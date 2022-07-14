@@ -1,1 +1,1 @@
-from ws-blaster.utils import open_driver
+from ws_blaster.utils import open_driver
