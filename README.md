@@ -13,7 +13,7 @@ Code related to account management
 
 ## `launch.py`
 
-Code related to streamlt ui
+Code related to streamlit ui
 
 ## `utils.py`
 
