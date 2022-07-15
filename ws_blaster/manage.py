@@ -26,5 +26,16 @@ def account_collection(accs, option3):
         driver.quit()
 
     return (available, not_available)
+
+def checking_acc_availability(available, not_available):
+    if len(available) == 0:
+        st.subheader('All accounts are not available!')
+        return st.subheader('Unavailable accounts: ', ', '.join(not_available))
+    elif len(not_available) == 0:
+        st.subheader('All accounts are available!')
+        return st.subheader('Available accounts: ' + str(', '.join(available)))
+    else:
+        st.subheader('Available account(s): ' + str(', '.join(available)))
+        return st.subheader('Unavailable account(s): ' + str(', '.join(not_available)))
             
             
