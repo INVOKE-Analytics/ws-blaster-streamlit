@@ -14,8 +14,8 @@ class Blaster:
         Get all the columns in the passed dataframe
         """
         if isinstance(self.contacts_df, pd.DataFrame):
-            return self.contact_numbers.columns
-        return "No DataFrame found"
+            return self.contacts_df.columns.tolist()
+        raise TypeError("No DataFrame found")
     
     @property
     def contact_numbers_info(self):
@@ -37,7 +37,7 @@ class Blaster:
         df: Dataframe [pandas dataframe]
         col: Column name containing the numbers to blast [str]
         
-        returns dataframe with cleaned numbers
+        Returns dataframe with cleaned numbers
         '''
         df[col] = df[col].astype(str)
         df[col] = [re.sub("[^0-9]", "", x) for x in df[col]]
