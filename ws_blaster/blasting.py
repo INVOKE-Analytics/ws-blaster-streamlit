@@ -10,12 +10,19 @@ class Blaster:
 
     @property
     def columns(self):
+        """
+        Get all the columns in the passed dataframe
+        """
         if isinstance(self.contacts_df, pd.DataFrame):
             return self.contact_numbers.columns
         return "No DataFrame found"
     
     @property
     def contact_numbers_info(self):
+        """
+        Returns a dictionary of the number of phone numbers and a
+        sample of 5 numbers
+        """
         info_dict = {
             "len_phone_numbers":len(set(self.contact_numbers)),
             "sample_of_5": random.sample(self.contact_numbers, 5)
@@ -46,7 +53,7 @@ class Blaster:
     def extract_from_file(self, file):
         # TODO: Extend for other file formats
         """
-        Currently accepts csv files.
+        Currently only accepts csv files.
         """
         self.contacts_df = pd.read_csv(file)
         # self.contact_numbers = self.clean_numbers(self.contacts_df, phone_number_column)
