@@ -117,8 +117,8 @@ def main_option_2(option2):
             st.subheader('Accounts: ' + ', '.join(accs))
 
             with st.spinner('Deleting Accounts...'):
-                available = checking_acc(accs, option3)[0]
-                not_available = checking_acc(accs, option3)[1]
+                available = account_collection(accs, option3)[0]
+                not_available = account_collection(accs, option3)[1]
 
                 # here
                 delete_not_av = delete_unav_account(not_available)
