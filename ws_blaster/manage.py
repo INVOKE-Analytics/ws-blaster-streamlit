@@ -62,5 +62,14 @@ def add_new_acc(taken, option3, name):
     
     else:
         st.write(str(', '.join(taken)) + ' are not available. Please choose another name!')
-            
-            
+
+def delete_unav_account(not_available):
+    if len(not_available) == 0:
+        st.subheader('No account(s) to delete!')
+    else:
+        st.subheader('Unavailable account(s): ' + str(', '.join(not_available)))
+        mypath = '/Users/amerwafiy/Desktop/ws-blasting/Users/amerwafiy/Library/Application Support/Google/Chrome/' + option3 + '/'
+        for n in not_available:
+            path_delete = mypath + n
+            shutil.rmtree(path_delete)
+        st.subheader('Succesfully deleted unavailable account(s)!')          
