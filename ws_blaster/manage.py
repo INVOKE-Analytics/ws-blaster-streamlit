@@ -37,5 +37,27 @@ def checking_acc_availability(available, not_available):
     else:
         st.subheader('Available account(s): ' + str(', '.join(available)))
         return st.subheader('Unavailable account(s): ' + str(', '.join(not_available)))
+
+def add_new_acc(taken, option3, name):
+    if len(taken) == 0:
+                option4 = st.button('Add Account(s)')
+                if option4:
+                    mypath = 'user-data-dir=Users/amerwafiy/Library/Application Support/Google/Chrome/' + option3 + '/'
+                    for n in name:
+                        driver = open_driver(mypath + n, headless = False)
+                        try:
+                            f = WebDriverWait(driver, 300).until(EC.visibility_of_element_located((By.XPATH,'//*[@title="Search input textbox"]')))
+                            st.subheader(n + ' added!')
+                            time.sleep(1)
+                            driver.quit()
+                        except:
+                            driver.quit()
+                            st.subheader('Unable to link account(' + n + '). Please try again!')
+                            mypath = '/Users/amerwafiy/Desktop/ws-blasting/Users/amerwafiy/Library/Application Support/Google/Chrome/' + option3 + '/'
+                            path_delete = mypath + n
+                            shutil.rmtree(path_delete)
+            
+    elif len(taken) == 1:
+        st.write('Account name--' + str(taken[0]) + ' is not available. Please choose another name!')
             
             
