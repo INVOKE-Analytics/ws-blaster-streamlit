@@ -27,3 +27,4 @@ def account_collection(accs, option3):
 
     return (available, not_available)
             
+            

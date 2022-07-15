@@ -43,9 +43,14 @@ class Blaster:
         contact_numbers = df[col].to_list()
         return contact_numbers
 
-    def extract_from_csv(self, file, phone_number_column):
+    def extract_from_file(self, file):
+        # TODO: Extend for other file formats
+        """
+        Currently accepts csv files.
+        """
         self.contacts_df = pd.read_csv(file)
-        self.contact_numbers = self.clean_numbers(self.contacts_df, phone_number_column)
+        # self.contact_numbers = self.clean_numbers(self.contacts_df, phone_number_column)
+        return self.contacts_df
 
 
 
