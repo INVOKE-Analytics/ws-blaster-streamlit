@@ -1,6 +1,8 @@
 import re
 import random
 import pandas as pd
+
+from typing import Union
 from ws_blaster.utils import open_driver
 
 
@@ -9,7 +11,7 @@ class Blaster:
         pass
 
     @property
-    def columns(self):
+    def columns(self) -> list:
         """
         Get all the columns in the passed dataframe
         """
@@ -18,7 +20,7 @@ class Blaster:
         raise TypeError("No DataFrame found")
     
     @property
-    def contact_numbers_info(self):
+    def contact_numbers_info(self) -> dict:
         """
         Returns a dictionary of the number of phone numbers and a
         sample of 5 numbers
