@@ -73,7 +73,7 @@ def add_new_acc(taken, option3, name):
     else:
         st.write(str(', '.join(taken)) + ' are not available. Please choose another name!')
 
-def delete_unav_account(not_available):
+def delete_unav_account(option3, not_available):
     if len(not_available) == 0:
         st.subheader('No account(s) to delete!')
     else:
@@ -121,14 +121,14 @@ def main_option_2(option2):
                 not_available = account_collection(accs, option3)[1]
 
                 # here
-                delete_not_av = delete_unav_account(not_available)
+                delete_not_av = delete_unav_account(option3, not_available)
                 return delete_not_av   
 
-    def main_acc_management(option1):
-        option1 == 'Account Management'
-        st.image('/Users/amerwafiy/Desktop/ws-blasting/ws-logo.png')
+def main_acc_management(option1):
+    option1 == 'Account Management'
+    st.image('/Users/amerwafiy/Desktop/ws-blasting/ws-logo.png')
 
-        option2 = st.selectbox('Select option', ('Add new account(s)','Check available account(s)', 'Delete unavailable account(s)'))
-        main_manager = main_option_2(option2)
-    
-        return main_manager       
+    option2 = st.selectbox('Select option', ('Add new account(s)','Check available account(s)', 'Delete unavailable account(s)'))
+    main_manager = main_option_2(option2)
+
+    return main_manager       
