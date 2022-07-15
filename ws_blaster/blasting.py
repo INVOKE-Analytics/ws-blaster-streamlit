@@ -2,13 +2,13 @@ import re
 import random
 import pandas as pd
 
-from typing import Union
 from ws_blaster.utils import open_driver
 
 
 class Blaster:
     def __init__(self):
-        pass
+        self.contacts_df = pd.DataFrame()
+        self.contact_numbers = []
 
     @property
     def columns(self) -> list:
@@ -17,7 +17,6 @@ class Blaster:
         """
         if isinstance(self.contacts_df, pd.DataFrame):
             return self.contacts_df.columns.tolist()
-        raise TypeError("No DataFrame found")
     
     @property
     def contact_numbers_info(self) -> dict:
@@ -31,8 +30,7 @@ class Blaster:
         }
         return info_dict
 
-    @staticmethod
-    def clean_numbers(df: pd.DataFrame, col: str) -> list:
+    def clean_numbers(self, col: str) -> list:
         '''
         Clean numbers to required format for whatsapp search
 
@@ -41,16 +39,16 @@ class Blaster:
         
         Returns dataframe with cleaned numbers
         '''
-        df[col] = df[col].astype(str)
-        df[col] = [re.sub("[^0-9]", "", x) for x in df[col]]
-        df = df[df[col] != '']
-        df[col] = ['60' + x if (x[0] == '1' and 8 < len(x) < 11) else x for x in df[col]]
-        df[col] = ['6' + x if (x[0] == '0' and 9 < len(x) < 12) else x for x in df[col]]
-        df[col] = ['' if (x[2] != '1' or len(x) > 12 or len(x) < 11) else x for x in df[col]]
-        df = df[df[col] != '']
-        df = df.drop_duplicates(subset = col)
-        contact_numbers = df[col].to_list()
-        return contact_numbers
+        self.contacts_df[col] = self.contacts_df[col].astype(str)
+        self.contacts_df[col] = [re.sub("[^0-9]", "", x) for x in self.contacts_df[col]]
+        self.contacts_df = self.contacts_df[self.contacts_df[col] != '']
+        self.contacts_df[col] = ['60' + x if (x[0] == '1' and 8 < len(x) < 11) else x for x in self.contacts_df[col]]
+        self.contacts_df[col] = ['6' + x if (x[0] == '0' and 9 < len(x) < 12) else x for x in self.contacts_df[col]]
+        self.contacts_df[col] = ['' if (x[2] != '1' or len(x) > 12 or len(x) < 11) else x for x in self.contacts_df[col]]
+        self.contacts_df = self.contacts_df[self.contacts_df[col] != '']
+        self.contacts_df = self.contacts_df.drop_duplicates(subset = col)
+        self.contact_numbers = self.contacts_df[col].to_list()
+        return self.contact_numbers
 
     def extract_from_file(self, file):
         # TODO: Extend for other file formats
