@@ -59,5 +59,8 @@ def add_new_acc(taken, option3, name):
             
     elif len(taken) == 1:
         st.write('Account name--' + str(taken[0]) + ' is not available. Please choose another name!')
+    
+    else:
+        st.write(str(', '.join(taken)) + ' are not available. Please choose another name!')
             
             
