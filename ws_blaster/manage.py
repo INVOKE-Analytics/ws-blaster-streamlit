@@ -1,4 +1,4 @@
-import streamlit as st
+from ws_blaster import launch as la
 from ws_blaster.utils import open_driver
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -10,7 +10,12 @@ import shutil
 
 class Manage:
     def __init__(self):
+        self.acc_options =
         pass
+    
+    def get_account_options(self):
+        return ['', 'Meniaga', "Ayuh Malaysia", "Burner Account"]    
+        
 
     def opt3(self):
         """
@@ -21,7 +26,7 @@ class Manage:
             - Burner Account 
 
         """
-        option3 = st.selectbox('Select set of accounts to check', ('', 'meniaga','AyuhMalaysia','Burner Accounts'))
+        option3 = Manage.get_account_options(self)
         if option3 != '':
             if option3 == 'Burner Accounts':
                 option3 = 'burner'
@@ -86,14 +91,11 @@ class Manage:
         self.not_available = available
 
         if len(self.available) == 0:
-            st.subheader('All accounts are not available!')
-            return st.subheader('Unavailable accounts: ', ', '.join(not_available))
+            return la.subheader('All accounts are not available!') + la.subheader('\nUnavailable accounts: ', ', '.join(not_available))# subheader
         elif len(self.not_available) == 0:
-            st.subheader('All accounts are available!')
-            return st.subheader('Available accounts: ' + str(', '.join(available)))
+            return 'All accounts are available!' + '\nAvailable accounts: ' + str(', '.join(available)) #subheader
         else:
-            st.subheader('Available account(s): ' + str(', '.join(available)))
-            return st.subheader('Unavailable account(s): ' + str(', '.join(not_available)))
+            return 'Available account(s): ' + str(', '.join(available)) + 'Unavailable account(s): ' + str(', '.join(not_available)) # subheader
 
     def add_new_acc(self, taken, option3, name):
         """
@@ -110,7 +112,7 @@ class Manage:
         self.name = name
 
         if len(self.taken) == 0:
-            option4 = st.button('Add Account(s)')
+            option4 = 'Add Account(s)' # button 
             if option4:
                 mypath = 'user-data-dir=Users/amerwafiy/Library/Application Support/Google/Chrome/' + self.option3 + '/'
                 for n in self.name:
@@ -119,20 +121,20 @@ class Manage:
                         f = WebDriverWait(driver, 300).until(EC.visibility_of_element_located((By.XPATH,'//*[@title="Search input textbox"]')))
                         
                         time.sleep(1)
-                        return st.subheader(n + ' added!')
+                        return n + ' added!' # subheader
                         driver.quit()
                     except:
                         driver.quit()
-                        st.subheader('Unable to link account(' + n + '). Please try again!')
+                        unable_sub = 'Unable to link account(' + n + '). Please try again!' # subheader
                         mypath = '/Users/amerwafiy/Desktop/ws-blasting/Users/amerwafiy/Library/Application Support/Google/Chrome/' + option3 + '/'
                         path_delete = mypath + n
                         return shutil.rmtree(path_delete)
                 
         elif len(self.taken) == 1:
-            return st.write('Account name--' + str(self.taken[0]) + ' is not available. Please choose another name!')
+            return 'Account name--' + str(self.taken[0]) + ' is not available. Please choose another name!' # st.write
         
         else:
-            return st.write(str(', '.join(self.taken)) + ' are not available. Please choose another name!')
+            return str(', '.join(self.taken)) + ' are not available. Please choose another name!' # st.write
 
     def delete_unav_account(self, option3, not_available):
         """
@@ -145,14 +147,14 @@ class Manage:
         self.not_available = not_available
 
         if len(self.not_available) == 0:
-            return st.subheader('No account(s) to delete!')
+            return 'No account(s) to delete!' # subheader
         else:
-            st.subheader('Unavailable account(s): ' + str(', '.join(self.not_available)))
+            unavailable_subh = 'Unavailable account(s): ' + str(', '.join(self.not_available)) # subheader
             mypath = '/Users/amerwafiy/Desktop/ws-blasting/Users/amerwafiy/Library/Application Support/Google/Chrome/' + self.option3 + '/'
             for n in self.not_available:
                 path_delete = mypath + n
                 shutil.rmtree(path_delete)
-            return st.subheader('Succesfully deleted unavailable account(s)!')
+            return unavailable_subh + 'Succesfully deleted unavailable account(s)!'
 
 
     def main_option_2(self, option2):
