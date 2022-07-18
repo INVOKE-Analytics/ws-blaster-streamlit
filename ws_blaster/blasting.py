@@ -1,9 +1,11 @@
 import re
+import time
 import uuid
 import random
 import pathlib
 import pandas as pd
 
+from os import listdir
 from ws_blaster.utils import open_driver, save_uploadedfile
 
 
@@ -14,6 +16,8 @@ class Blaster:
         self.contact_numbers = []
         self.messages = []
         self.files_to_blast_paths = []
+        self.user_path = ""
+        self.driver_dict = {}
 
     @property
     def columns(self) -> list:
@@ -33,8 +37,7 @@ class Blaster:
     @property
     def contact_numbers_info(self) -> dict:
         """
-        Returns a dictionary of the number of phone numbers and a
-        sample of 5 numbers
+        Returns a dictionary of the number of phone numbers and a sample of 5 numbers
         """
         info_dict = {
             "len_phone_numbers":len(set(self.contact_numbers)),
@@ -71,8 +74,7 @@ class Blaster:
     
     def save_files_to_blast(self, uploaded_files):
         """
-        Saves all the uplaoded files to a `tmp` file with a 
-        unique uuid
+        Saves all the uplaoded files to a `tmp` file with a unique uuid
         """
         self.save_path = pathlib.Path("./tmp") / uuid.uuid1()
         self.save_path.mkdir(parents=True, exist_ok=True)
@@ -80,10 +82,21 @@ class Blaster:
             self.files_to_blast_paths.append(self.save_path / uploaded_file.name)
             save_uploadedfile(uploaded_file, uploaded_file.name, self.save_path)
 
-    def message_variations_to_blast(self, message):
+    def add_message_variations_to_blast(self, message):
+        """
+        Append all the variations of a message to send to a list to be used later.
+        """
         self.messages.append(message)
     
-    def choose_available_accounts(self):
+    def setup_drivers_in_account(self, account, headless=False):
+        driver_path = self.user_path + account + '/'
+        for acc in  listdir(driver_path):
+            data_dir = "user-data-dir=" + driver_path + acc
+            driver = open_driver(data_dir, headless=headless)
+            self.driver_dict[acc] = driver
+            time.sleep(10)
+    
+    def send_picture(self):
         pass
     
     def send_message(self):
