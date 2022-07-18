@@ -1,3 +1,4 @@
+from click import option
 from ws_blaster import launch as la
 from ws_blaster.utils import open_driver
 from selenium import webdriver
@@ -91,11 +92,18 @@ class Manage:
         self.not_available = available
 
         if len(self.available) == 0:
-            return la.subheader('All accounts are not available!') + la.subheader('\nUnavailable accounts: ', ', '.join(not_available))# subheader
+            first = 'All accounts are not available!'
+            second = 'Unavailable accounts: ', ', '.join(not_available)
+            return first, second # subheader
         elif len(self.not_available) == 0:
-            return 'All accounts are available!' + '\nAvailable accounts: ' + str(', '.join(available)) #subheader
+            first = 'All accounts are available!'
+            second =  'Available accounts: ' + str(', '.join(available)) #subheader
+            return first, second
         else:
-            return 'Available account(s): ' + str(', '.join(available)) + 'Unavailable account(s): ' + str(', '.join(not_available)) # subheader
+            first = 'Available account(s): ' + str(', '.join(available)) + 
+            second = 'Unavailable account(s): ' + str(', '.join(not_available)) # subheader
+            return first, second
+
 
     def add_new_acc(self, taken, option3, name):
         """
@@ -131,10 +139,11 @@ class Manage:
                         return shutil.rmtree(path_delete)
                 
         elif len(self.taken) == 1:
-            return 'Account name--' + str(self.taken[0]) + ' is not available. Please choose another name!' # st.write
-        
+            txt = 'Account name--' + str(self.taken[0]) + ' is not available. Please choose another name!' # st.write
+            return txt
         else:
-            return str(', '.join(self.taken)) + ' are not available. Please choose another name!' # st.write
+            txt = str(', '.join(self.taken)) + ' are not available. Please choose another name!' # st.write
+            return txt
 
     def delete_unav_account(self, option3, not_available):
         """
@@ -147,7 +156,8 @@ class Manage:
         self.not_available = not_available
 
         if len(self.not_available) == 0:
-            return 'No account(s) to delete!' # subheader
+            txt = 'No account(s) to delete!' # subheader
+            return txt
         else:
             unavailable_subh = 'Unavailable account(s): ' + str(', '.join(self.not_available)) # subheader
             mypath = '/Users/amerwafiy/Desktop/ws-blasting/Users/amerwafiy/Library/Application Support/Google/Chrome/' + self.option3 + '/'
@@ -156,58 +166,63 @@ class Manage:
                 shutil.rmtree(path_delete)
             return unavailable_subh + 'Succesfully deleted unavailable account(s)!'
 
-
-    def main_option_2(self, option2):
-
-        self.option2 = option2
+    def get_accs(self):
+        option3 = Manage.opt3()
+        accs = Manage.remove_DS_store(option3)
+        return (option3, accs)
         
-        if self.option2 == 'Check available account(s)':
-            option3 = Manage.opt3()
+    def main_option_2_check_available_account(self, accs, option3):
+        self.option3 = option3
+        self.accs = accs
+        with st.spinner('Checking Accounts...'):
+            available = Manage.account_collection(accs, option3)[0]
+            not_available = Manage.account_collection(accs, option3)[1]
             
-            accs = Manage.remove_DS_store(option3)
-            with st.spinner('Checking Accounts...'):
-                available = Manage.account_collection(accs, option3)[0]
-                not_available = Manage.account_collection(accs, option3)[1]
-                
-            checking_avb_account = Manage.checking_acc_availability(available, not_available)
+        checking_avb_account = Manage.checking_acc_availability(available, not_available)
 
-            return checking_avb_account
-
-        elif self.option2 == 'Add new account(s)':
-            option3 = Manage.opt3()
-            accs = Manage.remove_DS_store(option3)
-
-            name = st.text_area("Enter Whatsapp account name:")
-            name = name.split(',')
-            name = [x.strip() for x in name]
-            taken = [x for x in name if x in accs]
-            check_new_account = Manage.add_new_acc(taken, option3, name)
-
-            return check_new_account
+        return checking_avb_account
     
-        elif self.option2 == 'Delete unavailable account(s)':
-            option3 = Manage.opt3()
-            accs = Manage.remove_DS_store(option3)
+    def main_option_2_add_new_acc(self, accs, option3):
+        self.option3 = option3
+        self.accs = accs
 
-            st.subheader('Accounts: ' + ', '.join(accs))
+        name = st.text_area("Enter Whatsapp account name:")
+        name = name.split(',')
+        name = [x.strip() for x in name]
+        taken = [x for x in name if x in accs]
+        check_new_account = Manage.add_new_acc(taken, option3, name)
 
-            with st.spinner('Deleting Accounts...'):
-                available = Manage.checking_acc_availability(accs, option3)[0]
-                not_available = Manage.checking_acc_availability(accs, option3)[1]
+        return check_new_account
+    
+    def main_option_2_delete_unavailable_account(self, accs, option3):
+        self.option3 = option3
+        self.accs = accs
 
-                # here
-                delete_not_av = Manage.delete_unav_account(not_available)
-                return delete_not_av
-                    
+        st.subheader('Accounts: ' + ', '.join(accs)) # need to split here
 
-    def main_acc_management(self, option1):
+        with st.spinner('Deleting Accounts...'):
+            available = Manage.checking_acc_availability(accs, option3)[0]
+            not_available = Manage.checking_acc_availability(accs, option3)[1]
+
+            # here
+            delete_not_av = Manage.delete_unav_account(not_available)
+            return delete_not_av
+
+    def option1_acc_management(self, option1):
 
         self.option1 = option1
-
         self.option1 == 'Account Management'
-        st.image('/Users/amerwafiy/Desktop/ws-blasting/ws-logo.png')
+        return self.option1
 
-        option2 = st.selectbox('Select option', ('Add new account(s)','Check available account(s)', 'Delete unavailable account(s)'))
-        main_manager = Manage.main_option_2(option2)
-    
-        return main_manager
+    def ws_logo(self):
+        path = '/Users/amerwafiy/Desktop/ws-blasting/ws-logo.png'
+        return path
+
+    def select_box_option1_acc_management(self):
+        return  ('Add new account(s)','Check available account(s)', 'Delete unavailable account(s)')
+
+    def spinner_checking_acc(self):
+        return 'Checking Accounts...'
+
+    def spinner_delete_acc(self):
+        return 'Deleting Accounts...'
