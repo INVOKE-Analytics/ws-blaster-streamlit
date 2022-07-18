@@ -3,21 +3,28 @@ import time
 import uuid
 import random
 import pathlib
+import pyperclip
 import pandas as pd
+import datetime
 
 from os import listdir
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support import expected_conditions as EC
 from ws_blaster.utils import open_driver, save_uploadedfile
-
 
 class Blaster:
 
-    def __init__(self):
+    def __init__(self, user_path):
+        self.user_path = user_path
         self.contacts_df = pd.DataFrame()
         self.contact_numbers = []
         self.messages = []
         self.files_to_blast_paths = []
-        self.user_path = ""
         self.driver_dict = {}
+        self.sent = 0
 
     @property
     def columns(self) -> list:
@@ -88,20 +95,72 @@ class Blaster:
         """
         self.messages.append(message)
     
-    def setup_drivers_in_account(self, account, headless=False):
-        driver_path = self.user_path + account + '/'
+    def setup_drivers_in_account(self, platform, headless=False):
+        """
+        Load the driver for all whats app accounts under platform
+        """
+        driver_path = self.user_path + platform + '/'
         for acc in  listdir(driver_path):
             data_dir = "user-data-dir=" + driver_path + acc
             driver = open_driver(data_dir, headless=headless)
             self.driver_dict[acc] = driver
             time.sleep(10)
     
-    def send_picture(self):
+    def _select_elm(self, driver, xpath, wait):
+        """
+        Get the selenium object associated with the element in the DOM Tree
+        """
+        elm = WebDriverWait(driver, wait).until(EC.visibility_of_element_located((By.XPATH, xpath)))
+        return elm
+
+    def nav_to_url(self, phone_number, sleep=5):
+        """
+        Navigate to the given URL and open a chat for a given phone number
+        """
+        acc = random.choice(self.driver_dict.keys())
+        driver = self.driver_dict[acc]
+        url = 'https://web.whatsapp.com/send?phone=' + str(phone_number)
+        driver.get(url)
+        driver.execute_script("window.onbeforeunload = function() {};")
+        time.sleep(sleep)
+        return driver
+    
+    def send_file(self, driver, file, sleep=2):
+        """
+        Send the requested files in the chat 
+        """
+        f = driver.find_element_by_css_selector("input[type='file']").send_keys(file)
+        self._select_elm(driver, '//*[@class="_165_h _2HL9j"]', 5).click()
+        time.sleep(sleep)
+    
+    def send_message(self, driver, message, sleep=2):
+        """
+        Send the message in the chat
+        """
+        self._select_elm(driver, '//*[@class="p3_M1"]', 6).click()
+        pyperclip.copy(message)
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys('v').key_up(Keys.CONTROL).perform()
+        time.sleep(sleep)
+        self._select_elm(driver, '//*[@data-testid="send"]', 5).click()
+    
+    def check_if_unavailable(self):
+        """
+        Check if the number is unavailable in the chat 
+        """
         pass
     
-    def send_message(self):
+    def apply_random_wait(self, count):
+        """
+        Apply some random wait time to lower the risk of accounts gettig banned
+        """
+        # if count % 300 == 0 and count != 0:
+        #     time.sleep(random.randint(500,1000))
+        # elif count % 10 == 0 and count!= 0:
+        #     time.sleep(random.randint(5,10))
+        #     return 'Numbers gone through: ' + str(count) + ', Messages sent: ' + str(count) + ', Time elapsed: ' + str(datetime.now() - self.start)[:7]
+        # else:
+        #     time.sleep(random.randint(2,5))        
         pass
-
 
 
 
