@@ -1,7 +1,7 @@
 import pandas as pd
 from ws_blaster.blasting import Blaster
 
-blaster = Blaster()
+blaster = Blaster(user_path="./Users")
 
 def test_extract_from_file():
     blaster.extract_from_file("tests/Sample Phone.csv")
