@@ -20,4 +20,9 @@ def test_setup_drivers_in_account():
     blaster.setup_drivers_in_account("meniaga")
     assert len(blaster.driver_dict) == 1
 
+def test_nav_to_number():
+    driver, acc = blaster.nav_to_number('60125303532')
+    # TODO : write a test to check that selenium went to the write number
+
+# TODO: write a function to get selenium to close the browser
 # blaster.close()

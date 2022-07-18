@@ -16,7 +16,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from ws_blaster.utils import open_driver, save_uploadedfile
 
 class Blaster:
-    session = 1
+    
     def __init__(self, user_path):
         self.user_path = pathlib.Path(user_path)
         self.contacts_df = pd.DataFrame()
@@ -113,11 +113,11 @@ class Blaster:
         elm = WebDriverWait(driver, wait).until(EC.visibility_of_element_located((By.XPATH, xpath)))
         return elm
 
-    def nav_to_url(self, phone_number, sleep=5):
+    def nav_to_number(self, phone_number, sleep=5):
         """
         Navigate to the given URL and open a chat for a given phone number
         """
-        acc = random.choice(self.driver_dict.keys())
+        acc = random.choice(list(self.driver_dict.keys()))
         driver = self.driver_dict[acc]
         url = 'https://web.whatsapp.com/send?phone=' + str(phone_number)
         driver.get(url)
