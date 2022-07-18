@@ -16,9 +16,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from ws_blaster.utils import open_driver, save_uploadedfile
 
 class Blaster:
-
+    session = 1
     def __init__(self, user_path):
-        self.user_path = user_path
+        self.user_path = pathlib.Path(user_path)
         self.contacts_df = pd.DataFrame()
         self.contact_numbers = []
         self.messages = []
@@ -99,9 +99,9 @@ class Blaster:
         """
         Load the driver for all whats app accounts under platform
         """
-        driver_path = self.user_path + platform + '/'
+        driver_path = self.user_path / platform 
         for acc in  listdir(driver_path):
-            data_dir = "user-data-dir=" + driver_path + acc
+            data_dir = "user-data-dir=" + str(driver_path / acc)
             driver = open_driver(data_dir, headless=headless)
             self.driver_dict[acc] = driver
             time.sleep(10)
@@ -123,7 +123,7 @@ class Blaster:
         driver.get(url)
         driver.execute_script("window.onbeforeunload = function() {};")
         time.sleep(sleep)
-        return driver
+        return acc, driver
     
     def send_file(self, driver, file, sleep=2):
         """
@@ -161,6 +161,10 @@ class Blaster:
         # else:
         #     time.sleep(random.randint(2,5))        
         pass
+
+    def close(self):
+        for available_drivers in self.driver_dict.values():
+            available_drivers.quit()
 
 
 

@@ -1,5 +1,7 @@
 import os 
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 
 
 def save_uploadedfile(uploadedfile, file_name, path):
@@ -31,7 +33,7 @@ def open_driver(user_path, headless = True):
         chrome_options.add_argument("--headless")
         # Specify user-agent to allow headless mode
         chrome_options.add_argument("user-agent=User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36")
-    driver = webdriver.Chrome('chromedriver_linux64/chromedriver',chrome_options=chrome_options)
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),options=chrome_options)
     driver.get('https://web.whatsapp.com/')
     driver.execute_script("window.onbeforeunload = function() {};")
     return driver

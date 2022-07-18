@@ -15,3 +15,9 @@ def test_clean_numbers():
     column = "Phone"
     numbers = blaster.clean_numbers(column)
     assert numbers == ['60125303532']
+
+def test_setup_drivers_in_account():
+    blaster.setup_drivers_in_account("meniaga")
+    assert len(blaster.driver_dict) == 1
+
+# blaster.close()
