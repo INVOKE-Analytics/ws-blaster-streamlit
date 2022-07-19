@@ -18,27 +18,29 @@ class Manage:
         Description: To choose option3
 
         """
-        option3 = self.get_account_options(self)
+        option3 = self.get_account_options()
         if option3 != '':
             if option3 == 'Burner Accounts':
                 option3 = 'burner'
                 return option3
 
-    def remove_DS_store(self): 
+    def remove_DS_store(self, mypath): 
         """ 
         Description: To remove .DS Store file
         
         """
-        self.option3 = self.opt3()
-        mypath = '/Users/amerwafiy/Desktop/ws-blasting/Users/amerwafiy/Library/Application Support/Google/Chrome/' + self.option3 + '/'
-        accs = [f for f in listdir(mypath)]
+        self.mypath = mypath
+        #option3 = self.opt3()
+        #mypath = '/Users/amerwafiy/Desktop/ws-blasting/Users/amerwafiy/Library/Application Support/Google/Chrome/' + option3 + '/'
+        accs = [f for f in listdir(self.mypath)]
         if ".DS_Store" in accs:
-                accs.remove(".DS_Store")
+            return accs.remove(".DS_Store")
         return accs
 
     #   START if len(taken) == 0:        
-    def get_item_in_name(self):
-        name = self.get_name(self)
+    def get_item_in_name(self, string_names):
+        self.string_names = string_names
+        name = self.get_name(self.string_names)
         for n in name:
             return n
 
@@ -64,18 +66,20 @@ class Manage:
         path_delete = mypath + n
         return shutil.rmtree(path_delete) 
 
-    def get_list_available_unavaible_account(self):
+    def get_list_available_unavaible_account(self,accs,mypath):
         """
         Return list of available and not_available 
         """
+        self.accs = accs
         accs = self.get_accs(self)
-        option3 = self.opt3(self)
+        self.mypath = mypath
+        #option3 = self.opt3(self)
 
         available = []
         not_available = []
-        mypath = 'user-data-dir=Users/amerwafiy/Library/Application Support/Google/Chrome/' + option3 + '/'
+        #mypath = 'user-data-dir=Users/amerwafiy/Library/Application Support/Google/Chrome/' + option3 + '/'
         for acc in accs:
-            driver = open_driver(mypath + acc)
+            driver = open_driver(self.mypath + acc)
             try:
                 elems = WebDriverWait(driver, 15).until(EC.visibility_of_element_located((By.PARTIAL_LINK_TEXT,'Need help to get started?')))
                 not_available.append(acc)
@@ -85,19 +89,20 @@ class Manage:
 
         return (available, not_available)
 
-    def get_accs(self):
+    def get_accs(self,accs)->list:
         """
         Return list of accs
         """
+        self.accs = accs
         option3 = self.opt3()
         accs = self.remove_DS_store(option3)
         return accs
 
-    def get_name(self,name):
+    def get_name(self,name)->list:
         """
         Return list of name
         """
-        self.name = name.split(',')
+        self.name = name.split(',') 
         name = [x.strip() for x in name]
         return name
 
