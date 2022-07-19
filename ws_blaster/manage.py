@@ -11,7 +11,6 @@ import shutil
 
 class Manage:
     def __init__(self):
-        self.acc_options =
         pass
     
     def get_account_options(self):
