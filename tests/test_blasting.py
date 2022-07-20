@@ -26,13 +26,10 @@ def test_setup_drivers_in_account():
     assert len(blaster.driver_dict) == 1
 
 def test_nav_to_number():
-    # TODO : write a test to check that selenium went to the write number
+    # TODO : write a test to check that selenium went to the right number
     acc, driver = blaster.nav_to_number('60125303532')
     pytest.acc = acc
     pytest.driver = driver
-
-def test_select_elm():
-    pass
 
 def test_send_message():
     # TODO: write a test to check that the message was sent
@@ -40,6 +37,10 @@ def test_send_message():
     driver = pytest.driver
     acc = pytest.acc
     blaster.send_message(driver, 'hello')
+
+def test_send_pic():
+    # TODO: write a test to check that the files were sent
+    pass
 
 # def test_close_drivers():
 #     # TODO: write a function to get selenium to close the browser

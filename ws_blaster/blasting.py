@@ -5,7 +5,6 @@ import random
 import pathlib
 import pyperclip
 import pandas as pd
-import datetime
 
 from os import listdir
 from selenium.webdriver.common.by import By
@@ -143,11 +142,26 @@ class Blaster:
         time.sleep(sleep)
         self._select_elm(driver, "//span[@data-testid='send']", 5).click()
     
-    def check_if_unavailable(self):
+    def check_if_unavailable(self, acc):
         """
         Check if the number is unavailable in the chat 
         """
-        pass
+        driver = self.driver_dict[acc]
+        elm = driver.find_elements(by=By.PARTIAL_LINK_TEXT, value='Need help to get started?')
+        elm_is_present = bool(len(elm) > 0 and elm[0].is_displayed())
+        return elm_is_present
+    
+    def remove_driver(self, acc):
+        """
+        Remove the driver if the driver becomes unavailable
+        """
+        # TODO: Add logging
+        driver = self.driver_dict[acc]
+        driver.quit()
+        del self.driver_dict[acc]
+        # st.subheader('*** Driver-- ' + str(driver_ls[drivers_idx]) + ' is unavailable ***')
+        # st.subheader('*** Drivers left: ' + str(driver_count) + ' ***')
+        # st.subheader('### ALL ACCOUNTS ARE CURRENTLY UNAVAILABLE! BLASTING STOPPED AT INDEX: ' + str(i) + '###')
     
     def apply_random_wait(self, count):
         """
@@ -160,7 +174,6 @@ class Blaster:
             return 'Numbers gone through: ' + str(count) + ', Messages sent: ' + str(count)
         else:
             time.sleep(random.randint(2,5))        
-        pass
 
     def close_drivers(self):
         """Close all open drivers once blasting has completed."""
