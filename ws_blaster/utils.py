@@ -16,7 +16,7 @@ def save_uploadedfile(uploadedfile, file_name, path):
         f.write(uploadedfile.getbuffer())
 
 
-def open_driver(user_path, headless = True):
+def open_driver(user_path, headless = False):
     '''
     Opens chromedriver and initialize Whatsapp web
 
@@ -27,13 +27,13 @@ def open_driver(user_path, headless = True):
     '''
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument(user_path)
-    chrome_options.add_argument("--disable-notifications")
+    chrome_options.add_argument('--disable-notifications')
     if headless:
         chrome_options.add_argument('--disable-gpu')
-        chrome_options.add_argument("--headless")
+        chrome_options.add_argument('--headless')
         # Specify user-agent to allow headless mode
-        chrome_options.add_argument("user-agent=User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36")
+        chrome_options.add_argument('user-agent=User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36')
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),options=chrome_options)
     driver.get('https://web.whatsapp.com/')
-    driver.execute_script("window.onbeforeunload = function() {};")
+    driver.execute_script('window.onbeforeunload = function() {};')
     return driver
