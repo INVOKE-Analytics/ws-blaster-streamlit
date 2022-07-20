@@ -1,7 +1,12 @@
+import time
+import pytest
 import pandas as pd
 from ws_blaster.blasting import Blaster
 
 blaster = Blaster(user_path="./Users")
+
+def pytest_namespace():
+    return {'driver': None, 'acc': None}
 
 def test_extract_from_file():
     blaster.extract_from_file("tests/Sample Phone.csv")
@@ -21,8 +26,21 @@ def test_setup_drivers_in_account():
     assert len(blaster.driver_dict) == 1
 
 def test_nav_to_number():
-    driver, acc = blaster.nav_to_number('60125303532')
     # TODO : write a test to check that selenium went to the write number
+    acc, driver = blaster.nav_to_number('60125303532')
+    pytest.acc = acc
+    pytest.driver = driver
 
-# TODO: write a function to get selenium to close the browser
-# blaster.close()
+def test_select_elm():
+    pass
+
+def test_send_message():
+    # TODO: write a test to check that the message was sent
+    time.sleep(20)
+    driver = pytest.driver
+    acc = pytest.acc
+    blaster.send_message(driver, 'hello')
+
+# def test_close_drivers():
+#     # TODO: write a function to get selenium to close the browser
+#     blaster.close_drivers()

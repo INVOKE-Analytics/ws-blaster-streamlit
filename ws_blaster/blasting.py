@@ -16,7 +16,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from ws_blaster.utils import open_driver, save_uploadedfile
 
 class Blaster:
-    
+
     def __init__(self, user_path):
         self.user_path = pathlib.Path(user_path)
         self.contacts_df = pd.DataFrame()
@@ -105,13 +105,6 @@ class Blaster:
             driver = open_driver(data_dir, headless=headless)
             self.driver_dict[acc] = driver
             time.sleep(10)
-    
-    def _select_elm(self, driver, xpath, wait):
-        """
-        Get the selenium object associated with the element in the DOM Tree
-        """
-        elm = WebDriverWait(driver, wait).until(EC.visibility_of_element_located((By.XPATH, xpath)))
-        return elm
 
     def nav_to_number(self, phone_number, sleep=5):
         """
@@ -124,7 +117,14 @@ class Blaster:
         driver.execute_script("window.onbeforeunload = function() {};")
         time.sleep(sleep)
         return acc, driver
-    
+
+    def _select_elm(self, driver, xpath, wait):
+        """
+        Get the selenium object associated with the element in the DOM Tree
+        """
+        elm = WebDriverWait(driver, wait).until(EC.visibility_of_element_located((By.XPATH, xpath)))
+        return elm
+
     def send_file(self, driver, file, sleep=2):
         """
         Send the requested files in the chat 
@@ -137,11 +137,11 @@ class Blaster:
         """
         Send the message in the chat
         """
-        self._select_elm(driver, '//*[@class="p3_M1"]', 6).click()
+        self._select_elm(driver, "//p[@class='selectable-text copyable-text']", 6).click()
         pyperclip.copy(message)
         ActionChains(driver).key_down(Keys.CONTROL).send_keys('v').key_up(Keys.CONTROL).perform()
         time.sleep(sleep)
-        self._select_elm(driver, '//*[@data-testid="send"]', 5).click()
+        self._select_elm(driver, "//span[@data-testid='send']", 5).click()
     
     def check_if_unavailable(self):
         """
@@ -153,19 +153,19 @@ class Blaster:
         """
         Apply some random wait time to lower the risk of accounts gettig banned
         """
-        # if count % 300 == 0 and count != 0:
-        #     time.sleep(random.randint(500,1000))
-        # elif count % 10 == 0 and count!= 0:
-        #     time.sleep(random.randint(5,10))
-        #     return 'Numbers gone through: ' + str(count) + ', Messages sent: ' + str(count) + ', Time elapsed: ' + str(datetime.now() - self.start)[:7]
-        # else:
-        #     time.sleep(random.randint(2,5))        
+        if count % 300 == 0 and count != 0:
+            time.sleep(random.randint(500,1000))
+        elif count % 10 == 0 and count!= 0:
+            time.sleep(random.randint(5,10))
+            return 'Numbers gone through: ' + str(count) + ', Messages sent: ' + str(count)
+        else:
+            time.sleep(random.randint(2,5))        
         pass
 
-    def close(self):
-        for available_drivers in self.driver_dict.values():
-            available_drivers.quit()
-
+    def close_drivers(self):
+        """Close all open drivers once blasting has completed."""
+        for driver in self.driver_dict.values():
+            driver.quit()
 
 
 
