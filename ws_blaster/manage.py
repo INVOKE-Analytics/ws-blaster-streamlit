@@ -9,12 +9,12 @@ import shutil
 import pathlib
 
 class Manage:
-    def __init__(self, user_path, option3):
+    def __init__(self, user_path, platform):
         self.user_path = pathlib.Path(user_path)
-        self.option3 = option3
+        self.platform = platform
         self.driver_dict = {}
 
-    def get_name(self,name)->str:
+    def get_name(self,name):
         """
         Return list of name
         """
@@ -23,20 +23,18 @@ class Manage:
         return name
     
     def get_all_account_list_dir(self):
-        n = self.get_name(self)
-        mypath = 'user-data-dir=' + self.user_path + '/' + self.option3 + '/' + n
+        mypath = 'user-data-dir=' + self.user_path + '/' 
         accs = [f for f in listdir(mypath)]
         return accs
 
     def checking_account(self):
         accs = self.get_all_account_list_dir(self)
-        n = self.get_name(self)
-        mypath = 'user-data-dir=' + self.user_path + '/' + self.option3 + '/' + n
+        path_to_platform = 'user-data-dir=' + self.user_path + '/' + self.platform + '/'
 
         available = [] # if len > 1, there is account
         not_available = []
         for acc in accs:
-            driver = open_driver(mypath + acc)
+            driver = open_driver(path_to_platform + acc)
             try:
                 not_available.append(acc)
             except:
@@ -51,7 +49,7 @@ class Manage:
         Component 1 for 'Add account'
         """
         n = self.get_name(self)
-        mypath = 'user-data-dir=' + self.user_path + '/' + self.option3 + '/' + n
+        mypath = 'user-data-dir=' + self.user_path + '/' + self.platform + '/' + n
         return mypath
     
     def setup_new_driver_for_new_account(self):
@@ -64,7 +62,7 @@ class Manage:
         Component 2 for 'Add account'
         """
         n = self.get_name(self)
-        mypath = 'user-data-dir=' + self.user_path + '/' + self.option3 + '/' + n
+        mypath = 'user-data-dir=' + self.user_path + '/' + self.platform + '/' + n
         return shutil.rmtree(mypath) 
 
     def get_taken(self):
