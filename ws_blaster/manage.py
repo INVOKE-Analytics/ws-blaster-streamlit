@@ -13,6 +13,7 @@ class Manage:
         self.user_path = pathlib.Path(user_path)
         self.platform = platform
         self.driver_dict = {}
+        self.account_dict = {}
 
     def get_name(self,name):
         """
@@ -48,9 +49,11 @@ class Manage:
         """
         Component 1 for 'Add account'
         """
-        n = self.get_name(self)
-        mypath = 'user-data-dir=' + self.user_path + '/' + self.platform + '/' + n
-        return mypath
+        name = self.get_name(self)
+        for account_name in name:
+            path_to_account = 'user-data-dir=' + self.user_path + '/' + self.platform + '/' + account_name
+            driver = open_driver(path_to_account, headless = False)
+            self.account_dict[account_name] = driver
     
     def setup_new_driver_for_new_account(self):
         mypath = self.add_new_account(self)
