@@ -1,5 +1,6 @@
 from ws_blaster.manage import Manage
 
+
 manage = Manage(user_path='D:\\Desktop\\INVOKE\\ws_blaster\\ahilan-branch\\venvAhilan\\ws-blaster-prod\\Users', 
                 option3='meniaga')
 
