@@ -13,8 +13,15 @@ class Manage:
         self.user_path = pathlib.Path(user_path)
         self.option3 = option3
         self.driver_dict = {}
+
+    def get_name(self,name)->str:
+        """
+        Return list of name
+        """
+        self.name = name.split(',') 
+        name = [x.strip() for x in name]
+        return name
     
-   
     def get_all_account_list_dir(self):
         n = self.get_name(self)
         mypath = 'user-data-dir=' + self.user_path + '/' + self.option3 + '/' + n
@@ -38,14 +45,6 @@ class Manage:
 
         return (available, not_available)
     
-    
-    def get_name(self,name)->str:
-        """
-        Return list of name
-        """
-        self.name = name.split(',') 
-        name = [x.strip() for x in name]
-        return name
         
     def add_new_account(self):
         """
