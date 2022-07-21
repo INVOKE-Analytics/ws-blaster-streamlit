@@ -32,11 +32,18 @@ class Blaster:
         """
         if isinstance(self.contacts_df, pd.DataFrame):
             return self.contacts_df.columns.tolist()
+            
+    @property
+    def get_num_drivers(self) -> str:
+        """
+        Returns the number of drivers still available
+        """
+        return f"{len(self.driver_dict)} drivers remaining"
     
     @property
     def phone_numbers(self) -> list:
         """
-        Return a list of all the phone numbers to blast to 
+        Returns a list of all the phone numbers to blast to 
         """
         return self.contact_numbers
     
@@ -55,7 +62,6 @@ class Blaster:
         """
         Clean numbers to required format for whatsapp search
 
-        df: Dataframe [pandas dataframe]
         col: Column name containing the numbers to blast [str]
         
         Returns dataframe with cleaned numbers
@@ -108,6 +114,7 @@ class Blaster:
     def nav_to_number(self, phone_number, sleep=5):
         """
         Navigate to the given URL and open a chat for a given phone number
+        Returns the account name and the driver for that account
         """
         acc = random.choice(list(self.driver_dict.keys()))
         driver = self.driver_dict[acc]
@@ -124,11 +131,12 @@ class Blaster:
         elm = WebDriverWait(driver, wait).until(EC.visibility_of_element_located((By.XPATH, xpath)))
         return elm
 
-    def send_file(self, driver, file, sleep=2):
+    def send_file(self, driver, file_path, sleep=2):
         """
         Send the requested files in the chat 
         """
-        f = driver.find_element_by_css_selector("input[type='file']").send_keys(file)
+        self._select_elm(driver, "//span[@data-testid='clip']", 300).click()
+        driver.find_element(By.CSS_SELECTOR, "input[type='file']").send_keys(file_path)
         self._select_elm(driver, '//*[@class="_165_h _2HL9j"]', 5).click()
         time.sleep(sleep)
     
@@ -136,7 +144,7 @@ class Blaster:
         """
         Send the message in the chat
         """
-        self._select_elm(driver, "//p[@class='selectable-text copyable-text']", 6).click()
+        self._select_elm(driver, "//p[@class='selectable-text copyable-text']", 300).click()
         pyperclip.copy(message)
         ActionChains(driver).key_down(Keys.CONTROL).send_keys('v').key_up(Keys.CONTROL).perform()
         time.sleep(sleep)
@@ -159,6 +167,7 @@ class Blaster:
         driver = self.driver_dict[acc]
         driver.quit()
         del self.driver_dict[acc]
+        return acc
         # st.subheader('*** Driver-- ' + str(driver_ls[drivers_idx]) + ' is unavailable ***')
         # st.subheader('*** Drivers left: ' + str(driver_count) + ' ***')
         # st.subheader('### ALL ACCOUNTS ARE CURRENTLY UNAVAILABLE! BLASTING STOPPED AT INDEX: ' + str(i) + '###')
@@ -176,7 +185,9 @@ class Blaster:
             time.sleep(random.randint(2,5))        
 
     def close_drivers(self):
-        """Close all open drivers once blasting has completed."""
+        """
+        Close all open drivers once blasting has completed.
+        """
         for driver in self.driver_dict.values():
             driver.quit()
 
