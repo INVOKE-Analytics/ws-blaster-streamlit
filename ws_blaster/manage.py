@@ -45,20 +45,14 @@ class Manage:
         return (available, not_available)
     
         
-    def add_new_account(self):
+    def setup_new_account(self, account_name):
         """
         Component 1 for 'Add account'
         """
-        name = self.get_name(self)
-        for account_name in name:
-            path_to_account = 'user-data-dir=' + self.user_path + '/' + self.platform + '/' + account_name
-            driver = open_driver(path_to_account, headless = False)
-            self.account_dict[account_name] = driver
+        path_to_account = 'user-data-dir=' + self.user_path + '/' + self.platform + '/' + account_name
+        driver = open_driver(path_to_account, headless = False)
+        self.account_dict[account_name] = driver
     
-    def setup_new_driver_for_new_account(self):
-        mypath = self.add_new_account(self)
-        driver = open_driver(mypath, headless = False)
-        self.driver_dict[driver] = driver # will add into the dict, means new account added 
 
     def automatically_deleted_account_if_error(self):
         """
