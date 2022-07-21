@@ -86,7 +86,7 @@ class Blaster:
     
     def save_files_to_blast(self, uploaded_files):
         """
-        Saves all the uplaoded files to a `tmp` file with a unique uuid
+        Saves all the uploaded files to a `tmp` file with a unique uuid
         """
         self.save_path = pathlib.Path("./tmp") / uuid.uuid1()
         self.save_path.mkdir(parents=True, exist_ok=True)
