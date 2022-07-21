@@ -8,23 +8,10 @@ import shutil
 import pathlib
 
 class Manage:
-    def __init__(self, user_path):
+    def __init__(self, user_path, option3):
         self.user_path = pathlib.Path(user_path)
+        self.option3 = option3
     
-    def get_account_options(self):
-        return ['', 'Meniaga', "Ayuh Malaysia", "Burner Account"]    
-
-    def opt3(self):
-        """
-        Description: To choose option3
-
-        """
-        option3 = self.get_account_options()
-        if option3 != '':
-            if option3 == 'Burner Accounts':
-                option3 = 'burner'
-                return option3
-
     def remove_DS_store(self, mypath): 
         """ 
         Description: To remove .DS Store file
