@@ -12,18 +12,6 @@ class Manage:
         self.user_path = pathlib.Path(user_path)
         self.option3 = option3
     
-    def remove_DS_store(self, mypath): 
-        """ 
-        Description: To remove .DS Store file
-        
-        """
-        self.mypath = mypath
-        #option3 = self.opt3()
-        #mypath = '/Users/amerwafiy/Desktop/ws-blasting/Users/amerwafiy/Library/Application Support/Google/Chrome/' + option3 + '/'
-        accs = [f for f in listdir(self.mypath)]
-        if ".DS_Store" in accs:
-            return accs.remove(".DS_Store")
-        return accs
 
     #   START if len(taken) == 0:        
     def get_item_in_name(self, string_names):
