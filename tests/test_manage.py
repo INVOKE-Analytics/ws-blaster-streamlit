@@ -1,11 +1,8 @@
 from ws_blaster.manage import Manage
 
-manage = Manage()
+manage = Manage(user_path='D:\\Desktop\\INVOKE\\ws_blaster\\ahilan-branch\\venvAhilan\\ws-blaster-prod\\Users', 
+                option3='meniaga')
 
-def test_remove_DS_store():
-    mypath = 'D:\Desktop\INVOKE\ws_blaster\github_ws_blaster\\test_file'
-    test = manage.remove_DS_store(mypath)
-    assert isinstance(test, list)
 
 def test_get_item_in_name():
     string_names = "Ammar Azman , Ahilan Ashwin"
