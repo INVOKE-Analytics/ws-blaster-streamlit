@@ -5,10 +5,11 @@ from selenium.webdriver.support import expected_conditions as EC
 from os import listdir
 import time
 import shutil
+import pathlib
 
 class Manage:
-    def __init__(self):
-        pass
+    def __init__(self, user_path):
+        self.user_path = pathlib.Path(user_path)
     
     def get_account_options(self):
         return ['', 'Meniaga', "Ayuh Malaysia", "Burner Account"]    
