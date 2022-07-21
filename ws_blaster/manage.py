@@ -1,3 +1,4 @@
+from sklearn.metrics import accuracy_score
 from ws_blaster.utils import open_driver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -11,76 +12,61 @@ class Manage:
     def __init__(self, user_path, option3):
         self.user_path = pathlib.Path(user_path)
         self.option3 = option3
+        self.driver_dict = {}
     
+   
+    def get_all_account_list_dir(self):
+        n = self.get_name(self)
+        mypath = 'user-data-dir=' + self.user_path + '/' + self.option3 + '/' + n
+        accs = [f for f in listdir(mypath)]
+        return accs
 
-    #   START if len(taken) == 0:        
-    def get_item_in_name(self, string_names):
-        self.string_names = string_names
-        name = self.get_name(self.string_names)
-        for n in name:
-            return n
+    def checking_account(self):
+        accs = self.get_all_account_list_dir(self)
+        n = self.get_name(self)
+        mypath = 'user-data-dir=' + self.user_path + '/' + self.option3 + '/' + n
 
-    def try_Add_account(self):
-        """
-        Component 1 for 'Add account'
-        """
-        option3 = self.opt3(self)
-        mypath = 'user-data-dir=Users/amerwafiy/Library/Application Support/Google/Chrome/' + option3 + '/'
-        n = self.get_item_in_name(self)
-        driver = open_driver(mypath + n, headless = False)
-        f = WebDriverWait(driver, 300).until(EC.visibility_of_element_located((By.XPATH,'//*[@title="Search input textbox"]')))
-        time.sleep(1)
-        return f
-
-    def exept_Add_account_path_delete(self):
-        """
-        Component 2 for 'Add account'
-        """
-        option3 = self.opt3(self)
-        mypath = '/Users/amerwafiy/Desktop/ws-blasting/Users/amerwafiy/Library/Application Support/Google/Chrome/' + option3 + '/'
-        n = self.get_item_in_name(self)
-        path_delete = mypath + n
-        return shutil.rmtree(path_delete) 
-
-    def get_list_available_unavaible_account(self,accs,mypath):
-        """
-        Return list of available and not_available 
-        """
-        self.accs = accs
-        accs = self.get_accs(self)
-        self.mypath = mypath
-        #option3 = self.opt3(self)
-
-        available = []
+        available = [] # if len > 1, there is account
         not_available = []
-        #mypath = 'user-data-dir=Users/amerwafiy/Library/Application Support/Google/Chrome/' + option3 + '/'
         for acc in accs:
-            driver = open_driver(self.mypath + acc)
+            driver = open_driver(mypath + acc)
             try:
-                elems = WebDriverWait(driver, 15).until(EC.visibility_of_element_located((By.PARTIAL_LINK_TEXT,'Need help to get started?')))
                 not_available.append(acc)
             except:
                 available.append(acc)
             driver.quit()
 
         return (available, not_available)
-
-    def get_accs(self,accs)->list:
-        """
-        Return list of accs
-        """
-        self.accs = accs
-        option3 = self.opt3()
-        accs = self.remove_DS_store(option3)
-        return accs
-
-    def get_name(self,name)->list:
+    
+    
+    def get_name(self,name)->str:
         """
         Return list of name
         """
         self.name = name.split(',') 
         name = [x.strip() for x in name]
         return name
+        
+    def add_new_account(self):
+        """
+        Component 1 for 'Add account'
+        """
+        n = self.get_name(self)
+        mypath = 'user-data-dir=' + self.user_path + '/' + self.option3 + '/' + n
+        return mypath
+    
+    def setup_new_driver_for_new_account(self):
+        mypath = self.add_new_account(self)
+        driver = open_driver(mypath, headless = False)
+        self.driver_dict[driver] = driver # will add into the dict, means new account added 
+
+    def automatically_deleted_account_if_error(self):
+        """
+        Component 2 for 'Add account'
+        """
+        n = self.get_name(self)
+        mypath = 'user-data-dir=' + self.user_path + '/' + self.option3 + '/' + n
+        return shutil.rmtree(mypath) 
 
     def get_taken(self):
         """
@@ -91,7 +77,7 @@ class Manage:
         taken = [x for x in name if x in accs]
         return taken
 
-    def option1_acc_management(self):
+    def get_option1(self):
         """
         Return option1 -- 'Account management'
         """
