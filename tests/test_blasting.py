@@ -3,7 +3,7 @@ import pytest
 import pandas as pd
 from ws_blaster.blasting import Blaster
 
-blaster = Blaster(user_path="./Users")
+blaster = Blaster(user_path="D:\\Desktop\\INVOKE\\ws_blaster\\ahilan-branch\\venvAhilan\\ws-blaster-prod\\Users")
 
 def pytest_namespace():
     return {'driver': None, 'acc': None}
