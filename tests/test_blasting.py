@@ -26,13 +26,19 @@ def test_clean_numbers():
     assert numbers == ['60125303532']
 
 def test_setup_drivers_in_account():
-    blaster.setup_drivers_in_account("burner")
+    blaster.setup_drivers_in_account("AyuhMalaysia")
     assert len(blaster.driver_dict) == 1
 
 def test_nav_to_number():
     # TODO : write a test to check that selenium went to the right number
     acc, driver = blaster.nav_to_number('60125303532')
     pytest.acc, pytest.driver = acc, driver
+
+def test_check_if_unavailable():
+    # TODO: write test to check if the account becomes unavailable
+    acc = pytest.acc
+    is_unavailable = blaster.check_if_unavailable(acc)
+    assert is_unavailable == False
 
 def test_send_message():
     # TODO: write a test to check that the message was sent
@@ -43,10 +49,6 @@ def test_send_pic():
     # TODO: write a test to check that the files were sent
     driver, acc = pytest.driver, pytest.acc
     blaster.send_file(driver, "/mnt/c/Users/ahila/Programs/ws-blaster-prod/images/invoke_logo.jpg")
-
-def test_check_if_unavailable():
-    # TODO: write test to check if the account becomes unavailable
-    pass
 
 def test_remove_driver():
     # TODO: write a test to check if the driver got deleted appropriately

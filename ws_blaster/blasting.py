@@ -24,11 +24,12 @@ class Blaster:
         self.files_to_blast_paths = []
         self.driver_dict = {}
         self.sent = 0
+        self.unavailable_accounts = []
 
     @property
     def columns(self) -> list:
         """
-        Get all the columns in the passed dataframe
+        Get all the columns in the passed dataframe.
         """
         if isinstance(self.contacts_df, pd.DataFrame):
             return self.contacts_df.columns.tolist()
@@ -36,27 +37,34 @@ class Blaster:
     @property
     def get_num_drivers(self) -> str:
         """
-        Returns the number of drivers still available
+        Returns the number of drivers still available.
         """
         return f"{len(self.driver_dict)} drivers remaining"
     
     @property
     def phone_numbers(self) -> list:
         """
-        Returns a list of all the phone numbers to blast to 
+        Returns a list of all the phone numbers to blast to.
         """
         return self.contact_numbers
     
     @property
     def contact_numbers_info(self) -> dict:
         """
-        Returns a dictionary of the number of phone numbers and a sample of 5 numbers
+        Returns a dictionary of the number of phone numbers and a sample of 5 numbers.
         """
         info_dict = {
             "len_phone_numbers":len(set(self.contact_numbers)),
             "sample_of_5": random.sample(self.contact_numbers, 5)
         }
         return info_dict
+    
+    @property
+    def blocked_accounts(self) -> list:
+        """
+        Returns a list of accounts that got banned during blasting.
+        """
+        return self.unavailable_accounts
 
     def clean_numbers(self, col: str) -> list:
         """
@@ -104,9 +112,9 @@ class Blaster:
         """
         Load the driver for all whats app accounts under platform
         """
-        driver_path = self.user_path / platform 
-        for acc in  listdir(driver_path):
-            data_dir = "user-data-dir=" + str(driver_path / acc)
+        self.driver_path = self.user_path / platform 
+        for acc in  listdir(self.driver_path):
+            data_dir = "user-data-dir=" + str(self.driver_path / acc)
             driver = open_driver(data_dir, headless=headless)
             self.driver_dict[acc] = driver
             time.sleep(10)
@@ -134,6 +142,8 @@ class Blaster:
     def send_file(self, driver, file_path, sleep=2):
         """
         Send the requested files in the chat 
+        Raises a selenium.common.exceptions.TimeoutException Message if 
+        it can't find the element
         """
         self._select_elm(driver, "//span[@data-testid='clip']", 300).click()
         driver.find_element(By.CSS_SELECTOR, "input[type='file']").send_keys(file_path)
@@ -143,6 +153,8 @@ class Blaster:
     def send_message(self, driver, message, sleep=2):
         """
         Send the message in the chat
+        Raises a selenium.common.exceptions.TimeoutException Message if 
+        it can't find the element
         """
         self._select_elm(driver, "//p[@class='selectable-text copyable-text']", 300).click()
         pyperclip.copy(message)
@@ -167,6 +179,7 @@ class Blaster:
         driver = self.driver_dict[acc]
         driver.quit()
         del self.driver_dict[acc]
+        self.unavailable_accounts.append(self.driver_path / acc)
         return acc
         # st.subheader('*** Driver-- ' + str(driver_ls[drivers_idx]) + ' is unavailable ***')
         # st.subheader('*** Drivers left: ' + str(driver_count) + ' ***')
