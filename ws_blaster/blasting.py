@@ -53,9 +53,10 @@ class Blaster:
         """
         Returns a dictionary of the number of phone numbers and a sample of 5 numbers.
         """
+        print(min(5, len(set(self.contact_numbers))))
         info_dict = {
             "len_phone_numbers":len(set(self.contact_numbers)),
-            "sample_of_5": random.sample(self.contact_numbers, 5)
+            "sample_of_5": random.sample(self.contact_numbers)
         }
         return info_dict
     
