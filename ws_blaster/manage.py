@@ -54,7 +54,8 @@ class Manage:
         Create new file user account in platform file
         """
         path_to_platform = 'user-data-dir=' + self.user_path + '\\' + str(platform) + '\\'
-        open_driver(path_to_platform + account_name, headless=False)
+        driver = open_driver(path_to_platform + account_name, headless=False)
+        WebDriverWait(driver, 300).until(EC.visibility_of_element_located((By.XPATH,'//*[@title="Search input textbox"]')))
         self.driver_dict[path_to_platform] = account_name
 
     def get_path_new_account(self, platform, account_name):
