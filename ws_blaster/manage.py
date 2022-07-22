@@ -10,9 +10,13 @@ import pathlib
 
 class Manage:
     def __init__(self, user_path):
-        self.user_path = pathlib.Path(user_path)
+        self.user_path = user_path
         self.driver_dict = {}
         self.account_dict = {}
+        self.list_dir = {}
+        self.new_account = []
+        self.available = [] # if len > 1, there is account
+        self.not_available = []
 
     def get_name(self, name):
         """
@@ -22,55 +26,67 @@ class Manage:
         name = [x.strip() for x in name]
         return name
     
-    def get_all_account_list_dir(self):
-        path_to_user = self.user_path + '/' 
-        accs = [f for f in listdir(path_to_user)]
+    def get_all_platform_list_dir(self):
+        path_to_user = self.user_path  
+        platform = [f for f in listdir(path_to_user)]
+        return platform
+
+    def get_all_account_name(self, platform):
+        path_to_accs = self.user_path  + '\\' + platform
+        accs = [f for f in listdir(path_to_accs)]
         return accs
 
-    def checking_account(self,platform):
-        accs = self.get_all_account_list_dir(self)
-        path_to_platform = 'user-data-dir=' + self.user_path + '/' + str(platform) + '/'
-
-        available = [] # if len > 1, there is account
-        not_available = []
+    def checking_account_list_dir(self,platform):
+        accs = self.get_all_account_name(platform)
+        path_to_platform = str(self.user_path) + '\\' + str(platform) + '\\' 
         for acc in accs:
-            driver = open_driver(path_to_platform + acc)
             try:
-                not_available.append(acc)
+                self.not_available.append(path_to_platform+acc)
             except:
-                available.append(acc)
-            driver.quit()
+                self.available.append(path_to_platform+acc)
+            #driver.quit()
 
-        return (available, not_available)
+        return (self.available, self.not_available)
     
         
-    def setup_new_account(self, platform, account_name):
+    def create_new_user_file(self, platform, account_name):
         """
-        Component 1 for 'Add account'
+        Create new file user account in platform file
         """
-        path_to_account = 'user-data-dir=' + self.user_path + '/' + str(platform) + '/' + account_name
-        driver = open_driver(path_to_account, headless = False)
-        self.account_dict[account_name] = driver
-    
+        path_to_platform = 'user-data-dir=' + self.user_path + '\\' + str(platform) + '\\'
+        open_driver(path_to_platform + account_name, headless=False)
+        self.driver_dict[path_to_platform] = account_name
 
+    def get_path_new_account(self, platform, account_name):
+        """
+        Return the PATH of account 
+        """
+        path_to_platform = 'user-data-dir=' + self.user_path + '\\' + str(platform) + '\\'
+        self.new_account.append(path_to_platform)
+        return path_to_platform + account_name
+
+    def activate_WS_website(self):
+        path_to_account = self.setup_path_new_account("AyuhMalaysia", "anis")
+        open_driver(path_to_account, headless=False)
+    
     def automatically_deleted_account_if_error(self, platform, name):
         """
         Component 2 for 'Add account'
         """
-        account_name = self.get_name(self, name)
-        path_to_acount = 'user-data-dir=' + self.user_path + '/' + str(platform) + '/' + account_name
+        path_to_acount =  'user-data-dir=' + self.user_path + '\\' + str(platform) + '\\' + name
         shutil.rmtree(path_to_acount)
-        self.account_dict[account_name] = 'deleted'
+        self.account_dict[name] = 'deleted'
 
-    def get_taken(self, name):
+    def get_taken(self, name, platform):
         """
         Return name_item within name list, that only exist in accs
         """
-        name = self.get_name(self, name)
-        accs = self.get_all_account_list_dir(self)
+        name = self.get_name(name)
+        accs = self.get_all_account_name(platform)
         taken = [x for x in name if x in accs]
         return taken
 
+    @property
     def get_option1(self):
         """
         Return option1 -- 'Account management'
@@ -83,5 +99,6 @@ class Manage:
         path = '/Users/amerwafiy/Desktop/ws-blasting/ws-logo.png'
         return path
 
+    @property
     def get_option_for_account_management(self):
         return  ['Add new account(s)','Check available account(s)', 'Delete unavailable account(s)']
