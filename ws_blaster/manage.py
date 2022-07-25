@@ -36,6 +36,11 @@ class Manage:
         return accs
 
     def checking_account_list_dir(self,platform):
+        """
+        Return a list of available and not-available list
+        available -> valid account
+        not-available -> banned account 
+        """
         accs = self.get_all_account_name(platform)
         #path_to_platform = str(self.user_path) + '\\' + str(platform) + '\\' 
         for acc in accs:
@@ -46,20 +51,6 @@ class Manage:
             #driver.quit()
 
         return (self.available, self.not_available)
-
-    def checking_all_account_exist(self, platform):
-        accs = self.get_all_account_name(platform)
-        path_to_platform = 'user-data-dir=' + str(self.user_path) + '\\' + str(platform) + '\\' 
-        for acc in accs:
-            driver = open_driver(path_to_platform+acc)
-            try:
-                elems = WebDriverWait(driver, 15).until(EC.visibility_of_element_located((By.PARTIAL_LINK_TEXT,'Need help to get started?')))
-                self.not_available.append(acc)
-            except:
-                self.available.append(acc)
-            driver.quit()
-
-        return self.exist_account
 
     def checking_banned_or_not(self,platform):
         accs = self.get_all_account_name(platform)
