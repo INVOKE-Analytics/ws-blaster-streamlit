@@ -1,19 +1,18 @@
 import re
 import time
-from tkinter.messagebox import NO
-import uuid
 import random
 import pathlib
 import pyperclip
 import pandas as pd
 
 from os import listdir
+from ws_blaster.utils import open_driver, save_uploadedfile
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
-from ws_blaster.utils import open_driver, save_uploadedfile
 
 class Blaster:
 
@@ -98,7 +97,7 @@ class Blaster:
         """
         Saves all the uploaded files to a `tmp` file with a unique uuid
         """
-        self.save_path = pathlib.Path("./tmp") / uuid.uuid1()
+        self.save_path = pathlib.Path("./tmp")
         self.save_path.mkdir(parents=True, exist_ok=True)
         for uploaded_file in uploaded_files:
             self.files_to_blast_paths.append(self.save_path / uploaded_file.name)

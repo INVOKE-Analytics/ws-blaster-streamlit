@@ -25,9 +25,17 @@ option1 = st.sidebar.selectbox('Select option', ('Blast Messages', 'Account Mana
 blaster = Blaster(user_path="./Users")
 if option1 == 'Blast Messages':
     st.image("images/whats-app-img.png")
-    uploaded_file = st.file_uploader("Choose a file (csv)", type='csv')
+
+    # Upload csv file to extract phone numbers
+    uploaded_file = st.file_uploader("Choose a file with phone numbers (csv)", type='csv')
     if uploaded_file is not None:
         blaster.extract_from_file(uploaded_file)
         col = st.selectbox('Select phone number column', blaster.columns)
         numbers = blaster.clean_numbers(col)
         st.json(blaster.contact_numbers_info)
+    
+    # Upload pictures
+    # if uploaded_file:
+    uploaded_imgs = st.file_uploader("Choose imgs you want to blast (png)", type='png', accept_multiple_files=True)
+    blaster.save_files_to_blast(uploaded_imgs)
+
