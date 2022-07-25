@@ -17,6 +17,7 @@ class Manage:
         self.new_account = []
         self.available = [] # if len > 1, there is account
         self.not_available = []
+        self.exist_account = self.available + self.not_available
 
     def get_name(self, name):
         """
@@ -38,15 +39,45 @@ class Manage:
 
     def checking_account_list_dir(self,platform):
         accs = self.get_all_account_name(platform)
-        path_to_platform = str(self.user_path) + '\\' + str(platform) + '\\' 
+        #path_to_platform = str(self.user_path) + '\\' + str(platform) + '\\' 
         for acc in accs:
             try:
-                self.not_available.append(path_to_platform+acc)
+                self.not_available.append(acc)
             except:
-                self.available.append(path_to_platform+acc)
+                self.available.append(acc)
             #driver.quit()
 
         return (self.available, self.not_available)
+
+    def checking_all_account_exist(self, platform):
+        accs = self.get_all_account_name(platform)
+        path_to_platform = 'user-data-dir=' + str(self.user_path) + '\\' + str(platform) + '\\' 
+        for acc in accs:
+            driver = open_driver(path_to_platform+acc)
+            try:
+                elems = WebDriverWait(driver, 15).until(EC.visibility_of_element_located((By.PARTIAL_LINK_TEXT,'Need help to get started?')))
+                self.not_available.append(acc)
+            except:
+                self.available.append(acc)
+            driver.quit()
+
+        return self.exist_account
+
+    def checking_banned_or_not(self,platform):
+        accs = self.get_all_account_name(platform)
+        path_to_platform = 'user-data-dir=' + str(self.user_path) + '\\' + str(platform) + '\\' 
+       
+        for acc in accs:
+            driver = open_driver(path_to_platform+acc)
+            try:
+                elems = WebDriverWait(driver, 15).until(EC.visibility_of_element_located((By.PARTIAL_LINK_TEXT,'Need help to get started?')))
+                self.not_available.append(acc)
+            except:
+                self.available.append(acc)
+            driver.quit()
+
+        return (self.available, self.not_available)
+
     
         
     def create_new_user_file(self, platform, account_name):
@@ -57,7 +88,7 @@ class Manage:
         driver = open_driver(path_to_platform + account_name, headless=False)
         WebDriverWait(driver, 300).until(EC.visibility_of_element_located((By.XPATH,'//*[@title="Search input textbox"]')))
         self.driver_dict[path_to_platform] = account_name
-        return driver
+        #return driver
 
     def get_path_new_account(self, platform, account_name):
         """
@@ -75,7 +106,7 @@ class Manage:
         """
         Component 2 for 'Add account'
         """
-        path_to_acount =  self.user_path + '\\' + str(platform) + '\\' + name
+        path_to_acount =  str(self.user_path) + '\\' + str(platform) + '\\' + name
         shutil.rmtree(path_to_acount)
         self.account_dict[name] = 'deleted'
 

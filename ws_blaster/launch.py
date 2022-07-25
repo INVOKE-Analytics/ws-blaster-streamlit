@@ -1,4 +1,5 @@
 from ctypes import util
+import click
 import streamlit as st
 import time
 from PIL import Image
@@ -52,11 +53,17 @@ def check_available_account():
                 select_platform = 'burner'
 
             get_acc = manage.get_all_account_name(select_platform)
-            check_all_acc_exist = manage.checking_account_list_dir()
+
+            with st.spinner('Checking Accounts...'):
+                check_all_acc_exist = manage.checking_banned_or_not(select_platform)
 
             available = check_all_acc_exist[0]
             not_available = check_all_acc_exist[1]
 
+            print("AV", available)
+            print("NOTAV", not_available)
+
+            
             if len(available) == 0:
                 st.subheader('All accounts are not available!')
                 st.subheader('Unavailable accounts: ', ', '.join(not_available))
@@ -74,21 +81,23 @@ def add_new_account():
                                 'AyuhMalaysia',
                                 'Burner Accounts'))
 
-        get_accs = manage.get_all_account_name(select_platform_new_acc)
         name = st.text_area("Enter Whatsapp account name:")
+        get_name = manage.get_name(name)
         get_taken = manage.get_taken(name, select_platform_new_acc)
 
         if len(get_taken) == 0:
             button_add_account = st.button('Add Account(s)')
             if button_add_account:
-                for name_acc in get_taken:
+                for name_acc in get_name:
                     try:
+                        print("ADDED")
                         manage.create_new_user_file(select_platform_new_acc, name_acc)
                         st.subheader(name_acc + ' added!')
                         time.sleep(1)
-                        manage.create_new_user_file.quit()
+                        #manage.create_new_user_file.quit()
                     except:
-                        manage.create_new_user_file.quit()
+                        print("NOT ADDED")
+                        #manage.create_new_user_file.quit()
                         manage.automatically_deleted_account_if_error(select_platform_new_acc, name_acc)
         elif len(get_taken) == 1:
             st.write('Account name--' + str(get_taken[0]) + ' is not available. Please choose another name!')
@@ -105,19 +114,28 @@ def deleting_account():
         if select_platform != '':
             if select_platform == 'Burner Accounts':
                 select_platform  = 'burner'
-            accs = manage.get_all_account_name(select_platform)
-            st.subheader('Accounts: ' + ', '.join(accs))
+            
+            with st.spinner('Checking unavailable account...'):
+                accs = manage.get_all_account_name(select_platform)
+                st.subheader('Accounts: ' + ', '.join(accs))
 
-            with st.spinner('Deleting Accounts...'):
-                available = manage.checking_account_list_dir(select_platform)[0]
-                not_available = manage.checking_account_list_dir(select_platform)[1]
+            
+            #available = manage.checking_account_list_dir(select_platform)[0]
+            not_available = manage.checking_banned_or_not(select_platform)[1]
+            print("HERE", not_available)
+            if len(not_available) == 0:
+                st.subheader('No account(s) to delete!')
 
-                if len(not_available) == 0:
-                    st.subheader('No account(s) to delete!')
+            else:
+                st.subheader('Unavailable account(s): ' + str(', '.join(not_available)))
+            
+                question = st.selectbox("Are you sure you want to delete the account?",
+                                        ("Yes", "No"))
 
-                else:
-                    st.subheader('Unavailable account(s): ' + str(', '.join(not_available)))
-                    manage.automatically_deleted_account_if_error(select_platform, )
+                if question == 'Yes':
+                    manage.automatically_deleted_account_if_error(select_platform, not_available)
+                elif question == 'No':
+                    st.caption("No account is deleted.")
 
 
 if option1 == 'Account Management':
@@ -128,13 +146,13 @@ if option1 == 'Account Management':
                                     'Delete unavailable account(s)'))
 
     if select_option == 'Check available account(s)':
-            check_available_account()
+            print(check_available_account())
 
     elif select_option == 'Add new account(s)':
-            add_new_account()
+            print(add_new_account())
 
     elif select_option == 'Delete unavailable account(s)':
-            deleting_account()
+            print(deleting_account())
 
 
 
