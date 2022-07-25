@@ -40,14 +40,8 @@ option1 = st.sidebar.selectbox('Select option', ('Blast Messages', 'Account Mana
 
 manage = Manage(user_path='D:\\Desktop\\INVOKE\\ws_blaster\\ahilan-branch\\venvAhilan\\ws-blaster-prod\\Users')
 
-if option1 == 'Account Management':
-    select_option = st.selectbox('Select option', 
-                            ('',
-                            'Add new account(s)',
-                            'Check available account(s)', 
-                            'Delete unavailable account(s)'))
 
-    if select_option == 'Check available account(s)':
+def check_available_account():
         select_platform = st.selectbox('Select set of accounts to check', 
                                 ('',
                                 'meniaga',
@@ -73,7 +67,7 @@ if option1 == 'Account Management':
                 st.subheader('Available account(s): ' + str(', '.join(available)))
                 st.subheader('Unavailable account(s): ' + str(', '.join(not_available)))
             
-    elif select_option == 'Add new account(s)':
+def add_new_account():
         select_platform_new_acc = st.selectbox('Where do you want to add the account(s)?', 
                                 ('',
                                 'meniaga',
@@ -89,7 +83,7 @@ if option1 == 'Account Management':
             if button_add_account:
                 for name_acc in get_taken:
                     try:
-                        create_new_acc = manage.create_new_user_file(select_platform_new_acc, name_acc)
+                        manage.create_new_user_file(select_platform_new_acc, name_acc)
                         st.subheader(name_acc + ' added!')
                         time.sleep(1)
                         manage.create_new_user_file.quit()
@@ -101,8 +95,7 @@ if option1 == 'Account Management':
         else:
             st.write(str(', '.join(get_taken)) + ' are not available. Please choose another name!')
                         
-
-    elif select_option == 'Delete unavailable account(s)':
+def deleting_account():
         select_platform = st.selectbox('From which set of account(s) do you want to delete?', 
                                 ('',
                                 'meniaga',
@@ -114,6 +107,38 @@ if option1 == 'Account Management':
                 select_platform  = 'burner'
             accs = manage.get_all_account_name(select_platform)
             st.subheader('Accounts: ' + ', '.join(accs))
+
+            with st.spinner('Deleting Accounts...'):
+                available = manage.checking_account_list_dir(select_platform)[0]
+                not_available = manage.checking_account_list_dir(select_platform)[1]
+
+                if len(not_available) == 0:
+                    st.subheader('No account(s) to delete!')
+
+                else:
+                    st.subheader('Unavailable account(s): ' + str(', '.join(not_available)))
+                    manage.automatically_deleted_account_if_error(select_platform, )
+
+
+if option1 == 'Account Management':
+    select_option = st.selectbox('Select option', 
+                                    ('',
+                                    'Add new account(s)',
+                                    'Check available account(s)', 
+                                    'Delete unavailable account(s)'))
+
+    if select_option == 'Check available account(s)':
+            check_available_account()
+
+    elif select_option == 'Add new account(s)':
+            add_new_account()
+
+    elif select_option == 'Delete unavailable account(s)':
+            deleting_account()
+
+
+
+
 
 
 
