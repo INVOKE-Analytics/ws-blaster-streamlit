@@ -14,6 +14,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 
+
 class Blaster:
 
     def __init__(self, user_path):
@@ -33,21 +34,21 @@ class Blaster:
         """
         if isinstance(self.contacts_df, pd.DataFrame):
             return self.contacts_df.columns.tolist()
-            
+
     @property
     def get_num_drivers(self) -> str:
         """
         Returns the number of drivers still available.
         """
         return f"{len(self.driver_dict)} drivers remaining"
-    
+
     @property
     def phone_numbers(self) -> list:
         """
         Returns a list of all the phone numbers to blast to.
         """
         return self.contact_numbers
-    
+
     @property
     def contact_numbers_info(self) -> dict:
         """
@@ -55,11 +56,18 @@ class Blaster:
         """
         k = min(5, len(set(self.contact_numbers)))
         info_dict = {
-            "len_phone_numbers":len(set(self.contact_numbers)),
+            "len_phone_numbers": len(set(self.contact_numbers)),
             "sample_phone_numbers": random.sample(self.contact_numbers, k)
         }
         return info_dict
-    
+
+    @property
+    def imgs(self):
+        """
+        Returns the list of images in blaster class
+        """
+        return self.imgs
+
     @property
     def blocked_accounts(self) -> list:
         """
@@ -67,22 +75,32 @@ class Blaster:
         """
         return self.unavailable_accounts
 
+    def get_random_message(self):
+        """
+        Returns a random message from all variations
+        """
+        return random.choice(self.messages)
+
     def clean_numbers(self, col: str) -> list:
         """
         Clean numbers to required format for whatsapp search
 
         col: Column name containing the numbers to blast [str]
-        
+
         Returns dataframe with cleaned numbers
         """
         self.contacts_df[col] = self.contacts_df[col].astype(str)
-        self.contacts_df[col] = [re.sub("[^0-9]", "", x) for x in self.contacts_df[col]]
+        self.contacts_df[col] = [re.sub("[^0-9]", "", x)
+                                 for x in self.contacts_df[col]]
         self.contacts_df = self.contacts_df[self.contacts_df[col] != '']
-        self.contacts_df[col] = ['60' + x if (x[0] == '1' and 8 < len(x) < 11) else x for x in self.contacts_df[col]]
-        self.contacts_df[col] = ['6' + x if (x[0] == '0' and 9 < len(x) < 12) else x for x in self.contacts_df[col]]
-        self.contacts_df[col] = ['' if (x[2] != '1' or len(x) > 12 or len(x) < 11) else x for x in self.contacts_df[col]]
+        self.contacts_df[col] = [
+            '60' + x if (x[0] == '1' and 8 < len(x) < 11) else x for x in self.contacts_df[col]]
+        self.contacts_df[col] = [
+            '6' + x if (x[0] == '0' and 9 < len(x) < 12) else x for x in self.contacts_df[col]]
+        self.contacts_df[col] = ['' if (x[2] != '1' or len(
+            x) > 12 or len(x) < 11) else x for x in self.contacts_df[col]]
         self.contacts_df = self.contacts_df[self.contacts_df[col] != '']
-        self.contacts_df = self.contacts_df.drop_duplicates(subset = col)
+        self.contacts_df = self.contacts_df.drop_duplicates(subset=col)
         self.contact_numbers = self.contacts_df[col].to_list()
         return self.contact_numbers
 
@@ -92,7 +110,7 @@ class Blaster:
         Currently only accepts csv files.
         """
         self.contacts_df = pd.read_csv(file)
-    
+
     def save_files_to_blast(self, uploaded_files) -> None:
         """
         Saves all the uploaded files to a `tmp` file with a unique uuid
@@ -100,21 +118,23 @@ class Blaster:
         self.save_path = pathlib.Path("./tmp")
         self.save_path.mkdir(parents=True, exist_ok=True)
         for uploaded_file in uploaded_files:
-            self.files_to_blast_paths.append(self.save_path / uploaded_file.name)
-            save_uploadedfile(uploaded_file, uploaded_file.name, self.save_path)
+            self.files_to_blast_paths.append(
+                self.save_path / uploaded_file.name)
+            save_uploadedfile(
+                uploaded_file, uploaded_file.name, self.save_path)
 
     def add_message_variations_to_blast(self, message) -> None:
         """
         Append all the variations of a message to send to a list to be used later.
         """
         self.messages.append(message)
-    
+
     def setup_drivers_in_account(self, platform, headless=False) -> None:
         """
         Load the driver for all whats app accounts under platform
         """
-        self.driver_path = self.user_path / platform 
-        for acc in  listdir(self.driver_path):
+        self.driver_path = self.user_path / platform
+        for acc in listdir(self.driver_path):
             data_dir = "user-data-dir=" + str(self.driver_path / acc)
             driver = open_driver(data_dir, headless=headless)
             self.driver_dict[acc] = driver
@@ -137,7 +157,8 @@ class Blaster:
         """
         Get the selenium object associated with the element in the DOM Tree
         """
-        elm = WebDriverWait(driver, wait).until(EC.visibility_of_element_located((By.XPATH, xpath)))
+        elm = WebDriverWait(driver, wait).until(
+            EC.visibility_of_element_located((By.XPATH, xpath)))
         return elm
 
     def send_file(self, driver, file_path, sleep=2) -> None:
@@ -147,31 +168,35 @@ class Blaster:
         it can't find the element
         """
         self._select_elm(driver, "//span[@data-testid='clip']", 300).click()
-        driver.find_element(By.CSS_SELECTOR, "input[type='file']").send_keys(file_path)
+        driver.find_element(
+            By.CSS_SELECTOR, "input[type='file']").send_keys(file_path)
         self._select_elm(driver, '//*[@class="_165_h _2HL9j"]', 5).click()
         time.sleep(sleep)
-    
+
     def send_message(self, driver, message, sleep=2) -> None:
         """
         Send the message in the chat
         Raises a selenium.common.exceptions.TimeoutException Message if 
         it can't find the element
         """
-        self._select_elm(driver, "//p[@class='selectable-text copyable-text']", 300).click()
+        self._select_elm(
+            driver, "//p[@class='selectable-text copyable-text']", 300).click()
         pyperclip.copy(message)
-        ActionChains(driver).key_down(Keys.CONTROL).send_keys('v').key_up(Keys.CONTROL).perform()
+        ActionChains(driver).key_down(Keys.CONTROL).send_keys(
+            'v').key_up(Keys.CONTROL).perform()
         time.sleep(sleep)
         self._select_elm(driver, "//span[@data-testid='send']", 5).click()
-    
+
     def check_if_unavailable(self, acc) -> bool:
         """
         Check if the number is unavailable in the chat 
         """
         driver = self.driver_dict[acc]
-        elm = driver.find_elements(by=By.PARTIAL_LINK_TEXT, value='Need help to get started?')
+        elm = driver.find_elements(
+            by=By.PARTIAL_LINK_TEXT, value='Need help to get started?')
         elm_is_present = bool(len(elm) > 0 and elm[0].is_displayed())
         return elm_is_present
-    
+
     def remove_driver(self, acc) -> str:
         """
         Remove the driver if the driver becomes unavailable
@@ -185,18 +210,18 @@ class Blaster:
         # st.subheader('*** Driver-- ' + str(driver_ls[drivers_idx]) + ' is unavailable ***')
         # st.subheader('*** Drivers left: ' + str(driver_count) + ' ***')
         # st.subheader('### ALL ACCOUNTS ARE CURRENTLY UNAVAILABLE! BLASTING STOPPED AT INDEX: ' + str(i) + '###')
-    
+
     def apply_random_wait(self, count) -> None:
         """
         Apply some random wait time to lower the risk of accounts gettig banned
         """
         if count % 300 == 0 and count != 0:
-            time.sleep(random.randint(500,1000))
-        elif count % 10 == 0 and count!= 0:
-            time.sleep(random.randint(5,10))
+            time.sleep(random.randint(500, 1000))
+        elif count % 10 == 0 and count != 0:
+            time.sleep(random.randint(5, 10))
             return 'Numbers gone through: ' + str(count) + ', Messages sent: ' + str(count)
         else:
-            time.sleep(random.randint(2,5))        
+            time.sleep(random.randint(2, 5))
 
     def close_drivers(self) -> None:
         """
@@ -204,8 +229,3 @@ class Blaster:
         """
         for driver in self.driver_dict.values():
             driver.quit()
-
-
-
-    
-

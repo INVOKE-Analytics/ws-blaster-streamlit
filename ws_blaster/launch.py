@@ -1,5 +1,8 @@
+from re import A
 import time
+import random
 import streamlit as st
+
 
 from PIL import Image
 from ws_blaster.blasting import Blaster
@@ -61,10 +64,17 @@ if option1 == 'Blast Messages':
         st.info("Setting up Web Drivers")
         blaster.setup_drivers_in_account(platform, headless=True)
         start = st.button('Start Blasting')
+        percent_complete = 0
         if start:
-            my_progress = st.progress(0)
-            for percent_complete in range(100):
-                time.sleep(0.1)
-                # st.write('hello')
-                my_progress.progress(percent_complete + 1)
+            my_progress = st.progress(0.0)
+            for i, number in enumerate(numbers):
+                acc, driver = blaster.nav_to_number(number)
+                # is_unavailable = blaster.check_if_unavailable(acc)
+                # if not is_unavailable:
+                message = blaster.get_random_message()
+                # if blaster.imgs:
+                #     blaster.send_file()
+                blaster.send_message(driver, message)
+                my_progress.progress(i+1/len(numbers))
+            blaster.close_drivers()
             st.success("Messages sent to all numbers")
