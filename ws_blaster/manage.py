@@ -21,18 +21,16 @@ class Manage:
 
     def get_name(self, name):
         """
-        Return list of name
+        Return name in list data type
         """
         name = name.split(',') 
         name = [x.strip() for x in name]
         return name
-    
-    def get_all_platform_list_dir(self):
-        path_to_user = self.user_path  
-        platform = [f for f in listdir(path_to_user)]
-        return platform
 
     def get_all_account_name(self, platform):
+        """
+        Return a list of directory of platform
+        """
         path_to_accs = self.user_path  + '\\' + platform
         accs = [f for f in listdir(path_to_accs)]
         return accs
