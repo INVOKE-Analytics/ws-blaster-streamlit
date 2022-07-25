@@ -37,7 +37,7 @@ class Manage:
 
     def checking_account_list_dir(self,platform):
         """
-        Return a list of available and not-available list
+        Return a list of available and not-available name list
         available -> valid account
         not-available -> banned account 
         """
@@ -53,6 +53,11 @@ class Manage:
         return (self.available, self.not_available)
 
     def checking_banned_or_not(self,platform):
+        """
+        Return list of available and not-available 
+        account.
+        Checking whether the account is banned or not. 
+        """
         accs = self.get_all_account_name(platform)
         path_to_platform = 'user-data-dir=' + str(self.user_path) + '\\' + str(platform) + '\\' 
        
@@ -78,22 +83,10 @@ class Manage:
         WebDriverWait(driver, 300).until(EC.visibility_of_element_located((By.XPATH,'//*[@title="Search input textbox"]')))
         self.driver_dict[path_to_platform] = account_name
         #return driver
-
-    def get_path_new_account(self, platform, account_name):
-        """
-        Return the PATH of account 
-        """
-        path_to_platform = 'user-data-dir=' + self.user_path + '\\' + str(platform) + '\\'
-        self.new_account.append(path_to_platform)
-        return path_to_platform + account_name
-
-    def activate_WS_website(self):
-        path_to_account = self.get_path_new_account("AyuhMalaysia", "anis")
-        open_driver(path_to_account, headless=False)
     
     def automatically_deleted_account_if_error(self, platform, name):
         """
-        Component 2 for 'Add account'
+        Delete account if error happened.
         """
         path_to_acount =  str(self.user_path) + '\\' + str(platform) + '\\' + name
         shutil.rmtree(path_to_acount)
@@ -101,26 +94,9 @@ class Manage:
 
     def get_taken(self, name, platform):
         """
-        Return name_item within name list, that only exist in accs
+        Return list of the account name, if the account is existed (added)
         """
         name = self.get_name(name)
         accs = self.get_all_account_name(platform)
         taken = [x for x in name if x in accs]
         return taken
-
-    @property
-    def get_option1(self):
-        """
-        Return option1 -- 'Account management'
-        """
-        option1 = 'Account Management'
-        return option1
-
-    @property
-    def ws_logo(self):
-        path = '/Users/amerwafiy/Desktop/ws-blasting/ws-logo.png'
-        return path
-
-    @property
-    def get_option_for_account_management(self):
-        return  ['Add new account(s)','Check available account(s)', 'Delete unavailable account(s)']
