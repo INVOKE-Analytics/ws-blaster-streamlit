@@ -67,7 +67,7 @@ class Manage:
         return path_to_platform + account_name
 
     def activate_WS_website(self):
-        path_to_account = self.setup_path_new_account("AyuhMalaysia", "anis")
+        path_to_account = self.get_path_new_account("AyuhMalaysia", "anis")
         open_driver(path_to_account, headless=False)
     
     def automatically_deleted_account_if_error(self, platform, name):
