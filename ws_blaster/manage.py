@@ -74,7 +74,7 @@ class Manage:
         """
         Component 2 for 'Add account'
         """
-        path_to_acount =  'user-data-dir=' + self.user_path + '\\' + str(platform) + '\\' + name
+        path_to_acount =  self.user_path + '\\' + str(platform) + '\\' + name
         shutil.rmtree(path_to_acount)
         self.account_dict[name] = 'deleted'
 
