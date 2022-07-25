@@ -3,3 +3,4 @@ selenium
 pyperclip
 pandas
 pytest
+webdriver-manager
