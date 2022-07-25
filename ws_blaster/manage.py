@@ -70,7 +70,7 @@ class Manage:
         for acc in accs:
             driver = open_driver(path_to_platform+acc)
             try:
-                elems = WebDriverWait(driver, 15).until(EC.visibility_of_element_located((By.PARTIAL_LINK_TEXT,'Need help to get started?')))
+                elems = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.PARTIAL_LINK_TEXT,'Need help to get started?')))
                 self.not_available.append(acc)
             except:
                 self.available.append(acc)
