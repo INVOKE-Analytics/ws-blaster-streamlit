@@ -23,14 +23,13 @@ invoke_logo = Image.open(invoke_logo_path)
 ws_logo = Image.open(ws_logo_path)
 st.sidebar.title('Whatsapp Blaster')
 st.sidebar.image(invoke_logo)
-
+st.image(ws_logo)
 option1 = st.sidebar.selectbox('Select option', ('Blast Messages', 'Account Management'))
 
 # BLASTING
 blaster = Blaster(user_path='D:\\Desktop\\INVOKE\\ws_blaster\\ahilan-branch\\venvAhilan\\ws-blaster-prod\\Users')
 
 if option1 == 'Blast Messages':
-    st.image(ws_logo_path)
 
     option2 = st.selectbox('How do you to want define your contacts to blast?', ('Upload contact file (csv/xlsx)', 'Manual input',))
 
@@ -57,11 +56,13 @@ if option1 == 'Blast Messages':
         contacts = [x.strip() for x in contacts]
         
         details = {'phone':contacts}
-        dataframe = 
-        print("DATAFRAME", dataframe)
+        dataframe = pd.DataFrame(details)
+        blaster.extract_from_file()
+        print(blaster.columns)
+        
         #print(str(dataframe.columns[-1]))
         #print(type(str(dataframe.columns[-1])))
-        contacts = blaster.clean_numbers(str(dataframe.columns[-1])) # return clean df
-        if len(contacts) == 0 :
-            st.write('Please make sure your numbers are in the right format')
+        contacts = blaster.clean_numbers(contact_df.columns) # return clean df
+        #if len(contacts) == 0 :
+            #st.write('Please make sure your numbers are in the right format')
         
