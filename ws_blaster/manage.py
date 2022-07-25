@@ -57,6 +57,7 @@ class Manage:
         driver = open_driver(path_to_platform + account_name, headless=False)
         WebDriverWait(driver, 300).until(EC.visibility_of_element_located((By.XPATH,'//*[@title="Search input textbox"]')))
         self.driver_dict[path_to_platform] = account_name
+        return driver
 
     def get_path_new_account(self, platform, account_name):
         """
