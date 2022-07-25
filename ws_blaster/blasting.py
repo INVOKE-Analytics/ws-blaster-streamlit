@@ -1,5 +1,6 @@
 import re
 import time
+from tkinter.messagebox import NO
 import uuid
 import random
 import pathlib
@@ -53,10 +54,10 @@ class Blaster:
         """
         Returns a dictionary of the number of phone numbers and a sample of 5 numbers.
         """
-        print(min(5, len(set(self.contact_numbers))))
+        k = min(5, len(set(self.contact_numbers)))
         info_dict = {
             "len_phone_numbers":len(set(self.contact_numbers)),
-            "sample_of_5": random.sample(self.contact_numbers)
+            "sample_phone_numbers": random.sample(self.contact_numbers, k)
         }
         return info_dict
     
@@ -86,14 +87,14 @@ class Blaster:
         self.contact_numbers = self.contacts_df[col].to_list()
         return self.contact_numbers
 
-    def extract_from_file(self, file):
+    def extract_from_file(self, file) -> None:
         # TODO: Extend for other file formats
         """
         Currently only accepts csv files.
         """
         self.contacts_df = pd.read_csv(file)
     
-    def save_files_to_blast(self, uploaded_files):
+    def save_files_to_blast(self, uploaded_files) -> None:
         """
         Saves all the uploaded files to a `tmp` file with a unique uuid
         """
@@ -103,13 +104,13 @@ class Blaster:
             self.files_to_blast_paths.append(self.save_path / uploaded_file.name)
             save_uploadedfile(uploaded_file, uploaded_file.name, self.save_path)
 
-    def add_message_variations_to_blast(self, message):
+    def add_message_variations_to_blast(self, message) -> None:
         """
         Append all the variations of a message to send to a list to be used later.
         """
         self.messages.append(message)
     
-    def setup_drivers_in_account(self, platform, headless=False):
+    def setup_drivers_in_account(self, platform, headless=False) -> None:
         """
         Load the driver for all whats app accounts under platform
         """
@@ -120,7 +121,7 @@ class Blaster:
             self.driver_dict[acc] = driver
             time.sleep(10)
 
-    def nav_to_number(self, phone_number, sleep=5):
+    def nav_to_number(self, phone_number, sleep=5) -> None:
         """
         Navigate to the given URL and open a chat for a given phone number
         Returns the account name and the driver for that account
@@ -140,7 +141,7 @@ class Blaster:
         elm = WebDriverWait(driver, wait).until(EC.visibility_of_element_located((By.XPATH, xpath)))
         return elm
 
-    def send_file(self, driver, file_path, sleep=2):
+    def send_file(self, driver, file_path, sleep=2) -> None:
         """
         Send the requested files in the chat 
         Raises a selenium.common.exceptions.TimeoutException Message if 
@@ -151,7 +152,7 @@ class Blaster:
         self._select_elm(driver, '//*[@class="_165_h _2HL9j"]', 5).click()
         time.sleep(sleep)
     
-    def send_message(self, driver, message, sleep=2):
+    def send_message(self, driver, message, sleep=2) -> None:
         """
         Send the message in the chat
         Raises a selenium.common.exceptions.TimeoutException Message if 
@@ -163,7 +164,7 @@ class Blaster:
         time.sleep(sleep)
         self._select_elm(driver, "//span[@data-testid='send']", 5).click()
     
-    def check_if_unavailable(self, acc):
+    def check_if_unavailable(self, acc) -> bool:
         """
         Check if the number is unavailable in the chat 
         """
@@ -172,7 +173,7 @@ class Blaster:
         elm_is_present = bool(len(elm) > 0 and elm[0].is_displayed())
         return elm_is_present
     
-    def remove_driver(self, acc):
+    def remove_driver(self, acc) -> str:
         """
         Remove the driver if the driver becomes unavailable
         """
@@ -186,7 +187,7 @@ class Blaster:
         # st.subheader('*** Drivers left: ' + str(driver_count) + ' ***')
         # st.subheader('### ALL ACCOUNTS ARE CURRENTLY UNAVAILABLE! BLASTING STOPPED AT INDEX: ' + str(i) + '###')
     
-    def apply_random_wait(self, count):
+    def apply_random_wait(self, count) -> None:
         """
         Apply some random wait time to lower the risk of accounts gettig banned
         """
@@ -198,7 +199,7 @@ class Blaster:
         else:
             time.sleep(random.randint(2,5))        
 
-    def close_drivers(self):
+    def close_drivers(self) -> None:
         """
         Close all open drivers once blasting has completed.
         """

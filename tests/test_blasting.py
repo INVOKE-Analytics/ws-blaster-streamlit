@@ -1,4 +1,3 @@
-import time
 import pytest
 import pandas as pd
 from ws_blaster.blasting import Blaster
