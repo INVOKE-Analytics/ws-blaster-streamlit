@@ -1,7 +1,6 @@
 import streamlit as st
 
 from PIL import Image
-from ws_blaster.manage import Manage
 from ws_blaster.blasting import Blaster
 
 
