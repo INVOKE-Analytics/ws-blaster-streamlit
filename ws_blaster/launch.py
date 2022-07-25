@@ -60,10 +60,6 @@ def check_available_account():
             available = check_all_acc_exist[0]
             not_available = check_all_acc_exist[1]
 
-            print("AV", available)
-            print("NOTAV", not_available)
-
-            
             if len(available) == 0:
                 st.subheader('All accounts are not available!')
                 st.subheader('Unavailable accounts: ', ', '.join(not_available))
@@ -146,13 +142,13 @@ if option1 == 'Account Management':
                                     'Delete unavailable account(s)'))
 
     if select_option == 'Check available account(s)':
-            print(check_available_account())
+            check_available_account()
 
     elif select_option == 'Add new account(s)':
-            print(add_new_account())
+            add_new_account()
 
     elif select_option == 'Delete unavailable account(s)':
-            print(deleting_account())
+            deleting_account()
 
 
 
