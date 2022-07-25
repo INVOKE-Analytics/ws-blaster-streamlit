@@ -172,6 +172,7 @@ class Blaster:
             By.CSS_SELECTOR, "input[type='file']").send_keys(file_path)
         self._select_elm(driver, '//*[@class="_165_h _2HL9j"]', 5).click()
         time.sleep(sleep)
+        return 'sent'
 
     def send_message(self, driver, message, sleep=2) -> None:
         """
@@ -186,6 +187,7 @@ class Blaster:
             'v').key_up(Keys.CONTROL).perform()
         time.sleep(sleep)
         self._select_elm(driver, "//span[@data-testid='send']", 5).click()
+        return 'sent'
 
     def check_if_unavailable(self, acc) -> bool:
         """
@@ -219,7 +221,7 @@ class Blaster:
             time.sleep(random.randint(500, 1000))
         elif count % 10 == 0 and count != 0:
             time.sleep(random.randint(5, 10))
-            return 'Numbers gone through: ' + str(count) + ', Messages sent: ' + str(count)
+            # return 'Numbers gone through: ' + str(count) + ', Messages sent: ' + str(count)
         else:
             time.sleep(random.randint(2, 5))
 

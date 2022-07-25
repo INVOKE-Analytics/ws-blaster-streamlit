@@ -60,21 +60,19 @@ if option1 == 'Blast Messages':
                                 ('Select', 'meniaga', 'AyuhMalaysia', "Burner Accounts"))
 
     # Start Blasting
+    # TODO: Check if unavailable and send pictures
     if uploaded_file and platform != "Select":
-        st.info("Setting up Web Drivers")
-        blaster.setup_drivers_in_account(platform, headless=True)
         start = st.button('Start Blasting')
         percent_complete = 0
         if start:
+            st.info("Setting up Web Drivers")
+            blaster.setup_drivers_in_account(platform, headless=False)
             my_progress = st.progress(0.0)
             for i, number in enumerate(numbers):
                 acc, driver = blaster.nav_to_number(number)
-                # is_unavailable = blaster.check_if_unavailable(acc)
-                # if not is_unavailable:
                 message = blaster.get_random_message()
-                # if blaster.imgs:
-                #     blaster.send_file()
-                blaster.send_message(driver, message)
+                status = blaster.send_message(driver, message)
                 my_progress.progress(i+1/len(numbers))
-            blaster.close_drivers()
+                blaster.apply_random_wait(i)
             st.success("Messages sent to all numbers")
+            blaster.close_drivers()
