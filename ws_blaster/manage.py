@@ -70,7 +70,7 @@ class Manage:
         """
         Delete account if error happened.
         """
-        path_to_acount =  str(self.user_path) + '\\' + str(platform) + '\\' + name
+        path_to_acount =  str(self.user_path) + '\\' + str(platform) + '\\' + str(name)
         shutil.rmtree(path_to_acount)
         self.account_dict[name] = 'deleted'
 
@@ -86,6 +86,6 @@ class Manage:
     def take_screenshot(self):
         driver = open_driver(self.user_path)
         WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.PARTIAL_LINK_TEXT,'Need help to get started?')))
-        driver.save_screenshot('./whatsapp_login.png')
+        driver.save_screenshot('.\\ws-blaster-prod\\ws_blaster\\screenshot\\whatsapp_login.png')
         ss = 'screenshot'
-        self.take_screenshot.append(ss)
+        self.screenshot.append(ss)
