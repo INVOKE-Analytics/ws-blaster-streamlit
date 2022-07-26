@@ -18,6 +18,7 @@ class Manage:
         self.available = [] # if len > 1, there is account
         self.not_available = []
         self.exist_account = self.available + self.not_available
+        self.screenshot = []
 
     def get_name(self, name):
         """
@@ -34,23 +35,6 @@ class Manage:
         path_to_accs = self.user_path  + '\\' + platform
         accs = [f for f in listdir(path_to_accs)]
         return accs
-
-    def checking_account_list_dir(self,platform):
-        """
-        Return a list of available and not-available name list
-        available -> valid account
-        not-available -> banned account 
-        """
-        accs = self.get_all_account_name(platform)
-        #path_to_platform = str(self.user_path) + '\\' + str(platform) + '\\' 
-        for acc in accs:
-            try:
-                self.not_available.append(acc)
-            except:
-                self.available.append(acc)
-            #driver.quit()
-
-        return (self.available, self.not_available)
 
     def checking_banned_or_not(self,platform):
         """
@@ -72,8 +56,6 @@ class Manage:
 
         return (self.available, self.not_available)
 
-    
-        
     def create_new_user_file(self, platform, account_name):
         """
         Create new file user account in platform file
@@ -100,3 +82,10 @@ class Manage:
         accs = self.get_all_account_name(platform)
         taken = [x for x in name if x in accs]
         return taken
+
+    def take_screenshot(self):
+        driver = open_driver(self.user_path)
+        WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.PARTIAL_LINK_TEXT,'Need help to get started?')))
+        driver.save_screenshot('./whatsapp_login.png')
+        ss = 'screenshot'
+        self.take_screenshot.append(ss)
