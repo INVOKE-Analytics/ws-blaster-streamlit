@@ -180,13 +180,17 @@ class Blaster:
         Raises a selenium.common.exceptions.TimeoutException Message if 
         it can't find the element
         """
+        # Debug this in headless mode
+        driver.get_screenshot_as_file("screenshot1.png")
         self._select_elm(
             driver, "//p[@class='selectable-text copyable-text']", 300).click()
         pyperclip.copy(message)
         ActionChains(driver).key_down(Keys.CONTROL).send_keys(
             'v').key_up(Keys.CONTROL).perform()
         time.sleep(sleep)
+        driver.get_screenshot_as_file("screenshot2.png")
         self._select_elm(driver, "//span[@data-testid='send']", 5).click()
+        driver.get_screenshot_as_file("screenshot3.png")
         return 'sent'
 
     def check_if_unavailable(self, acc) -> bool:
