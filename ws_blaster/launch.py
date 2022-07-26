@@ -118,20 +118,31 @@ def deleting_account():
             
             #available = manage.checking_account_list_dir(select_platform)[0]
             not_available = manage.checking_banned_or_not(select_platform)[1]
-            print("HERE", not_available)
+            
             if len(not_available) == 0:
                 st.subheader('No account(s) to delete!')
 
-            else:
-                st.subheader('Unavailable account(s): ' + str(', '.join(not_available)))
-            
+            elif len(not_available) == 1:
+                st.subheader('Unavailable account(s): ' + str(', '.join(not_av)))
+                
                 question = st.selectbox("Are you sure you want to delete the account?",
-                                        ("Yes", "No"))
+                                            ("Yes", "No"))
 
                 if question == 'Yes':
-                    manage.automatically_deleted_account_if_error(select_platform, not_available)
+                    manage.automatically_deleted_account_if_error(select_platform, not_av)
                 elif question == 'No':
                     st.caption("No account is deleted.")
+            else:
+                for not_av in not_available:
+                    st.subheader('Unavailable account(s): ' + str(', '.join(not_av)))
+                
+                    question = st.selectbox("Are you sure you want to delete the account?",
+                                            ("Yes", "No"))
+
+                    if question == 'Yes':
+                        manage.automatically_deleted_account_if_error(select_platform, not_av)
+                    elif question == 'No':
+                        st.caption("No account is deleted.")
 
 
 if option1 == 'Account Management':
