@@ -1,4 +1,4 @@
-import os 
+import os
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
@@ -12,11 +12,11 @@ def save_uploadedfile(uploadedfile, file_name, path):
     file_name: File name of the uploaded file
     path: Path directory on where to save the file
     '''
-    with open(os.path.join(path,file_name),"wb") as f:
+    with open(os.path.join(path, file_name), "wb") as f:
         f.write(uploadedfile.getbuffer())
 
 
-def open_driver(user_path, headless = False):
+def open_driver(user_path, headless=True):
     '''
     Opens chromedriver and initialize Whatsapp web
 
@@ -31,10 +31,13 @@ def open_driver(user_path, headless = False):
         
     if headless:
         chrome_options.add_argument('--disable-gpu')
-        chrome_options.add_argument('--headless')
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--window-size=1920,1080")
         # Specify user-agent to allow headless mode
-        chrome_options.add_argument('user-agent=User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36')
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),options=chrome_options)
+        chrome_options.add_argument(
+            "user-agent=User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36")
+    driver = webdriver.Chrome(service=Service(
+        ChromeDriverManager().install()), options=chrome_options)
     driver.get('https://web.whatsapp.com/')
-    driver.execute_script('window.onbeforeunload = function() {};')
+    driver.execute_script("window.onbeforeunload = function() {};")
     return driver
