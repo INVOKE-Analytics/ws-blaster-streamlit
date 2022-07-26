@@ -54,6 +54,7 @@ class Blaster:
         """
         Returns a dictionary of the number of phone numbers and a sample of 5 numbers
         """
+        k = min(5, len(set(self.contact_numbers)))
         info_dict = {
             "len_phone_numbers": len(set(self.contact_numbers)),
             "sample_phone_numbers": random.sample(self.contact_numbers, k)
@@ -160,7 +161,7 @@ class Blaster:
             EC.visibility_of_element_located((By.XPATH, xpath)))
         return elm
 
-    def send_file(self, driver, file, sleep=2):
+    def send_file(self, driver, file_path, sleep=2):
         """
         Send the requested files in the chat 
         """
