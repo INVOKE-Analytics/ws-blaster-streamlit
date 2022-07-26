@@ -4,3 +4,4 @@ pyperclip
 pandas
 pytest
 webdriver-manager
+autopep8
