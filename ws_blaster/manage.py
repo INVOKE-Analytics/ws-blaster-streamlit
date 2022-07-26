@@ -69,7 +69,7 @@ class Manage:
         driver = open_driver(path_to_platform + account_name, headless=False)
         WebDriverWait(driver, 300).until(EC.visibility_of_element_located((By.XPATH,'//*[@title="Search input textbox"]')))
         self.driver_dict[path_to_platform] = account_name
-        #return driver
+        return driver
     
     def automatically_deleted_account_if_error(self, platform, name):
         """
