@@ -56,6 +56,11 @@ class Manage:
 
         return (self.available, self.not_available)
 
+    def take_screenshot(self, driver):
+        driver.save_screenshot('.\\ws-blaster-prod\\ws_blaster\\screenshot\\whatsapp_login.png')
+        ss = 'screenshot'
+        self.screenshot.append(ss)
+
     def create_new_user_file(self, platform, account_name):
         """
         Create new file user account in platform file
@@ -63,6 +68,7 @@ class Manage:
         path_to_platform = 'user-data-dir=' + self.user_path + '\\' + str(platform) + '\\'
         driver = open_driver(path_to_platform + account_name, headless=False)
         WebDriverWait(driver, 300).until(EC.visibility_of_element_located((By.XPATH,'//*[@title="Search input textbox"]')))
+        self.take_screenshot(driver)
         self.driver_dict[path_to_platform] = account_name
         #return driver
     
@@ -83,9 +89,4 @@ class Manage:
         taken = [x for x in name if x in accs]
         return taken
 
-    def take_screenshot(self):
-        driver = open_driver(self.user_path)
-        WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.PARTIAL_LINK_TEXT,'Need help to get started?')))
-        driver.save_screenshot('.\\ws-blaster-prod\\ws_blaster\\screenshot\\whatsapp_login.png')
-        ss = 'screenshot'
-        self.screenshot.append(ss)
+
