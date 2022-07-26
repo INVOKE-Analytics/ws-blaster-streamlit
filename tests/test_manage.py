@@ -14,28 +14,28 @@ def test_get_all_account_name():
 
 def test_checking_banned_or_not():
     get_acc = manage.checking_banned_or_not("meniaga")
-    test_av = []
-    test_not_av = ['Ammar', 'Ahilan']
+    test_av = ['Ahilan']
+    test_not_av = ['Ammar']
     assert get_acc[0] == test_av
     assert get_acc[1] == test_not_av
 
 def test_create_new_user_file():
-    manage.create_new_user_file('meniaga', 'Ammar')
+    manage.create_new_user_file('meniaga', 'Zabir')
     assert len(manage.driver_dict) == 1
 
 def test_automatically_deleted_account_if_error():
     # TODO: Test still FAILED
-    manage.create_new_user_file('meniaga', 'Ammar')
-    manage.automatically_deleted_account_if_error('meniaga', 'Ammar')
+    manage.create_new_user_file('meniaga', 'Zabir')
+    manage.automatically_deleted_account_if_error('meniaga', 'Zabir')
     assert len(manage.account_dict) == 1
 
 def test_taken():
-    test_input = manage.get_taken('sharafi','meniaga')
-    assert test_input == ['sharafi']
+    test_input = manage.get_taken('Ammar','meniaga')
+    assert test_input == ['Ammar']
 
 def test_take_screenshot():
     manage.take_screenshot()
-    assert len(manage.take_screenshot) == 1
+    assert len(manage.screenshot) == 1
 
     
 
