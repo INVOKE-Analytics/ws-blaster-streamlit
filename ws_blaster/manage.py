@@ -67,8 +67,8 @@ class Manage:
         """
         path_to_platform = 'user-data-dir=' + self.user_path + '\\' + str(platform) + '\\'
         driver = open_driver(path_to_platform + account_name, headless=False)
-        WebDriverWait(driver, 300).until(EC.visibility_of_element_located((By.XPATH,'//*[@title="Search input textbox"]')))
         self.take_screenshot(driver)
+        WebDriverWait(driver, 300).until(EC.visibility_of_element_located((By.XPATH,'//*[@title="Search input textbox"]')))
         self.driver_dict[path_to_platform] = account_name
         #return driver
     
