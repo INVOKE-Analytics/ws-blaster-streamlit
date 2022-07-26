@@ -7,11 +7,6 @@ manage = Manage(user_path='D:\\Desktop\\INVOKE\\ws_blaster\\ahilan-branch\\venvA
 def test_get_name():
     assert manage.get_name("Sharafi, Anis") == ['Sharafi', 'Anis']
 
-def test_get_all_platform_list_dir():
-    test_fx = manage.get_all_platform_list_dir()
-    exp_output = ['AyuhMalaysia', 'burner', 'meniaga']
-    assert test_fx == exp_output
-
 def test_get_all_account_name():
     test_fx = manage.get_all_account_name("meniaga")
     exp_output = ['Ammar', 'sharafi']
@@ -29,11 +24,6 @@ def test_create_new_user_file():
     manage.create_new_user_file('meniaga', 'Ammar')
     assert len(manage.driver_dict) == 1
 
-def test_setup_path_new_account():
-    add_new_account = manage.get_path_new_account("meniaga", "Ammar")
-    assert add_new_account == 'user-data-dir=D:\\Desktop\\INVOKE\\ws_blaster\\ahilan-branch\\venvAhilan\\ws-blaster-prod\\Users\\meniaga\\Ammar'
-
-
 def test_automatically_deleted_account_if_error():
     # TODO: Test still FAILED
     manage.create_new_user_file('meniaga', 'Ammar')
@@ -45,9 +35,4 @@ def test_taken():
     assert test_input == ['sharafi']
 
     
-def test_get_option1():
-    test_input = 'Account Management'
-    assert test_input == 'Account Management'
 
-def get_option_for_account_management():
-    assert isinstance(manage.get_option_for_account_management, list)
