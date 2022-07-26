@@ -47,8 +47,8 @@ def test_automatically_deleted_account_if_error():
     """
     Create account and delete the account.
     """
-    manage.create_new_user_file('meniaga', 'Ammar') # create
-    manage.automatically_deleted_account_if_error('meniaga', 'Ammar') # delete
+    manage.create_new_user_file('meniaga', 'Ammar2') # create
+    manage.automatically_deleted_account_if_error('meniaga', 'Ammar2') # delete
     assert len(manage.account_dict) == 1
 
 def test_taken():
@@ -61,11 +61,14 @@ def test_taken():
 
 def test_take_screenshot():
     """
+    TODO: Test still fail. Try tomorrow.
     Take the screenshot of the QR code.
     """
-    driver = open_driver(manage.user_path)
-    WebDriverWait(driver, 300).until(EC.visibility_of_element_located((By.XPATH,'//*[@title="Search input textbox"]')))
+    driver = manage.create_new_user_file('meniaga', 'Ammar3') # DO NOT SCAN
+    driver.maximize_window()
+    WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.PARTIAL_LINK_TEXT,'Need help to get started?')))
     manage.take_screenshot(driver)
+    driver.quit()
     assert len(manage.screenshot) == 1
 
     
