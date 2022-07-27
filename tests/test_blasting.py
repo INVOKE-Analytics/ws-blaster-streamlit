@@ -30,7 +30,7 @@ def test_clean_numbers():
 
 
 def test_setup_drivers_in_account():
-    blaster.setup_drivers_in_account("AyuhMalaysia")
+    blaster.setup_drivers_in_account("burner")
     assert len(blaster.driver_dict) == 1
 
 
