@@ -2,6 +2,7 @@ import os
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
+from pyvirtualdisplay import Display
 
 
 def save_uploadedfile(uploadedfile, file_name, path):
@@ -16,7 +17,33 @@ def save_uploadedfile(uploadedfile, file_name, path):
         f.write(uploadedfile.getbuffer())
 
 
-def open_driver(user_path, headless=True):
+# def open_driver(user_path, headless=True):
+#     '''
+#     Opens chromedriver and initialize Whatsapp web
+
+#     user_path: Path where user credentials are located
+#     headless: Decides whether to run on headless mode or otherwise
+
+#     Returns a chromedriver instance
+#     '''
+#     chrome_options = webdriver.ChromeOptions()
+#     chrome_options.add_argument(user_path)
+#     chrome_options.add_argument("--disable-notifications")
+#     if headless:
+#         chrome_options.add_argument('--disable-gpu')
+#         chrome_options.add_argument("--headless")
+#         chrome_options.add_argument("--window-size=1920,1080")
+#         # Specify user-agent to allow headless mode
+#         chrome_options.add_argument(
+#             "user-agent=User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36")
+#     driver = webdriver.Chrome(service=Service(
+#         ChromeDriverManager().install()), options=chrome_options)
+#     driver.get('https://web.whatsapp.com/')
+#     driver.execute_script("window.onbeforeunload = function() {};")
+#     return driver
+
+
+def open_driver(user_path, headless=False):
     '''
     Opens chromedriver and initialize Whatsapp web
 
@@ -25,6 +52,8 @@ def open_driver(user_path, headless=True):
 
     Returns a chromedriver instance
     '''
+    display = Display(visible=1, size=(800, 800))
+    display.start()
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument(user_path)
     chrome_options.add_argument("--disable-notifications")
@@ -39,4 +68,4 @@ def open_driver(user_path, headless=True):
         ChromeDriverManager().install()), options=chrome_options)
     driver.get('https://web.whatsapp.com/')
     driver.execute_script("window.onbeforeunload = function() {};")
-    return driver
+    return driver, display
