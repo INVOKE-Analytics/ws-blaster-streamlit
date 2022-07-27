@@ -46,6 +46,12 @@ manage = Manage(user_path='D:\\Desktop\\INVOKE\\ws_blaster\\ahilan-branch\\venvA
 
 
 def check_available_account():
+        """
+        Check available account registed in the apps.
+
+        Available account is a registered account that still valid and not being banned.
+        Not-available account is a registered account that have been banned.
+        """
         select_platform = st.selectbox('Select set of accounts to check', 
                                 ('',
                                 'meniaga',
@@ -54,8 +60,6 @@ def check_available_account():
         if select_platform != '':
             if select_platform == 'Burner Accounts':
                 select_platform = 'burner'
-
-            get_acc = manage.get_all_account_name(select_platform)
 
             with st.spinner('Checking Accounts...'):
                 check_all_acc_exist = manage.checking_banned_or_not(select_platform)
@@ -74,6 +78,23 @@ def check_available_account():
                 st.subheader('Unavailable account(s): ' + str(', '.join(not_available)))
             
 def add_new_account():
+        """
+        Adding new account. 
+        
+        How it works:
+        1. Choose platform and new name. 
+        2. Apps will produce a screenshot of the Whatsapp QR code.
+        3. Scan the QR code using your mobile Whatsapp. 
+
+        More:
+        1. For every QR scan, a new account is created. 
+        2. For every new name, even though it scanned by the same mobile, 
+        it will create a new account. 
+            Example: 
+            new_name: Ammar_1 --> scanned by Ammar --> Ammar_1 account created
+            new_name: Ammar_2 --> scanned by Ammar --> Ammar_2 accound created
+        3. QR code is refresh for every 15 seconds.
+        """
         select_platform_new_acc = st.selectbox('Where do you want to add the account(s)?', 
                                 ('',
                                 'meniaga',
@@ -89,7 +110,6 @@ def add_new_account():
             if button_add_account:
                 for name_acc in get_name:
                     try:
-                        
                         driver = manage.create_new_user_file(select_platform_new_acc, name_acc)
                         WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH,'//*[@id="app"]/div/div/div[2]/div[1]/div/div[2]/div/canvas')))
                         manage.take_screenshot(driver)
@@ -97,10 +117,7 @@ def add_new_account():
                         WebDriverWait(driver, 300).until(EC.visibility_of_element_located((By.XPATH,'//*[@title="Search input textbox"]')))
                         st.subheader(name_acc + ' added!')
                         time.sleep(1)
-                        #manage.create_new_user_file.quit()
                     except:
-                        print("NOT ADDED")
-                        #manage.create_new_user_file.quit()
                         manage.automatically_deleted_account_if_error(select_platform_new_acc, name_acc)
         elif len(get_taken) == 1:
             st.write('Account name--' + str(get_taken[0]) + ' is not available. Please choose another name!')
@@ -108,6 +125,10 @@ def add_new_account():
             st.write(str(', '.join(get_taken)) + ' are not available. Please choose another name!')
                         
 def deleting_account():
+        """
+        To delete NOT-AVAILABLE account only.
+        Not-available account is banned account.
+        """
         select_platform = st.selectbox('From which set of account(s) do you want to delete?', 
                                 ('',
                                 'meniaga',
