@@ -52,13 +52,18 @@ def open_driver_beta(user_path):
 
     Returns a chromedriver instance
     '''
-    display = Display(visible=1, size=(800, 800))
+    display = Display(visible=1, size=(1000, 1000))
     display.start()
     chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_argument(user_path)
+    # chrome_options.add_argument(user_path)
     chrome_options.add_argument("--disable-notifications")
     driver = webdriver.Chrome(service=Service(
         ChromeDriverManager().install()), options=chrome_options)
     driver.get('https://web.whatsapp.com/')
     driver.execute_script("window.onbeforeunload = function() {};")
     return driver, display
+
+# from selenium.webdriver.common.by import By
+# driver, display = open_driver_beta("")
+# driver.get_screenshot_as_file("screenshot.png")
+# driver.find_element(By.XPATH, "//div[@class='p3_M1']").click()
