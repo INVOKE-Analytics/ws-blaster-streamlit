@@ -3,6 +3,9 @@ import click
 import streamlit as st
 import time
 from PIL import Image
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from ws_blaster.manage import Manage
 from ws_blaster.utils import save_uploadedfile, open_driver
 from PIL import Image
@@ -86,8 +89,12 @@ def add_new_account():
             if button_add_account:
                 for name_acc in get_name:
                     try:
-                        print("ADDED")
-                        manage.create_new_user_file(select_platform_new_acc, name_acc)
+                        
+                        driver = manage.create_new_user_file(select_platform_new_acc, name_acc)
+                        WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH,'//*[@id="app"]/div/div/div[2]/div[1]/div/div[2]/div/canvas')))
+                        manage.take_screenshot(driver)
+                        st.success('QR code screenshot taken!')
+                        WebDriverWait(driver, 300).until(EC.visibility_of_element_located((By.XPATH,'//*[@title="Search input textbox"]')))
                         st.subheader(name_acc + ' added!')
                         time.sleep(1)
                         #manage.create_new_user_file.quit()
