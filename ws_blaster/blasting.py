@@ -137,6 +137,7 @@ class Blaster:
         self.driver_path = self.user_path / platform
         for acc in listdir(self.driver_path):
             data_dir = "user-data-dir=" + str(self.driver_path / acc)
+            print(data_dir)
             driver, display = open_driver_beta(data_dir)
             self.driver_dict[acc] = driver
             self.display_dict[acc] = display
@@ -216,9 +217,6 @@ class Blaster:
         del self.driver_dict[acc]
         self.unavailable_accounts.append(self.driver_path / acc)
         return acc
-        # st.subheader('*** Driver-- ' + str(driver_ls[drivers_idx]) + ' is unavailable ***')
-        # st.subheader('*** Drivers left: ' + str(driver_count) + ' ***')
-        # st.subheader('### ALL ACCOUNTS ARE CURRENTLY UNAVAILABLE! BLASTING STOPPED AT INDEX: ' + str(i) + '###')
 
     def apply_random_wait(self, count) -> None:
         """
