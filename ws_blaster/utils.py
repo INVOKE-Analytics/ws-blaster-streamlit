@@ -52,7 +52,7 @@ def open_driver_beta(user_path):
 
     Returns a chromedriver instance
     '''
-    display = Display(visible=0, size=(800, 800))
+    display = Display(visible=1, size=(800, 800))
     display.start()
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument(user_path)

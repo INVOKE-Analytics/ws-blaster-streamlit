@@ -6,7 +6,7 @@ import pyperclip
 import pandas as pd
 
 from os import listdir
-from ws_blaster.utils import open_driver, save_uploadedfile
+from ws_blaster.utils import open_driver_beta, save_uploadedfile
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -23,9 +23,10 @@ class Blaster:
         self.contact_numbers = []
         self.messages = []
         self.files_to_blast_paths = []
-        self.driver_dict = {}
-        self.sent = 0
         self.unavailable_accounts = []
+        self.driver_dict = {}
+        self.display_dict = {}
+        self.sent = 0
 
     @property
     def columns(self) -> list:
@@ -136,8 +137,9 @@ class Blaster:
         self.driver_path = self.user_path / platform
         for acc in listdir(self.driver_path):
             data_dir = "user-data-dir=" + str(self.driver_path / acc)
-            driver = open_driver(data_dir, headless=headless)
+            driver, display = open_driver_beta(data_dir)
             self.driver_dict[acc] = driver
+            self.display_dict[acc] = display
             time.sleep(10)
 
     def nav_to_number(self, phone_number, sleep=5) -> None:
@@ -182,8 +184,7 @@ class Blaster:
         """
         # Debug this in headless mode
         driver.get_screenshot_as_file("screenshot1.png")
-        self._select_elm(
-            driver, "//p[@class='selectable-text copyable-text']", 300).click()
+        self._select_elm(driver, "//div[@class='p3_M1']", 300).click()
         pyperclip.copy(message)
         ActionChains(driver).key_down(Keys.CONTROL).send_keys(
             'v').key_up(Keys.CONTROL).perform()
@@ -209,7 +210,9 @@ class Blaster:
         """
         # TODO: Add logging
         driver = self.driver_dict[acc]
+        display = self.display_dict[acc]
         driver.quit()
+        display.stop()
         del self.driver_dict[acc]
         self.unavailable_accounts.append(self.driver_path / acc)
         return acc
@@ -225,7 +228,6 @@ class Blaster:
             time.sleep(random.randint(500, 1000))
         elif count % 10 == 0 and count != 0:
             time.sleep(random.randint(5, 10))
-            # return 'Numbers gone through: ' + str(count) + ', Messages sent: ' + str(count)
         else:
             time.sleep(random.randint(2, 5))
 
@@ -233,5 +235,8 @@ class Blaster:
         """
         Close all open drivers once blasting has completed.
         """
-        for driver in self.driver_dict.values():
+        for acc in self.driver_dict.keys():
+            driver = self.driver_dict[acc]
+            display = self.display_dict[acc]
             driver.quit()
+            display.stop()
