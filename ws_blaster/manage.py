@@ -57,7 +57,7 @@ class Manage:
         return (self.available, self.not_available)
 
     def take_screenshot(self, driver):
-        driver.save_screenshot('.\\ws-blaster-prod\\ws_blaster\\screenshot\\whatsapp_login.png')
+        driver.save_screenshot('D:\\Desktop\\INVOKE\\ws_blaster\\ahilan-branch\\venvAhilan\\ws-blaster-prod\\screenshot\\QR_code.png')
         ss = 'screenshot'
         self.screenshot.append(ss)
 
@@ -66,8 +66,7 @@ class Manage:
         Create new file user account in platform file
         """
         path_to_platform = 'user-data-dir=' + self.user_path + '\\' + str(platform) + '\\'
-        driver = open_driver(path_to_platform + account_name, headless=False)
-        WebDriverWait(driver, 300).until(EC.visibility_of_element_located((By.XPATH,'//*[@title="Search input textbox"]')))
+        driver = open_driver(path_to_platform + account_name, headless=True)
         self.driver_dict[path_to_platform] = account_name
         return driver
     
