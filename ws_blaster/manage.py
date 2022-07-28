@@ -1,4 +1,3 @@
-from sklearn.metrics import accuracy_score
 from ws_blaster.utils import open_driver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
