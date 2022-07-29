@@ -56,6 +56,10 @@ class Manage:
         return (self.available, self.not_available)
 
     def take_screenshot(self, driver):
+        # TODO: QR code will be refreshed after 15 seconds
+        """
+        Take the screenshot of the QR code 
+        """
         driver.save_screenshot('D:\\Desktop\\INVOKE\\ws_blaster\\ahilan-branch\\venvAhilan\\ws-blaster-prod\\screenshot\\QR_code.png')
         ss = 'screenshot'
         self.screenshot.append(ss)
