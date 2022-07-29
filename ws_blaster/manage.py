@@ -1,5 +1,5 @@
 import streamlit as st
-from ws_blaster.utils import open_driver, open_driver_beta1
+from ws_blaster.utils import open_driver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
