@@ -8,6 +8,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from ws_blaster.manage import Manage
 from ws_blaster.utils import save_uploadedfile, open_driver
+import streamlit as st
+
 from PIL import Image
 import pandas as pd
 from ws_blaster.blasting import Blaster

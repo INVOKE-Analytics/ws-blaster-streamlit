@@ -2,6 +2,7 @@ import os
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
+from pyvirtualdisplay import Display
 
 
 def save_uploadedfile(uploadedfile, file_name, path):
@@ -41,3 +42,24 @@ def open_driver(user_path, headless=True):
     driver.get('https://web.whatsapp.com/')
     driver.execute_script("window.onbeforeunload = function() {};")
     return driver
+
+
+def open_driver_beta(user_path):
+    '''
+    Opens chromedriver and initialize Whatsapp web
+
+    user_path: Path where user credentials are located
+    headless: Decides whether to run on headless mode or otherwise
+
+    Returns a chromedriver instance
+    '''
+    display = Display(visible=0, size=(800, 800))
+    display.start()
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument(user_path)
+    chrome_options.add_argument("--disable-notifications")
+    driver = webdriver.Chrome(service=Service(
+        ChromeDriverManager().install()), options=chrome_options)
+    driver.get('https://web.whatsapp.com/')
+    driver.execute_script("window.onbeforeunload = function() {};")
+    return driver, display
