@@ -233,7 +233,7 @@ if option1 == 'Account Management':
         if select_option == 'Check available sim-name(s)':
                 check_available_account()
 
-        elif select_option == 'Add new account(s)':
+        elif select_option == 'Add new sim-name(s)':
                 add_new_account()
 
         elif select_option == 'Delete unavailable sim-name(s)':

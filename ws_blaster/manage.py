@@ -28,7 +28,6 @@ class Manage:
         name = [x.strip() for x in name]
         return name
 
-    @property
     def get_all_account_name(self, platform:str)->list[str]:
         """
         Return a list of directory of platform
@@ -37,7 +36,7 @@ class Manage:
         accs = [f for f in listdir(path_to_accs)]
         return accs
 
-    @property
+    
     def checking_banned_or_not(self,platform:str)->tuple[list,list]:
         """
         Return list of available and not-available 
@@ -87,7 +86,7 @@ class Manage:
         shutil.rmtree(path_to_acount)
         self.account_dict[name] = 'deleted'
 
-    @property
+    
     def get_taken(self, name:str, platform:str)->list[str]:
         """
         Return list of the account name, if the account is existed (added)
