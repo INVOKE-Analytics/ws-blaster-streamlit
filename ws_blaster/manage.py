@@ -19,8 +19,8 @@ class Manage:
         self.not_available = []
         self.exist_account = self.available + self.not_available
         self.screenshot = []
-
-    def get_name(self, name):
+    
+    def get_name(self, name:str):
         """
         Return name in list data type
         """
@@ -28,7 +28,8 @@ class Manage:
         name = [x.strip() for x in name]
         return name
 
-    def get_all_account_name(self, platform):
+    @property
+    def get_all_account_name(self, platform:str)->list[str]:
         """
         Return a list of directory of platform
         """
@@ -36,7 +37,8 @@ class Manage:
         accs = [f for f in listdir(path_to_accs)]
         return accs
 
-    def checking_banned_or_not(self,platform):
+    @property
+    def checking_banned_or_not(self,platform:str)->tuple[list,list]:
         """
         Return list of available and not-available 
         account.
@@ -56,6 +58,7 @@ class Manage:
 
         return (self.available, self.not_available)
 
+    @property
     def take_screenshot(self, driver):
         # TODO: QR code will be refreshed after 15 seconds
         """
@@ -65,7 +68,8 @@ class Manage:
         ss = 'screenshot'
         self.screenshot.append(ss)
 
-    def create_new_user_file(self, platform, account_name):
+    @property
+    def create_new_user_file(self, platform:str, account_name):
         """
         Create new file user account in platform file
         """
@@ -74,15 +78,17 @@ class Manage:
         self.driver_dict[path_to_platform] = account_name
         return driver
     
-    def automatically_deleted_account_if_error(self, platform, name):
+    @property
+    def deleted_account(self, platform:str, name:str):
         """
-        Delete account if error happened.
+        To delete the directory which deleted the account too.
         """
         path_to_acount =  str(self.user_path) + '\\' + str(platform) + '\\' + str(name)
         shutil.rmtree(path_to_acount)
         self.account_dict[name] = 'deleted'
 
-    def get_taken(self, name, platform):
+    @property
+    def get_taken(self, name:str, platform:str)->list[str]:
         """
         Return list of the account name, if the account is existed (added)
         """
