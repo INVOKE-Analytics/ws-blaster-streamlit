@@ -178,20 +178,47 @@ def deleting_account():
 
 
 if option1 == 'Account Management':
-    select_option = st.selectbox('Select option', 
-                                    ('',
-                                    'Add new account(s)',
-                                    'Check available account(s)', 
-                                    'Delete unavailable account(s)'))
+    choice = st.selectbox('Select option',('', 'About', 'Account Setup'))
+    st.markdown(
+        """
+        > About: Learn about Account Management.
 
-    if select_option == 'Check available account(s)':
-            check_available_account()
+        > Account Setup: Manage account.
+        """
+    )
+    if choice == "About":
+        st.markdown(
+            """
+            ### Platform
+            > The product that we use to execute the blasting. 
 
-    elif select_option == 'Add new account(s)':
-            add_new_account()
+                > Example: Decoris, Meniaga, Ayuh Malaysia
+            """)
+        st.markdown(
+            """
+            ### Sim-name
+            > The sim card name that have been registered for the platform chosen by the client.
 
-    elif select_option == 'Delete unavailable account(s)':
-            deleting_account()
+            > For every client, they have 3 sim-name that can be used.
+
+                > Example:  Meniaga > Restauran Rahmat > Sim-name_1: 011-xxx xxxx .
+            
+            """)
+    elif choice == "Account Setup":
+        select_option = st.selectbox('Select what do you want to do?', 
+                                        ('',
+                                        'Add new account(s)',
+                                        'Check available account(s)', 
+                                        'Delete unavailable account(s)'))
+
+        if select_option == 'Check available account(s)':
+                check_available_account()
+
+        elif select_option == 'Add new account(s)':
+                add_new_account()
+
+        elif select_option == 'Delete unavailable account(s)':
+                deleting_account()
 
 
 
