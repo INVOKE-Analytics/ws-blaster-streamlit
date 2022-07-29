@@ -1,4 +1,5 @@
-from ws_blaster.utils import open_driver
+import streamlit as st
+from ws_blaster.utils import open_driver, open_driver_beta1
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -89,5 +90,8 @@ class Manage:
         accs = self.get_all_account_name(platform)
         taken = [x for x in name if x in accs]
         return taken
+
+    def get_screenshot(self, photo):
+        return st.image(photo)
 
 
