@@ -25,8 +25,8 @@ hide_st_style = """
 st.markdown(hide_st_style, unsafe_allow_html=True)
 
 # INVOKE logo and WS logo setup
-invoke_logo_path = 'D:\\Desktop\\INVOKE\\ws_blaster\\ahilan-branch\\venvAhilan\\ws-blaster-prod\\images\\invoke_logo.jpg'
-ws_logo_path = 'D:\\Desktop\\INVOKE\\ws_blaster\\ahilan-branch\\venvAhilan\\ws-blaster-prod\\images\\ws-logo.png'
+invoke_logo_path = './invoke_logo.jpg'
+ws_logo_path = './ws-logo.png'
 invoke_logo = Image.open(invoke_logo_path)
 ws_logo = Image.open(ws_logo_path)
 st.sidebar.title('Whatsapp Blaster')
@@ -44,7 +44,7 @@ option1 = st.sidebar.selectbox('Select option', ('Blast Messages', 'Account Mana
 # Account Management
 ##############################################################
 
-manage = Manage(user_path='D:\\Desktop\\INVOKE\\ws_blaster\\ahilan-branch\\venvAhilan\\ws-blaster-prod\\Users')
+manage = Manage(user_path='./Users')
 
 
 def check_available_account():
@@ -129,13 +129,13 @@ def add_new_account():
                         WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH,'//*[@id="app"]/div/div/div[2]/div[1]/div/div[2]/div/canvas')))
                         manage.take_screenshot(driver)
                         st.success('QR code screenshot taken!')
-                        ss = Image.open('D:\\Desktop\\INVOKE\\ws_blaster\\ahilan-branch\\venvAhilan\\ws-blaster-prod\\screenshot\\QR_code.png')
+                        ss = Image.open('./screenshot/QR_code.png')
                         manage.get_screenshot(ss)
                         WebDriverWait(driver, 300).until(EC.visibility_of_element_located((By.XPATH,'//*[@title="Search input textbox"]')))
                         st.subheader(name_acc + ' added!')
                         time.sleep(1)
                     except:
-                        manage.automatically_deleted_account_if_error(select_platform_new_acc, name_acc)
+                        manage.deleted_account(select_platform_new_acc, name_acc)
         elif len(get_taken) == 1:
             st.write('Sim-name name--' + str(get_taken[0]) + ' is not available. Please choose another name!')
         else:
@@ -178,7 +178,7 @@ def deleting_account():
                 button_yes = st.button("Yes")
                 button_no  = st.button("No")
                 if  button_yes:
-                    manage.automatically_deleted_account_if_error(select_platform, not_av)
+                    manage.deleted_account(select_platform, not_av)
                     st.caption("All the banned sim-name has been deleted")
                 elif button_no:
                     st.caption("No sim-name is deleted.")
@@ -190,7 +190,7 @@ def deleting_account():
                     button_yes = st.button("Yes")
                     button_no  = st.button("No")
                     if  button_yes:
-                        manage.automatically_deleted_account_if_error(select_platform, not_av)
+                        manage.deleted_account(select_platform, not_av)
                         st.caption("All the banned sim-name has been deleted")
                     elif button_no:
                         st.caption("No sim-name is deleted.")

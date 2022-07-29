@@ -77,7 +77,7 @@ class Manage:
         self.driver_dict[path_to_platform] = account_name
         return driver
     
-    @property
+    
     def deleted_account(self, platform:str, name:str):
         """
         To delete the directory which deleted the account too.
