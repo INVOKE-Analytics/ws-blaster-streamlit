@@ -116,6 +116,8 @@ def add_new_account():
                         WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH,'//*[@id="app"]/div/div/div[2]/div[1]/div/div[2]/div/canvas')))
                         manage.take_screenshot(driver)
                         st.success('QR code screenshot taken!')
+                        ss = Image.open('D:\\Desktop\\INVOKE\\ws_blaster\\ahilan-branch\\venvAhilan\\ws-blaster-prod\\screenshot\\QR_code.png')
+                        manage.get_screenshot(ss)
                         WebDriverWait(driver, 300).until(EC.visibility_of_element_located((By.XPATH,'//*[@title="Search input textbox"]')))
                         st.subheader(name_acc + ' added!')
                         time.sleep(1)
