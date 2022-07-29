@@ -49,12 +49,15 @@ manage = Manage(user_path='D:\\Desktop\\INVOKE\\ws_blaster\\ahilan-branch\\venvA
 
 def check_available_account():
         """
-        Check available account registed in the apps.
+        Check available sim-name registed in the apps.
 
-        Available account is a registered account that still valid and not being banned.
-        Not-available account is a registered account that have been banned.
+        Available sim-name is a registered sim-name that still valid and not being banned.
+        Not-available sim-name is a registered sim-name that have been banned.
         """
-        select_platform = st.selectbox('Select set of accounts to check', 
+        st.markdown("----------------------------------------------")
+        st.info("CHECK AVAILABLE SIM-NAME")
+        # choose the platform
+        select_platform = st.selectbox('Select set of sim-name to check', 
                                 ('',
                                 'meniaga',
                                 'AyuhMalaysia',
@@ -63,25 +66,33 @@ def check_available_account():
             if select_platform == 'Burner Accounts':
                 select_platform = 'burner'
 
-            with st.spinner('Checking Accounts...'):
-                check_all_acc_exist = manage.checking_banned_or_not(select_platform)
+            # press the button to start CHECK
+            button = st.button("CHECK")
+            if button:
+                with st.spinner('Checking sim-name status...'):
+                    time.sleep(2)
+                    check_all_acc_exist = manage.checking_banned_or_not(select_platform)
 
-            available = check_all_acc_exist[0]
-            not_available = check_all_acc_exist[1]
+                    available = check_all_acc_exist[0]
+                    not_available = check_all_acc_exist[1]
 
-            if len(available) == 0:
-                st.subheader('All accounts are not available!')
-                st.subheader('Unavailable accounts: ', ', '.join(not_available))
-            elif len(not_available) == 0:
-                st.subheader('All accounts are available!')
-                st.subheader('Available accounts: ' + str(', '.join(available)))
-            else:
-                st.subheader('Available account(s): ' + str(', '.join(available)))
-                st.subheader('Unavailable account(s): ' + str(', '.join(not_available)))
+                    if len(available) == 0:
+                        st.error('All sim(s) are not available!')
+                        st.subheader("The only sim(s) available: ")
+                        st.code(+ '\n' + ' | '.join(not_available))
+                    elif len(not_available) == 0:
+                        st.success('All sim(s) are available!')
+                        st.subheader('Available sim(s): ')
+                        st.code('\n' + str(' | '.join(available)))
+                    else:
+                        st.success('Available sim(s): ')
+                        st.code(str(' |  '.join(available)))
+                        st.error('Unavailable sim(s): ')
+                        st.code(str(' |  '.join(not_available)))
             
 def add_new_account():
         """
-        Adding new account. 
+        Adding new sim-name. 
         
         How it works:
         1. Choose platform and new name. 
@@ -89,26 +100,28 @@ def add_new_account():
         3. Scan the QR code using your mobile Whatsapp. 
 
         More:
-        1. For every QR scan, a new account is created. 
+        1. For every QR scan, a new sim-name is created. 
         2. For every new name, even though it scanned by the same mobile, 
-        it will create a new account. 
+        it will create a new sim-name. 
             Example: 
-            new_name: Ammar_1 --> scanned by Ammar --> Ammar_1 account created
-            new_name: Ammar_2 --> scanned by Ammar --> Ammar_2 accound created
+            new_name: Ammar_1 --> scanned by Ammar --> Ammar_1 sim-name created
+            new_name: Ammar_2 --> scanned by Ammar --> Ammar_2 sim-name created
         3. QR code is refresh for every 15 seconds.
         """
-        select_platform_new_acc = st.selectbox('Where do you want to add the account(s)?', 
+        st.markdown("----------------------------------------------")
+        st.info("ADD NEW SIM-NAME")
+        select_platform_new_acc = st.selectbox('Where do you want to add the sim-name(s)?', 
                                 ('',
                                 'meniaga',
                                 'AyuhMalaysia',
                                 'Burner Accounts'))
 
-        name = st.text_area("Enter Whatsapp account name:")
+        name = st.text_area("Enter Whatsapp sim-name name:")
         get_name = manage.get_name(name)
         get_taken = manage.get_taken(name, select_platform_new_acc)
 
         if len(get_taken) == 0:
-            button_add_account = st.button('Add Account(s)')
+            button_add_account = st.button('Add sim-name(s)')
             if button_add_account:
                 for name_acc in get_name:
                     try:
@@ -124,16 +137,18 @@ def add_new_account():
                     except:
                         manage.automatically_deleted_account_if_error(select_platform_new_acc, name_acc)
         elif len(get_taken) == 1:
-            st.write('Account name--' + str(get_taken[0]) + ' is not available. Please choose another name!')
+            st.write('Sim-name name--' + str(get_taken[0]) + ' is not available. Please choose another name!')
         else:
             st.write(str(', '.join(get_taken)) + ' are not available. Please choose another name!')
                         
 def deleting_account():
         """
-        To delete NOT-AVAILABLE account only.
-        Not-available account is banned account.
+        To delete NOT-AVAILABLE sim-name only.
+        Not-available sim-name is banned sim-name.
         """
-        select_platform = st.selectbox('From which set of account(s) do you want to delete?', 
+        st.markdown("----------------------------------------------")
+        st.info("DELETING ACCOUNT")
+        select_platform = st.selectbox('From which set of sim-name(s) do you want to delete?', 
                                 ('',
                                 'meniaga',
                                 'AyuhMalaysia',
@@ -143,47 +158,51 @@ def deleting_account():
             if select_platform == 'Burner Accounts':
                 select_platform  = 'burner'
             
-            with st.spinner('Checking unavailable account...'):
+            with st.spinner('Checking all sim-name...'):
+                time.sleep(2)
                 accs = manage.get_all_account_name(select_platform)
-                st.subheader('Accounts: ' + ', '.join(accs))
+            st.subheader('List of sim-name: ')
+            st.code( ' | '.join(accs))
 
-            
-            #available = manage.checking_account_list_dir(select_platform)[0]
-            not_available = manage.checking_banned_or_not(select_platform)[1]
+            with st.spinner("Checking banned sim-name..."):
+                time.sleep(2)
+                not_available = manage.checking_banned_or_not(select_platform)[1]
             
             if len(not_available) == 0:
-                st.subheader('No account(s) to delete!')
+                st.subheader('All sim-name is still valid. \n No sim-name need to be to deleted!')
 
             elif len(not_available) == 1:
-                st.subheader('Unavailable account(s): ' + str(', '.join(not_av)))
+                st.subheader('Unavailable sim-name(s): ' + str(', '.join(not_av)))
                 
-                question = st.selectbox("Are you sure you want to delete the account?",
-                                            ("Yes", "No"))
-
-                if question == 'Yes':
+                st.markdown("Are you sure you want to delete the sim-name?")
+                button_yes = st.button("Yes")
+                button_no  = st.button("No")
+                if  button_yes:
                     manage.automatically_deleted_account_if_error(select_platform, not_av)
-                elif question == 'No':
-                    st.caption("No account is deleted.")
+                    st.caption("All the banned sim-name has been deleted")
+                elif button_no:
+                    st.caption("No sim-name is deleted.")
             else:
                 for not_av in not_available:
-                    st.subheader('Unavailable account(s): ' + str(', '.join(not_av)))
+                    st.subheader('Unavailable sim-name(s): ' + str(', '.join(not_av)))
                 
-                    question = st.selectbox("Are you sure you want to delete the account?",
-                                            ("Yes", "No"))
-
-                    if question == 'Yes':
+                    st.markdown("Are you sure you want to delete the sim-name?")
+                    button_yes = st.button("Yes")
+                    button_no  = st.button("No")
+                    if  button_yes:
                         manage.automatically_deleted_account_if_error(select_platform, not_av)
-                    elif question == 'No':
-                        st.caption("No account is deleted.")
+                        st.caption("All the banned sim-name has been deleted")
+                    elif button_no:
+                        st.caption("No sim-name is deleted.")
 
 
 if option1 == 'Account Management':
-    choice = st.selectbox('Select option',('', 'About', 'Account Setup'))
+    choice = st.selectbox('Select option',('', 'About', 'Sim-name Setup'))
     st.markdown(
         """
-        > About: Learn about Account Management.
+        > About: Learn about Sim-name Management.
 
-        > Account Setup: Manage account.
+        > Sim-name Setup: Manage Sim-name.
         """
     )
     if choice == "About":
@@ -204,20 +223,20 @@ if option1 == 'Account Management':
                 > Example:  Meniaga > Restauran Rahmat > Sim-name_1: 011-xxx xxxx .
             
             """)
-    elif choice == "Account Setup":
+    elif choice == "Sim-name Setup":
         select_option = st.selectbox('Select what do you want to do?', 
                                         ('',
-                                        'Add new account(s)',
-                                        'Check available account(s)', 
-                                        'Delete unavailable account(s)'))
+                                        'Add new sim-name(s)',
+                                        'Check available sim-name(s)', 
+                                        'Delete unavailable sim-name(s)'))
 
-        if select_option == 'Check available account(s)':
+        if select_option == 'Check available sim-name(s)':
                 check_available_account()
 
         elif select_option == 'Add new account(s)':
                 add_new_account()
 
-        elif select_option == 'Delete unavailable account(s)':
+        elif select_option == 'Delete unavailable sim-name(s)':
                 deleting_account()
 
 
