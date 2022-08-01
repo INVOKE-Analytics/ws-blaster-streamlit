@@ -25,8 +25,8 @@ hide_st_style = """
 st.markdown(hide_st_style, unsafe_allow_html=True)
 
 # INVOKE logo and WS logo setup
-invoke_logo_path = './invoke_logo.jpg'
-ws_logo_path = './ws-logo.png'
+invoke_logo_path = '../ws-blaster-prod/images/invoke_logo.jpg'
+ws_logo_path = '../ws-blaster-prod/images/ws-logo.png'
 invoke_logo = Image.open(invoke_logo_path)
 ws_logo = Image.open(ws_logo_path)
 st.sidebar.title('Whatsapp Blaster')
@@ -44,7 +44,7 @@ option1 = st.sidebar.selectbox('Select option', ('Blast Messages', 'Account Mana
 # Account Management
 ##############################################################
 
-manage = Manage(user_path='./Users')
+manage = Manage(user_path='../ws-blaster-prod/Users')
 
 
 def check_available_account():
@@ -89,7 +89,7 @@ def check_available_account():
                         st.code(str(' |  '.join(available)))
                         st.error('Unavailable sim(s): ')
                         st.code(str(' |  '.join(not_available)))
-            
+
 def add_new_account():
         """
         Adding new sim-name. 
@@ -115,6 +115,8 @@ def add_new_account():
                                 'meniaga',
                                 'AyuhMalaysia',
                                 'Burner Accounts'))
+        select_client = st.selectbox('Select Client', tuple(manage.get_all_client_dir(select_platform_new_acc)))
+        # TODO: Adding client into open_driver
 
         name = st.text_area("Enter Whatsapp sim-name name:")
         get_name = manage.get_name(name)
@@ -160,7 +162,7 @@ def deleting_account():
             
             with st.spinner('Checking all sim-name...'):
                 time.sleep(2)
-                accs = manage.get_all_account_name(select_platform)
+                accs = manage.get_all_sim_name(select_platform)
             st.subheader('List of sim-name: ')
             st.code( ' | '.join(accs))
 
@@ -195,9 +197,46 @@ def deleting_account():
                     elif button_no:
                         st.caption("No sim-name is deleted.")
 
+def user_learning():
+    st.markdown(
+            """
+            ### 👉 Platform
+            > The product that we use to execute the blasting. 
 
-if option1 == 'Account Management':
-    choice = st.selectbox('Select option',('', 'About', 'Sim-name Setup'))
+                Example: Decoris, Meniaga, Ayuh Malaysia
+            """)
+
+    st.markdown(
+            """
+            ### 👉 Client
+            > Client that used WhatApp Blaster service
+
+                Example: Mc Donald, Restauran Maju
+            
+            """
+    )
+    st.markdown(
+            """
+            ### 👉 Sim-name
+            > The sim card name that have been registered for the platform chosen by the client.
+
+            > For every client, they have 3 sim-name that can be used.
+
+                Example:  011-123 4567
+            
+            """)
+
+    st.markdown(
+        """
+        ### ✅ Full-path
+        > Format
+            Platform > Client > Sim-name
+        > Example:  
+            Meniaga > Restauran Maju > 011- 123 4567
+        """
+    )
+
+def main_account_management(option1='Account Management'):
     st.markdown(
         """
         > About: Learn about Sim-name Management.
@@ -205,39 +244,33 @@ if option1 == 'Account Management':
         > Sim-name Setup: Manage Sim-name.
         """
     )
+    choice = st.selectbox('Select option',('', 'About', 'Sim-name Setup'))
+    
     if choice == "About":
-        st.markdown(
-            """
-            ### Platform
-            > The product that we use to execute the blasting. 
-
-                > Example: Decoris, Meniaga, Ayuh Malaysia
-            """)
-        st.markdown(
-            """
-            ### Sim-name
-            > The sim card name that have been registered for the platform chosen by the client.
-
-            > For every client, they have 3 sim-name that can be used.
-
-                > Example:  Meniaga > Restauran Rahmat > Sim-name_1: 011-xxx xxxx .
-            
-            """)
+        user_learning()
+        
     elif choice == "Sim-name Setup":
         select_option = st.selectbox('Select what do you want to do?', 
                                         ('',
+                                        'Add new client', 
                                         'Add new sim-name(s)',
                                         'Check available sim-name(s)', 
                                         'Delete unavailable sim-name(s)'))
 
-        if select_option == 'Check available sim-name(s)':
-                check_available_account()
+        if select_option == 'Add new client':
+            pass
+
+        elif select_option == 'Check available sim-name(s)':
+            check_available_account()
 
         elif select_option == 'Add new sim-name(s)':
-                add_new_account()
+            add_new_account()
 
         elif select_option == 'Delete unavailable sim-name(s)':
-                deleting_account()
+            deleting_account()
+
+if __name__ == '__main__':
+    main_account_management()
 
 
 

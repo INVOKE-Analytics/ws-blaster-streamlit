@@ -6,7 +6,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 manage = Manage(user_path='D:\\Desktop\\INVOKE\\ws_blaster\\ahilan-branch\\venvAhilan\\ws-blaster-prod\\Users')
-
 def test_get_name():
     """
     Split new names input into a list.
@@ -19,8 +18,13 @@ def test_get_all_account_name():
     """
     Retreive all existed account (either it is banned or not)
     """
-    test_fx = manage.get_all_account_name("meniaga")
-    exp_output = ['Ahilan']
+    test_fx = manage.get_all_sim_name("meniaga")
+    exp_output = ['Ahilan', 'Ammar']
+    assert test_fx == exp_output
+
+def test_get_all_platform():
+    test_fx = manage.get_all_platform()
+    exp_output = ['AyuhMalaysia', 'burner', 'meniaga']
     assert test_fx == exp_output
 
 def test_checking_banned_or_not():
@@ -30,7 +34,7 @@ def test_checking_banned_or_not():
     If valid, will be appended inside available.
     """
     get_acc = manage.checking_banned_or_not("meniaga")
-    test_av = ['Ahilan']
+    test_av = ['Ahilan', 'Ammar']
     test_not_av = []
     assert get_acc[0] == test_av
     assert get_acc[1] == test_not_av
@@ -43,12 +47,12 @@ def test_create_new_user_file():
     manage.create_new_user_file('meniaga', 'Ammar')
     assert len(manage.driver_dict) == 1
 
-def test_automatically_deleted_account_if_error():
+def test_deleted_account():
     """
     Create account and delete the account.
     """
     manage.create_new_user_file('meniaga', 'Ammar2') # create
-    manage.automatically_deleted_account_if_error('meniaga', 'Ammar2') # delete
+    manage.deleted_account('meniaga', 'Ammar2') # delete
     assert len(manage.account_dict) == 1
 
 def test_taken():
@@ -69,7 +73,12 @@ def test_take_screenshot():
     WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.PARTIAL_LINK_TEXT,'Need help to get started?')))
     manage.take_screenshot(driver)
     driver.quit()
+    manage.deleted_account('meniaga', 'Ammar3')
     assert len(manage.screenshot) == 1
 
+def test_add_client_directory():
+    manage.add_client_directory('meniaga', 'Restauran A')
+    get_client_dir = manage.get_all_client_dir('meniaga')
+    assert get_client_dir ==  ['Ahilan', 'Ammar', 'Restauran A']
     
 
