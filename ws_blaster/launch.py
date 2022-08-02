@@ -43,7 +43,7 @@ option1 = st.sidebar.selectbox('Select option', ('Blast Messages', 'Account Mana
 # Account Management
 ##############################################################
 
-manage = Manage(user_path='../ws-blaster-prod/Users')
+manage = Manage(user_path='D:\\Desktop\\INVOKE\\ws_blaster\\ahilan-branch\\venvAhilan\\ws-blaster-prod\\Users')
 
 
 def check_available_account():
@@ -142,14 +142,22 @@ def add_new_account():
             if button_add_account:
                 for name_acc in get_name:
                     try:
-                        driver = manage.create_new_user_file(select_platform_new_acc, name_acc)
-                        WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH,'//*[@id="app"]/div/div/div[2]/div[1]/div/div[2]/div/canvas')))
+                        driver = manage.create_new_user_file(select_platform_new_acc,
+                                                            select_client, 
+                                                            name_acc)
+                        WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH,
+                                    '//*[@id="app"]/div/div/div[2]/div[1]/div/div[2]/div/canvas')))
+
+                        # take screenshot
                         manage.take_screenshot(driver)
                         st.success('QR code screenshot taken!')
                         ss = Image.open('./screenshot/QR_code.png')
                         manage.get_screenshot(ss)
-                        WebDriverWait(driver, 300).until(EC.visibility_of_element_located((By.XPATH,'//*[@title="Search input textbox"]')))
-                        st.subheader(name_acc + ' added!')
+
+                        # wait until all cache file get
+                        f = WebDriverWait(driver, 300).until(EC.visibility_of_element_located((By.XPATH,
+                                    '//*[@title="Search input textbox"]')))
+                        st.success(name_acc + ' added!')
                         time.sleep(1)
                     except:
                         manage.deleted_account(select_platform_new_acc, name_acc)
@@ -216,6 +224,7 @@ def user_learning():
     """
     Tutorial for user.
     """
+    st.title("Terms Used")
     st.markdown(
             """
             ### 👉 Platform
@@ -253,9 +262,10 @@ def user_learning():
             Meniaga > Restauran Maju > 011- 123 4567
         """
     )
+    st.title("Steps")
     st.markdown(
         """
-        # How to setup a new simcard for new client?
+        ### How to setup a new simcard for new client?
 
             1. Add new client name on "Add client name" section
             2. Move to "Add new sim-name(s)

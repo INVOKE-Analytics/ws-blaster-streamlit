@@ -82,12 +82,12 @@ class Manage:
         ss = 'screenshot'
         self.screenshot.append(ss)
 
-    def create_new_user_file(self, platform:str, client, account_name):
+    def create_new_user_file(self, platform:str, client:str, account_name:str):
         # TODO: Client has been added here, not tested yet
         """
         Create new file user account in platform file
         """
-        path_to_platform = 'user-data-dir=' + self.user_path + '\\' + str(client) + '\\' + str(platform) + '\\'
+        path_to_platform = 'user-data-dir=' + self.user_path + '\\' + str(platform) + '\\' + str(client) + '\\'
         driver = open_driver(path_to_platform + account_name, headless=True)
         self.driver_dict[path_to_platform] = account_name
         return driver
