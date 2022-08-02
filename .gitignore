@@ -162,3 +162,4 @@ cython_debug/
 tmp/
 Users/
 screenshot/
+ws_blaster/mine.py
