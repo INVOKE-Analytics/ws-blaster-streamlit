@@ -1,5 +1,4 @@
-from ctypes import util
-import click
+
 import streamlit as st
 import time
 from PIL import Image
@@ -16,12 +15,12 @@ from ws_blaster.blasting import Blaster
 
 # Hide streamlit header and footer
 hide_st_style = """
-             <style>
-             #MainMenu {visibility: hidden;}
-             footer {visibility: hidden;}
-             header {visibility: hidden;}
-             </style>
-             """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            </style>
+            """
 st.markdown(hide_st_style, unsafe_allow_html=True)
 
 # INVOKE logo and WS logo setup
@@ -89,6 +88,22 @@ def check_available_account():
                         st.code(str(' |  '.join(available)))
                         st.error('Unavailable sim(s): ')
                         st.code(str(' |  '.join(not_available)))
+
+def add_new_client():
+    client_platform = st.selectbox('Choose platform for client', 
+                                ('',
+                                'meniaga',
+                                'AyuhMalaysia',
+                                'Burner Accounts'))
+    client_name = st.text_area("Enter client name:")
+    button = st.button("Add client")
+
+    if button:
+        with st.spinner("Adding new client..."):
+            time.sleep(2)
+            manage.add_client_directory(client_platform, client_name)
+
+            st.success("{} sucessfully added!".format(client_name))
 
 def add_new_account():
         """
@@ -198,6 +213,9 @@ def deleting_account():
                         st.caption("No sim-name is deleted.")
 
 def user_learning():
+    """
+    Tutorial for user.
+    """
     st.markdown(
             """
             ### 👉 Platform
@@ -235,18 +253,34 @@ def user_learning():
             Meniaga > Restauran Maju > 011- 123 4567
         """
     )
-
-def main_account_management(option1='Account Management'):
     st.markdown(
         """
-        > About: Learn about Sim-name Management.
+        # How to setup a new simcard for new client?
 
-        > Sim-name Setup: Manage Sim-name.
+            1. Add new client name on "Add client name" section
+            2. Move to "Add new sim-name(s)
+            3. Choose the platform of the client. 
+            4. Select client name that has been added previously. 
+            5. Enter Whatsapp number a sim-name.
+            6. Click "Add sim-name(s)" button.
         """
     )
-    choice = st.selectbox('Select option',('', 'About', 'Sim-name Setup'))
+
+
+def main_account_management():
+    st.sidebar.warning(
+        """
+        Select option
+        > Tutorial
+            Learn how to setup a simcard.
+
+        > Sim-name Setup
+            Setup a new simcard.
+        """
+    )
+    choice = st.selectbox('Select option',('', 'Tutorial', 'Sim-name Setup'))
     
-    if choice == "About":
+    if choice == "Tutorial":
         user_learning()
         
     elif choice == "Sim-name Setup":
@@ -258,7 +292,7 @@ def main_account_management(option1='Account Management'):
                                         'Delete unavailable sim-name(s)'))
 
         if select_option == 'Add new client':
-            pass
+            add_new_client()
 
         elif select_option == 'Check available sim-name(s)':
             check_available_account()
@@ -269,8 +303,10 @@ def main_account_management(option1='Account Management'):
         elif select_option == 'Delete unavailable sim-name(s)':
             deleting_account()
 
+
 if __name__ == '__main__':
-    main_account_management()
+    if option1=='Account Management':
+        main_account_management()
 
 
 
