@@ -102,13 +102,13 @@ class Manage:
         return driver
     
     
-    def deleted_account(self, platform:str, name:str):
+    def deleted_account(self, platform:str, client:str):
         """
         To delete the directory which deleted the account too.
         """
-        path_to_acount =  str(self.user_path) + '\\' + str(platform) + '\\' + str(name)
+        path_to_acount =  str(self.user_path) + '\\' + str(platform) + '\\' + str(client)
         shutil.rmtree(path_to_acount)
-        self.account_dict[name] = 'deleted'
+        self.account_dict[client] = 'deleted'
 
     
     def get_taken(self, name:str, platform:str, client:str)->list[str]:
