@@ -184,40 +184,43 @@ def deleting_account():
         select_client = st.selectbox('Select client', tuple([' ',]) + tuple(manage.get_all_client_dir(select_platform)))
 
         if select_platform != '' and select_client != ' ':
-            if select_platform == 'Burner Accounts':
-                select_platform  = 'burner'
-
-            with st.spinner('Checking all simcard...'):
-                time.sleep(2)
-                accs = manage.get_all_sim_name(select_platform,select_client)
+            #with st.spinner('Checking all simcard...'):
+            #time.sleep(2)
+            accs = manage.get_all_sim_name(select_platform,select_client)
             st.subheader('List of simcard: ')
             st.code( ' | '.join(accs))
-            
-            button_2 = st.button('Check banned')
-            if button_2:
-                with st.spinner("Checking banned simcard..."):
-                    #time.sleep(2)
-                    #available = manage.checking_banned_or_not(select_platform, select_client)[0]
-                    not_available = manage.checking_banned_or_not(select_platform,select_client)[1]
-                    print(not_available)
-                    st.success("Check Done")
-                
-                    if len(not_available) == 0:
-                        st.success('All simcard is valid! \n No simcard need to be to deleted!')
 
-                    elif len(not_available) > 0:
-                        st.error('Unavailable simcard:')
-                        st.code('\n' + ' | '.join(not_available))
-                        
-                        for not_av in not_available:
-                            st.error("Are you sure you want to delete the simcard?")
-                            button_yes = st.button("Yes")
-                            button_no  = st.button("No")
-                            if  button_yes:
-                                manage.deleted_account(select_platform, not_av)
-                                st.caption("All the banned simcard has been deleted")
-                            elif button_no:
-                                st.caption("No simcard is deleted.")
+            if len(accs) > 1:
+                if select_platform == 'Burner Accounts':
+                    select_platform  = 'burner'    
+                
+                approval_simcard = st.selectbox('Select "Check Banned" to check banned simcard', ('', 'Check Banned'))
+                if approval_simcard == 'Check Banned':
+                    #with st.spinner("Checking banned simcard..."):
+                        #time.sleep(2)
+                        #available = manage.checking_banned_or_not(select_platform, select_client)[0]
+                    not_available_simcard = manage.checking_banned_or_not(select_platform,select_client)[1]
+                    print(not_available_simcard)
+                    st.success("Check Done")
+                    
+                if len(not_available_simcard) == 0:
+                    st.success('All simcard is valid! \n No simcard need to be to deleted!')
+
+                elif len(not_available_simcard) > 0:
+                    st.error('Unavailable simcard:')
+                    st.code('\n' + ' | '.join(not_available_simcard))
+
+                    
+                    approval_button = st.selectbox('Are you sure you want to delete the simcard?', 
+                                                        ('','Yes', 'No'))
+                    #for not_av_sim in not_available_simcard:
+                        #st.error("Are you sure you want to delete the simcard?")
+                    if  approval_button == 'Yes':
+                        manage.deleted_account(select_platform, select_client)
+                        st.caption("All the banned simcard has been deleted")
+                    elif approval_button == 'No' :
+                        st.caption("No simcard is deleted.")
+                        print('No simcard')
 
 def user_learning():
     """
