@@ -53,7 +53,7 @@ class Manage:
         platform_list = [f for f in listdir(path_to_accs)]
         return platform_list
 
-    def checking_banned_or_not(self,platform:str)->tuple[list,list]:
+    def checking_banned_or_not(self,platform:str, client:str)->tuple[list,list]:
         """
         Return list of available and not-available 
         account.
@@ -65,7 +65,9 @@ class Manage:
         for acc in accs:
             driver = open_driver(path_to_platform+acc)
             try:
-                WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.PARTIAL_LINK_TEXT,'Need help to get started?')))
+                #WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.PARTIAL_LINK_TEXT,'Need help to get started?')))
+                f = WebDriverWait(driver, 300).until(EC.visibility_of_element_located((By.XPATH,
+                                    '//*[@title="Search input textbox"]')))
                 self.not_available.append(acc)
             except:
                 self.available.append(acc)
