@@ -29,13 +29,13 @@ class Manage:
         name = [x.strip() for x in name]
         return name
 
-    def get_all_sim_name(self, platform:str)->list[str]:
+    def get_all_sim_name(self, platform:str, client:str)->list[str]:
         """
         Return a list of directory of platform
         """
-        path_to_accs = self.user_path  + '\\' + platform
-        accs = [f for f in listdir(path_to_accs)]
-        return accs
+        path_to_accs = self.user_path  + '\\' + platform + '\\' + client
+        sim_list = [f for f in listdir(path_to_accs)]
+        return sim_list
 
     def add_client_directory(self, platform, client:str):
         filepath = self.user_path + '\\' + str(platform) 
@@ -59,18 +59,25 @@ class Manage:
         account.
         Checking whether the account is banned or not. 
         """
-        accs = self.get_all_sim_name(platform)
-        path_to_platform = 'user-data-dir=' + str(self.user_path) + '\\' + str(platform) + '\\' 
+        sim_list = self.get_all_sim_name(platform, client)
+        path_to_platform = 'user-data-dir=' + str(self.user_path) + '\\' + str(platform) + '\\' + str(client) + '\\'
        
-        for acc in accs:
-            driver = open_driver(path_to_platform+acc)
+        for simcard in sim_list:
+            driver = open_driver(path_to_platform+simcard)
             try:
-                WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.PARTIAL_LINK_TEXT,'Need help to get started?')))
-                self.not_available.append(acc)
+                # if available, will found there phrase
+                #WebDriverWait(driver, 300).until(EC.visibility_of_element_located((By.XPATH,
+                #                    '//*[@title="Search input textbox"]')))
+                f = WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.XPATH,'//*[@title="Search input textbox"]')))
+                self.available.append(simcard)
+                print("AVAILABLE")
+                
             except:
-                f = WebDriverWait(driver, 300).until(EC.visibility_of_element_located((By.XPATH,
-                                    '//*[@title="Search input textbox"]')))
-                self.available.append(acc)
+                # If not avaialble, will found these phrase
+                f = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="app"]/div/div/div[2]/div[1]/div/div[2]/div/canvas')))
+                self.not_available.append(simcard)
+                print("NOT AVAILABLE")
+                
             driver.quit()
 
         return (self.available, self.not_available)
@@ -104,13 +111,13 @@ class Manage:
         self.account_dict[name] = 'deleted'
 
     
-    def get_taken(self, name:str, platform:str)->list[str]:
+    def get_taken(self, name:str, platform:str, client:str)->list[str]:
         """
         Return list of the account name, if the account is existed (added)
         """
         name = self.get_name(name)
-        accs = self.get_all_sim_name(platform)
-        taken = [x for x in name if x in accs]
+        sim_list = self.get_all_sim_name(platform,client)
+        taken = [x for x in name if x in sim_list]
         return taken
 
     def get_screenshot(self, photo):
