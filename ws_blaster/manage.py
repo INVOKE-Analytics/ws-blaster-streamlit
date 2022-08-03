@@ -65,11 +65,11 @@ class Manage:
         for acc in accs:
             driver = open_driver(path_to_platform+acc)
             try:
-                #WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.PARTIAL_LINK_TEXT,'Need help to get started?')))
-                f = WebDriverWait(driver, 300).until(EC.visibility_of_element_located((By.XPATH,
-                                    '//*[@title="Search input textbox"]')))
+                WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.PARTIAL_LINK_TEXT,'Need help to get started?')))
                 self.not_available.append(acc)
             except:
+                f = WebDriverWait(driver, 300).until(EC.visibility_of_element_located((By.XPATH,
+                                    '//*[@title="Search input textbox"]')))
                 self.available.append(acc)
             driver.quit()
 
