@@ -64,7 +64,7 @@ def open_driver_beta(user_path):
     return driver, display
 
 # from selenium.webdriver.common.by import By
-# driver, display = open_driver_beta("")
+# driver, display = open_driver_beta("user-data-dir=Users/AyuhMalaysia/Anis_3")
 # driver.get_screenshot_as_file("screenshot.png")
 # driver.find_element(By.XPATH, "//span[@title='+60 11-6070 0295']").click()
 # driver.find_element(By.XPATH, "//div[@class='p3_M1']").click()
