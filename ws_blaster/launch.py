@@ -163,6 +163,7 @@ def add_new_account():
                             time.sleep(1)
                         except:
                             manage.deleted_account(select_platform_new_acc, name_acc)
+                            st.error('ERROR: Whatsapp failed to link the simcard.')
             elif len(get_taken) == 1:
                 st.write('simcard name--' + str(get_taken[0]) + ' is not available. Please choose another name!')
             else:
@@ -175,13 +176,14 @@ def deleting_account():
         """
         st.markdown("----------------------------------------------")
         st.info("DELETING ACCOUNT")
+
         select_platform = st.selectbox('Select platform', 
                                 ('',
                                 'meniaga',
                                 'AyuhMalaysia',
                                 'Burner Accounts'))
 
-        select_client = st.selectbox('Select client', tuple([' ',]) + tuple(manage.get_all_client_dir(select_platform)))
+        select_client = st.selectbox('Select client', tuple([' ',]) + tuple(manage.get_all_client_dir(select_platform)))   
 
         if select_platform != '' and select_client != ' ':
             #with st.spinner('Checking all simcard...'):
@@ -190,37 +192,55 @@ def deleting_account():
             st.subheader('List of simcard: ')
             st.code( ' | '.join(accs))
 
-            if len(accs) > 1:
-                if select_platform == 'Burner Accounts':
-                    select_platform  = 'burner'    
-                
-                approval_simcard = st.selectbox('Select "Check Banned" to check banned simcard', ('', 'Check Banned'))
-                if approval_simcard == 'Check Banned':
-                    #with st.spinner("Checking banned simcard..."):
+            st.subheader('Click to check simcard status')
+            button = st.button('Check banned simcard')
+
+            unavailable = [x for x in empty_list]
+            empty_list = []
+        
+            
+
+            if button:
+
+                #with st.spinner("Checking banned simcard..."):
+                bar = st.progress(0)
+                for percent_complete in range(100):
                         #time.sleep(2)
                         #available = manage.checking_banned_or_not(select_platform, select_client)[0]
                     not_available_simcard = manage.checking_banned_or_not(select_platform,select_client)[1]
-                    print(not_available_simcard)
-                    st.success("Check Done")
                     
-                if len(not_available_simcard) == 0:
-                    st.success('All simcard is valid! \n No simcard need to be to deleted!')
-
-                elif len(not_available_simcard) > 0:
-                    st.error('Unavailable simcard:')
-                    st.code('\n' + ' | '.join(not_available_simcard))
-
+                    empty_list.append(not_available_simcard)
+                    bar.progress(percent_complete+100)
+                    break
+            print('UNAvailable',unavailable, 'EMPTY', empty_list)
+            if len(unavailable) == 0:
+                st.success('All simcard is valid! \n No simcard need to be to deleted!')
+            elif len(unavailable) > 0:
+                st.error('Unavailable simcard:')
+                st.code('\n' + ' | '.join(unavailable))
                     
+                
+        '''try:
+            unavailable = [x for x in not_available_simcard]
+        except Exception as e1:
+            print(f'Exception e1: {e1}')
+            st.error('Please check the simcard status first')'''
+
+        try:
+            if len(unavailable) > 0:
                     approval_button = st.selectbox('Are you sure you want to delete the simcard?', 
                                                         ('','Yes', 'No'))
                     #for not_av_sim in not_available_simcard:
                         #st.error("Are you sure you want to delete the simcard?")
                     if  approval_button == 'Yes':
                         manage.deleted_account(select_platform, select_client)
-                        st.caption("All the banned simcard has been deleted")
+                        st.warning("All the banned simcard has been deleted")
                     elif approval_button == 'No' :
-                        st.caption("No simcard is deleted.")
+                        st.warning("No simcard is deleted.")
                         print('No simcard')
+        except Exception as e2:
+            print(f'Exception e2: {e2}')
+
 
 def user_learning():
     """
