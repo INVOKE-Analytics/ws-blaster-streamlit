@@ -136,6 +136,7 @@ class Blaster:
         self.driver_path = self.user_path / platform
         for acc in listdir(self.driver_path):
             data_dir = "user-data-dir=" + str(self.driver_path / acc)
+            print(data_dir)
             driver = open_driver(data_dir, headless=headless)
             self.driver_dict[acc] = driver
             time.sleep(10)
