@@ -68,7 +68,7 @@ if option1 == 'Blast Messages':
                 acc, driver = blaster.nav_to_number(number)
                 message = blaster.get_random_message()
                 status = blaster.send_message(driver, message)
-                my_progress.progress(i+1/len(numbers))
+                my_progress.progress((i+1)/len(numbers))
                 blaster.apply_random_wait(i)
             st.success("Messages sent to all numbers")
             blaster.close_drivers()

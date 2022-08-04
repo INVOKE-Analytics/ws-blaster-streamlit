@@ -30,7 +30,7 @@ def test_clean_numbers():
 
 
 def test_setup_drivers_in_account():
-    blaster.setup_drivers_in_account("burner")
+    blaster.setup_drivers_in_account("AyuhMalaysia")
     assert len(blaster.driver_dict) == 1
 
 
@@ -60,9 +60,5 @@ def test_send_pic():
         driver, "/mnt/c/Users/ahila/Programs/ws-blaster-prod/images/invoke_logo.jpg")
 
 
-def test_remove_driver():
-    # TODO: write a test to check if the driver got deleted appropriately
-    pass
-
-# def test_close_drivers():
-#     blaster.close_drivers()
+def test_close_drivers():
+    blaster.close_drivers()

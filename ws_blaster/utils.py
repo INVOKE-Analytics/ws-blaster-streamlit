@@ -1,4 +1,3 @@
-from lib2to3.pgen2 import driver
 import os
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -53,10 +52,10 @@ def open_driver_beta(user_path):
 
     Returns a chromedriver instance
     '''
-    display = Display(visible=0, size=(1000, 1000))
+    display = Display(visible=1, size=(1000, 1000))
     display.start()
     chrome_options = webdriver.ChromeOptions()
-    # chrome_options.add_argument(user_path)
+    chrome_options.add_argument(user_path)
     chrome_options.add_argument("--disable-notifications")
     driver = webdriver.Chrome(service=Service(
         ChromeDriverManager().install()), options=chrome_options)

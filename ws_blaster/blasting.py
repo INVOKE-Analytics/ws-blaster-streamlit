@@ -137,6 +137,7 @@ class Blaster:
         self.driver_path = self.user_path / platform
         for acc in listdir(self.driver_path):
             data_dir = "user-data-dir=" + str(self.driver_path / acc)
+            print(data_dir)
             driver, display = open_driver_beta(data_dir)
             self.driver_dict[acc] = driver
             self.display_dict[acc] = display
@@ -182,16 +183,12 @@ class Blaster:
         Raises a selenium.common.exceptions.TimeoutException Message if 
         it can't find the element
         """
-        # Debug this in headless mode
-        driver.get_screenshot_as_file("screenshot1.png")
-        self._select_elm(driver, "//div[@class='p3_M1']", 300).click()
         pyperclip.copy(message)
-        ActionChains(driver).key_down(Keys.CONTROL).send_keys(
-            'v').key_up(Keys.CONTROL).perform()
+        self._select_elm(driver, "//div[@class='p3_M1']", 300).click()
+        self._select_elm(
+            driver, "//div[@class='p3_M1']", 300).send_keys(pyperclip.paste())
         time.sleep(sleep)
-        driver.get_screenshot_as_file("screenshot2.png")
         self._select_elm(driver, "//span[@data-testid='send']", 5).click()
-        driver.get_screenshot_as_file("screenshot3.png")
         return 'sent'
 
     def check_if_unavailable(self, acc) -> bool:
