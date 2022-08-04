@@ -52,7 +52,7 @@ def open_driver_beta(user_path):
 
     Returns a chromedriver instance
     '''
-    display = Display(visible=1, size=(1000, 1000))
+    display = Display(visible=0, size=(1000, 1000))
     display.start()
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument(user_path)
@@ -64,7 +64,7 @@ def open_driver_beta(user_path):
     return driver, display
 
 # from selenium.webdriver.common.by import By
-# driver, display = open_driver_beta("user-data-dir=Users/AyuhMalaysia/Anis_3")
+# driver, display = open_driver_beta("user-data-dir=Users/AyuhMalaysia/Fizah")
 # driver.get_screenshot_as_file("screenshot.png")
 # driver.find_element(By.XPATH, "//span[@title='+60 11-6070 0295']").click()
 # driver.find_element(By.XPATH, "//div[@class='p3_M1']").click()

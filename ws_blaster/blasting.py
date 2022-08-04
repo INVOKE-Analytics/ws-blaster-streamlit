@@ -164,7 +164,7 @@ class Blaster:
             EC.visibility_of_element_located((By.XPATH, xpath)))
         return elm
 
-    def send_file(self, driver, file_path, sleep=2) -> None:
+    def send_file(self, driver, file_path, sleep=7) -> None:
         """
         Send the requested files in the chat 
         Raises a selenium.common.exceptions.TimeoutException Message if 
