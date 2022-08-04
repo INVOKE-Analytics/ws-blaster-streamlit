@@ -6,7 +6,7 @@ import pyperclip
 import pandas as pd
 
 from os import listdir
-from ws_blaster.utils import open_driver_beta, save_uploadedfile
+from ws_blaster.utils import open_driver_blasting, save_uploadedfile
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -67,7 +67,7 @@ class Blaster:
         """
         Returns the list of images in blaster class
         """
-        return self.imgs
+        return random.choice(self.files_to_blast_paths)
 
     @property
     def blocked_accounts(self) -> list:
@@ -119,10 +119,11 @@ class Blaster:
         self.save_path = pathlib.Path("./tmp")
         self.save_path.mkdir(parents=True, exist_ok=True)
         for uploaded_file in uploaded_files:
-            self.files_to_blast_paths.append(
-                self.save_path / uploaded_file.name)
+            path = self.save_path / uploaded_file.name
+            self.files_to_blast_paths.append(path.resolve())
             save_uploadedfile(
                 uploaded_file, uploaded_file.name, self.save_path)
+        print(self.files_to_blast_paths)
 
     def add_message_variations_to_blast(self, message) -> None:
         """
@@ -138,7 +139,7 @@ class Blaster:
         for acc in listdir(self.driver_path):
             data_dir = "user-data-dir=" + str(self.driver_path / acc)
             print(data_dir)
-            driver, display = open_driver_beta(data_dir)
+            driver, display = open_driver_blasting(data_dir)
             self.driver_dict[acc] = driver
             self.display_dict[acc] = display
             time.sleep(10)
@@ -155,6 +156,13 @@ class Blaster:
         driver.execute_script("window.onbeforeunload = function() {};")
         time.sleep(sleep)
         return acc, driver
+
+    def check_num_exits(self, driver, xpath, wait) -> None:
+        # TODO: Check if the phone number exists then continue
+        """
+        Check if the phone number exists
+        """
+        pass
 
     def _select_elm(self, driver, xpath, wait):
         """
