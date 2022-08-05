@@ -92,13 +92,16 @@ def check_available_account():
                         st.code(str(' |  '.join(not_available)))
 
 def add_new_client():
-    client_platform = st.selectbox('Choose platform for client', 
-                                ('',
-                                'meniaga',
-                                'AyuhMalaysia',
-                                'Burner Accounts'))
-    client_name = st.text_area("Enter client name:")
-    button = st.button("Add client")
+    st.markdown("----------------------------------------------")
+    st.info("ADD NEW CLIENT")
+    with st.form(key='new_client'):
+        client_platform = st.selectbox('Choose platform for client', 
+                                    ('',
+                                    'meniaga',
+                                    'AyuhMalaysia',
+                                    'Burner Accounts'))
+        client_name = st.text_area("Enter client name:")
+        button = st.form_submit_button("Add client")
 
     if button:
         with st.spinner("Adding new client..."):
@@ -292,23 +295,17 @@ def user_learning():
 
 
 def main_account_management():
-    with st.expander('Open to see the details'):
-        st.sidebar.warning(
-            """
-            Select option
-            > Tutorial
-                Learn how to setup a simcard.
-
-            > simcard Setup
-                Setup a new simcard.
-            """
-        )
-    choice = st.selectbox('Select option',('', 'Tutorial', 'simcard Setup'))
     
-    if choice == "Tutorial":
+        
+    #choice = st.selectbox('Select option',('', 'Tutorial', 'simcard Setup'))
+    tab1, tab2 = st.tabs(['⚡Tutorial', '⚙ Simcard Settings'])
+
+    #if choice == "Tutorial":
+    with tab1:
         user_learning()
         
-    elif choice == "simcard Setup":
+    #elif choice == "simcard Setup":
+    with tab2:
         select_option = st.selectbox('Select what do you want to do?', 
                                         ('',
                                         'Add new client', 
