@@ -6,12 +6,10 @@ import pyperclip
 import pandas as pd
 
 from os import listdir
-from ws_blaster.utils import open_driver, save_uploadedfile
+from ws_blaster.utils import open_driver_blasting, save_uploadedfile
 
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 
 
@@ -23,9 +21,10 @@ class Blaster:
         self.contact_numbers = []
         self.messages = []
         self.files_to_blast_paths = []
-        self.driver_dict = {}
-        self.sent = 0
         self.unavailable_accounts = []
+        self.driver_dict = {}
+        self.display_dict = {}
+        self.sent = 0
 
     @property
     def columns(self) -> list:
@@ -66,7 +65,7 @@ class Blaster:
         """
         Returns the list of images in blaster class
         """
-        return self.imgs
+        return random.choice(self.files_to_blast_paths)
 
     @property
     def blocked_accounts(self) -> list:
@@ -118,10 +117,11 @@ class Blaster:
         self.save_path = pathlib.Path("./tmp")
         self.save_path.mkdir(parents=True, exist_ok=True)
         for uploaded_file in uploaded_files:
-            self.files_to_blast_paths.append(
-                self.save_path / uploaded_file.name)
+            path = self.save_path / uploaded_file.name
+            self.files_to_blast_paths.append(path.resolve())
             save_uploadedfile(
                 uploaded_file, uploaded_file.name, self.save_path)
+        print(self.files_to_blast_paths)
 
     def add_message_variations_to_blast(self, message) -> None:
         """
@@ -129,15 +129,17 @@ class Blaster:
         """
         self.messages.append(message)
 
-    def setup_drivers_in_account(self, platform, headless=False) -> None:
+    def setup_drivers_in_account(self, platform) -> None:
         """
         Load the driver for all whats app accounts under platform
         """
         self.driver_path = self.user_path / platform
         for acc in listdir(self.driver_path):
             data_dir = "user-data-dir=" + str(self.driver_path / acc)
-            driver = open_driver(data_dir, headless=headless)
+            print(data_dir)
+            driver, display = open_driver_blasting(data_dir)
             self.driver_dict[acc] = driver
+            self.display_dict[acc] = display
             time.sleep(10)
 
     def nav_to_number(self, phone_number, sleep=5) -> None:
@@ -153,6 +155,13 @@ class Blaster:
         time.sleep(sleep)
         return acc, driver
 
+    def check_num_exits(self, driver, xpath, wait) -> None:
+        # TODO: Check if the phone number exists then continue
+        """
+        Check if the phone number exists
+        """
+        pass
+
     def _select_elm(self, driver, xpath, wait):
         """
         Get the selenium object associated with the element in the DOM Tree
@@ -161,7 +170,7 @@ class Blaster:
             EC.visibility_of_element_located((By.XPATH, xpath)))
         return elm
 
-    def send_file(self, driver, file_path, sleep=2) -> None:
+    def send_file(self, driver, file_path, sleep=7) -> None:
         """
         Send the requested files in the chat 
         Raises a selenium.common.exceptions.TimeoutException Message if 
@@ -180,17 +189,12 @@ class Blaster:
         Raises a selenium.common.exceptions.TimeoutException Message if 
         it can't find the element
         """
-        # Debug this in headless mode
-        driver.get_screenshot_as_file("screenshot1.png")
-        self._select_elm(
-            driver, "//p[@class='selectable-text copyable-text']", 300).click()
         pyperclip.copy(message)
-        ActionChains(driver).key_down(Keys.CONTROL).send_keys(
-            'v').key_up(Keys.CONTROL).perform()
+        self._select_elm(driver, "//div[@class='p3_M1']", 300).click()
+        self._select_elm(
+            driver, "//div[@class='p3_M1']", 300).send_keys(pyperclip.paste())
         time.sleep(sleep)
-        driver.get_screenshot_as_file("screenshot2.png")
         self._select_elm(driver, "//span[@data-testid='send']", 5).click()
-        driver.get_screenshot_as_file("screenshot3.png")
         return 'sent'
 
     def check_if_unavailable(self, acc) -> bool:
@@ -204,18 +208,17 @@ class Blaster:
         return elm_is_present
 
     def remove_driver(self, acc) -> str:
+        # TODO: Add logging
         """
         Remove the driver if the driver becomes unavailable
         """
-        # TODO: Add logging
         driver = self.driver_dict[acc]
+        display = self.display_dict[acc]
         driver.quit()
+        display.stop()
         del self.driver_dict[acc]
         self.unavailable_accounts.append(self.driver_path / acc)
         return acc
-        # st.subheader('*** Driver-- ' + str(driver_ls[drivers_idx]) + ' is unavailable ***')
-        # st.subheader('*** Drivers left: ' + str(driver_count) + ' ***')
-        # st.subheader('### ALL ACCOUNTS ARE CURRENTLY UNAVAILABLE! BLASTING STOPPED AT INDEX: ' + str(i) + '###')
 
     def apply_random_wait(self, count) -> None:
         """
@@ -225,7 +228,6 @@ class Blaster:
             time.sleep(random.randint(500, 1000))
         elif count % 10 == 0 and count != 0:
             time.sleep(random.randint(5, 10))
-            # return 'Numbers gone through: ' + str(count) + ', Messages sent: ' + str(count)
         else:
             time.sleep(random.randint(2, 5))
 
@@ -233,5 +235,8 @@ class Blaster:
         """
         Close all open drivers once blasting has completed.
         """
-        for driver in self.driver_dict.values():
+        for acc in self.driver_dict.keys():
+            driver = self.driver_dict[acc]
+            display = self.display_dict[acc]
             driver.quit()
+            display.stop()
