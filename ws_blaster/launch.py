@@ -1,4 +1,5 @@
 
+from html.entities import name2codepoint
 from unicodedata import unidata_version
 from soupsieve import select
 import streamlit as st
@@ -45,7 +46,7 @@ option1 = st.sidebar.selectbox('Select option', ('Blast Messages', 'Account Mana
 # Account Management
 ##############################################################
 
-manage = Manage(user_path='D:\\Desktop\\INVOKE\\ws_blaster\\ahilan-branch\\venvAhilan\\ws-blaster-prod\\Users')
+manage = Manage(user_path='./Users')
 
 
 def check_available_account():
@@ -173,7 +174,7 @@ def add_new_account():
                             st.success(name_acc + ' added!')
                             time.sleep(1)
                         except:
-                            manage.deleted_account(select_platform_new_acc, name_acc)
+                            #manage.deleted_account(select_platform_new_acc, select_client, name_acc)
                             st.error('ERROR: Whatsapp failed to link the simcard.')
             elif len(get_taken) == 1:
                 st.error('Simcard name--' + str(get_taken[0]) + ' has been existed. Try choose another name.')

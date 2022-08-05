@@ -11,7 +11,7 @@ import pathlib
 
 class Manage:
     def __init__(self, user_path):
-        self.user_path = user_path
+        self.user_path = pathlib.Path(user_path)
         self.driver_dict = {}
         self.account_dict = {}
         self.list_dir = {}
@@ -33,24 +33,24 @@ class Manage:
         """
         Return a list of directory of platform
         """
-        path_to_accs = self.user_path  + '\\' + str(platform) + '\\' + str(client)
-        sim_list = [f for f in listdir(path_to_accs)]
+        path_to_client = self.user_path/platform/client
+        sim_list = [f for f in listdir(path_to_client)]
         return sim_list
 
     def add_client_directory(self, platform, client:str):
-        filepath = self.user_path + '\\' + str(platform) 
-        make_dir = os.mkdir(filepath + '\\' + client)
-        return make_dir
+        filepath = self.user_path/platform 
+        new_dir = os.mkdir(str(filepath / client))
+        return new_dir
 
     def get_all_client_dir(self, platform):
-        path_to_platform = self.user_path + '\\' + platform 
+        path_to_platform = self.user_path/platform
         client_dir = [f for f in listdir(path_to_platform)]
         return client_dir
 
 
     def get_all_platform(self):
-        path_to_accs = self.user_path  
-        platform_list = [f for f in listdir(path_to_accs)]
+        path_to_user = self.user_path
+        platform_list = [f for f in listdir(path_to_user)]
         return platform_list
 
     def checking_banned_or_not(self,platform:str, client:str)->tuple[list,list]:
@@ -60,14 +60,13 @@ class Manage:
         Checking whether the account is banned or not. 
         """
         sim_list = self.get_all_sim_name(platform, client)
-        path_to_platform = 'user-data-dir=' + str(self.user_path) + '\\' + str(platform) + '\\' + str(client) + '\\'
+        
        
         for simcard in sim_list:
-            driver = open_driver(path_to_platform+simcard)
+            path_to_platform = 'user-data-dir=' + str(self.user_path/platform/client/simcard)
+            print(path_to_platform)
+            driver = open_driver(path_to_platform)
             try:
-                # if available, will found there phrase
-                #WebDriverWait(driver, 300).until(EC.visibility_of_element_located((By.XPATH,
-                #                    '//*[@title="Search input textbox"]')))
                 f = WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.XPATH,'//*[@title="Search input textbox"]')))
                 self.available.append(simcard)
                 print("AVAILABLE")
@@ -87,27 +86,35 @@ class Manage:
         """
         Take the screenshot of the QR code 
         """
-        driver.save_screenshot('D:\\Desktop\\INVOKE\\ws_blaster\\ahilan-branch\\venvAhilan\\ws-blaster-prod\\screenshot\\QR_code.png')
+        driver.save_screenshot('ws-blaster-prod/screenshot/QR_code.png')
         ss = 'screenshot'
         self.screenshot.append(ss)
 
     def create_new_user_file(self, platform:str, client:str, account_name:str):
-        # TODO: Client has been added here, not tested yet
         """
         Create new file user account in platform file
         """
-        path_to_platform = 'user-data-dir=' + self.user_path + '\\' + str(platform) + '\\' + str(client) + '\\'
-        driver = open_driver(path_to_platform + account_name, headless=True)
+        path_to_platform = self.user_path/platform/client/account_name
+        path_to_platform = pathlib.WindowsPath(path_to_platform)
+
+        # TODO: POSIX --> WINDOWS == os.path.abspath(path).replace('\\', '/')
+        print(100*"#")
+        print("CREATE NEW USER FILE 1", path_to_platform)
+        #print(path_to_platform.exists())
+        print(100*"#")
+        driver = open_driver(path_to_platform, headless=True)
         self.driver_dict[path_to_platform] = account_name
         return driver
-    
     
     def deleted_account(self, platform:str, client:str, simcard:str):
         """
         To delete the directory which deleted the account too.
         """
-        path_to_acount =  str(self.user_path) + '\\' + str(platform) + '\\' + str(client) + '\\' + str(simcard)
-        shutil.rmtree(path_to_acount)
+        path_to_account =  self.user_path/platform/client/simcard
+        print(100*'#')
+        print(path_to_account.exists())
+        print(100*'#')
+        shutil.rmtree(path_to_account)
         self.account_dict[client] = 'deleted'
 
     
