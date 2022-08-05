@@ -234,73 +234,75 @@ def deleting_account():
 
 
 def user_learning():
-    """
-    Tutorial for user.
-    """
-    st.title("Terms Used")
-    st.markdown(
-            """
-            ### 👉 Platform
-            > The product that we use to execute the blasting. 
-
-                Example: Decoris, Meniaga, Ayuh Malaysia
-            """)
-
-    st.markdown(
-            """
-            ### 👉 Client
-            > Client that used WhatApp Blaster service
-
-                Example: Mc Donald, Restauran Maju
-            
-            """
-    )
-    st.markdown(
-            """
-            ### 👉 Simcard account
-            > The sim card name that have been registered for the platform chosen by the client.
-
-            > For every client, they have 3 simcard that can be used.
-
-                Example:  011-123 4567
-            
-            """)
-
-    st.markdown(
+    with st.container():
         """
-        ### ✅ Full-path
-        > Format
-            Platform > Client > Simcard account
-        > Example:  
-            Meniaga > Restauran Maju > 011- 123 4567
+        Tutorial for user.
         """
-    )
-    st.title("Steps")
-    st.markdown(
-        """
-        ### How to setup a new simcard for new client?
+        st.title("Terms Used")
+        st.markdown(
+                """
+                ### 👉 Platform
+                > The product that we use to execute the blasting. 
 
-            1. Add new client name on "Add client name" section
-            2. Move to "Add new simcard(s)
-            3. Choose the platform of the client. 
-            4. Select client name that has been added previously. 
-            5. Enter Whatsapp number a simcard.
-            6. Click "Add simcard(s)" button.
-        """
-    )
+                    Example: Decoris, Meniaga, Ayuh Malaysia
+                """)
+
+        st.markdown(
+                """
+                ### 👉 Client
+                > Client that used WhatApp Blaster service
+
+                    Example: Mc Donald, Restauran Maju
+                
+                """
+        )
+        st.markdown(
+                """
+                ### 👉 Simcard account
+                > The sim card name that have been registered for the platform chosen by the client.
+
+                > For every client, they have 3 simcard that can be used.
+
+                    Example:  011-123 4567
+                
+                """)
+
+        st.markdown(
+            """
+            ### ✅ Full-path
+            > Format
+                Platform > Client > Simcard account
+            > Example:  
+                Meniaga > Restauran Maju > 011- 123 4567
+            """
+        )
+        st.title("Steps")
+        st.markdown(
+            """
+            ### How to setup a new simcard for new client?
+
+                1. Add new client name on "Add client name" section
+                2. Move to "Add new simcard(s)
+                3. Choose the platform of the client. 
+                4. Select client name that has been added previously. 
+                5. Enter Whatsapp number a simcard.
+                6. Click "Add simcard(s)" button.
+            """
+        )
 
 
 def main_account_management():
-    st.sidebar.warning(
-        """
-        Select option
-        > Tutorial
-            Learn how to setup a simcard.
+    with st.expander('Open to see the details'):
+        st.sidebar.warning(
+            """
+            Select option
+            > Tutorial
+                Learn how to setup a simcard.
 
-        > simcard Setup
-            Setup a new simcard.
-        """
-    )
+            > simcard Setup
+                Setup a new simcard.
+            """
+        )
     choice = st.selectbox('Select option',('', 'Tutorial', 'simcard Setup'))
     
     if choice == "Tutorial":
