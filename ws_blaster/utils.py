@@ -28,7 +28,8 @@ def open_driver(user_path, headless=True):
     '''
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument(user_path)
-    chrome_options.add_argument("--disable-notifications")
+    chrome_options.add_argument('--disable-notifications')
+
     if headless:
         chrome_options.add_argument('--disable-gpu')
         chrome_options.add_argument("--headless")

@@ -2,7 +2,7 @@ import pytest
 import pandas as pd
 from ws_blaster.blasting import Blaster
 
-blaster = Blaster(user_path="./Users")
+blaster = Blaster(user_path="D:\\Desktop\\INVOKE\\ws_blaster\\ahilan-branch\\venvAhilan\\ws-blaster-prod\\Users")
 
 
 def pytest_namespace():
@@ -30,7 +30,7 @@ def test_clean_numbers():
 
 
 def test_setup_drivers_in_account():
-    blaster.setup_drivers_in_account("AyuhMalaysia")
+    blaster.setup_drivers_in_account("burner")
     assert len(blaster.driver_dict) == 1
 
 

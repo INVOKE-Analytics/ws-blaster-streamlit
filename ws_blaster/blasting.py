@@ -1,5 +1,6 @@
 import re
 import time
+import uuid
 import random
 import pathlib
 import pyperclip
@@ -29,7 +30,7 @@ class Blaster:
     @property
     def columns(self) -> list:
         """
-        Get all the columns in the passed dataframe.
+        Get all the columns in the passed dataframe
         """
         if isinstance(self.contacts_df, pd.DataFrame):
             return self.contacts_df.columns.tolist()
@@ -44,14 +45,14 @@ class Blaster:
     @property
     def phone_numbers(self) -> list:
         """
-        Returns a list of all the phone numbers to blast to.
+        Return a list of all the phone numbers to blast to 
         """
         return self.contact_numbers
 
     @property
     def contact_numbers_info(self) -> dict:
         """
-        Returns a dictionary of the number of phone numbers and a sample of 5 numbers.
+        Returns a dictionary of the number of phone numbers and a sample of 5 numbers
         """
         k = min(5, len(set(self.contact_numbers)))
         info_dict = {
@@ -84,6 +85,7 @@ class Blaster:
         """
         Clean numbers to required format for whatsapp search
 
+        df: Dataframe [pandas dataframe]
         col: Column name containing the numbers to blast [str]
 
         Returns dataframe with cleaned numbers
@@ -103,7 +105,7 @@ class Blaster:
         self.contact_numbers = self.contacts_df[col].to_list()
         return self.contact_numbers
 
-    def extract_from_file(self, file) -> None:
+    def extract_from_file(self, file):
         # TODO: Extend for other file formats
         """
         Currently only accepts csv files.
@@ -112,7 +114,7 @@ class Blaster:
 
     def save_files_to_blast(self, uploaded_files) -> None:
         """
-        Saves all the uploaded files to a `tmp` file with a unique uuid
+        Saves all the uplaoded files to a `tmp` file with a unique uuid
         """
         self.save_path = pathlib.Path("./tmp")
         self.save_path.mkdir(parents=True, exist_ok=True)
@@ -123,7 +125,7 @@ class Blaster:
                 uploaded_file, uploaded_file.name, self.save_path)
         print(self.files_to_blast_paths)
 
-    def add_message_variations_to_blast(self, message) -> None:
+    def add_message_variations_to_blast(self, message):
         """
         Append all the variations of a message to send to a list to be used later.
         """
@@ -142,10 +144,9 @@ class Blaster:
             self.display_dict[acc] = display
             time.sleep(10)
 
-    def nav_to_number(self, phone_number, sleep=5) -> None:
+    def nav_to_number(self, phone_number, sleep=5):
         """
         Navigate to the given URL and open a chat for a given phone number
-        Returns the account name and the driver for that account
         """
         acc = random.choice(list(self.driver_dict.keys()))
         driver = self.driver_dict[acc]
@@ -173,8 +174,6 @@ class Blaster:
     def send_file(self, driver, file_path, sleep=7) -> None:
         """
         Send the requested files in the chat 
-        Raises a selenium.common.exceptions.TimeoutException Message if 
-        it can't find the element
         """
         self._select_elm(driver, "//span[@data-testid='clip']", 300).click()
         driver.find_element(
@@ -186,8 +185,6 @@ class Blaster:
     def send_message(self, driver, message, sleep=2) -> None:
         """
         Send the message in the chat
-        Raises a selenium.common.exceptions.TimeoutException Message if 
-        it can't find the element
         """
         pyperclip.copy(message)
         self._select_elm(driver, "//div[@class='p3_M1']", 300).click()

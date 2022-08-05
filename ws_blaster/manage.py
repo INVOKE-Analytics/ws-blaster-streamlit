@@ -1,130 +1,115 @@
+import streamlit as st
 from ws_blaster.utils import open_driver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from os import listdir
+import os
+from os import listdir, path
 import time
 import shutil
+import pathlib
 
 class Manage:
-    def __init__(self):
-        pass
+    def __init__(self, user_path):
+        self.user_path = user_path
+        self.driver_dict = {}
+        self.account_dict = {}
+        self.list_dir = {}
+        self.new_account = []
+        self.available = [] # if len > 1, there is account
+        self.not_available = []
+        self.exist_account = self.available + self.not_available
+        self.screenshot = []
     
-    def get_account_options(self):
-        return ['', 'Meniaga', "Ayuh Malaysia", "Burner Account"]    
-
-    def opt3(self):
+    def get_name(self, name:str):
         """
-        Description: To choose option3
-
+        Return name in list data type
         """
-        option3 = self.get_account_options()
-        if option3 != '':
-            if option3 == 'Burner Accounts':
-                option3 = 'burner'
-                return option3
-
-    def remove_DS_store(self, mypath): 
-        """ 
-        Description: To remove .DS Store file
-        
-        """
-        self.mypath = mypath
-        #option3 = self.opt3()
-        #mypath = '/Users/amerwafiy/Desktop/ws-blasting/Users/amerwafiy/Library/Application Support/Google/Chrome/' + option3 + '/'
-        accs = [f for f in listdir(self.mypath)]
-        if ".DS_Store" in accs:
-            return accs.remove(".DS_Store")
-        return accs
-
-    #   START if len(taken) == 0:        
-    def get_item_in_name(self, string_names):
-        self.string_names = string_names
-        name = self.get_name(self.string_names)
-        for n in name:
-            return n
-
-    def try_Add_account(self):
-        """
-        Component 1 for 'Add account'
-        """
-        option3 = self.opt3(self)
-        mypath = 'user-data-dir=Users/amerwafiy/Library/Application Support/Google/Chrome/' + option3 + '/'
-        n = self.get_item_in_name(self)
-        driver = open_driver(mypath + n, headless = False)
-        f = WebDriverWait(driver, 300).until(EC.visibility_of_element_located((By.XPATH,'//*[@title="Search input textbox"]')))
-        time.sleep(1)
-        return f
-
-    def exept_Add_account_path_delete(self):
-        """
-        Component 2 for 'Add account'
-        """
-        option3 = self.opt3(self)
-        mypath = '/Users/amerwafiy/Desktop/ws-blasting/Users/amerwafiy/Library/Application Support/Google/Chrome/' + option3 + '/'
-        n = self.get_item_in_name(self)
-        path_delete = mypath + n
-        return shutil.rmtree(path_delete) 
-
-    def get_list_available_unavaible_account(self,accs,mypath):
-        """
-        Return list of available and not_available 
-        """
-        self.accs = accs
-        accs = self.get_accs(self)
-        self.mypath = mypath
-        #option3 = self.opt3(self)
-
-        available = []
-        not_available = []
-        #mypath = 'user-data-dir=Users/amerwafiy/Library/Application Support/Google/Chrome/' + option3 + '/'
-        for acc in accs:
-            driver = open_driver(self.mypath + acc)
-            try:
-                elems = WebDriverWait(driver, 15).until(EC.visibility_of_element_located((By.PARTIAL_LINK_TEXT,'Need help to get started?')))
-                not_available.append(acc)
-            except:
-                available.append(acc)
-            driver.quit()
-
-        return (available, not_available)
-
-    def get_accs(self,accs)->list:
-        """
-        Return list of accs
-        """
-        self.accs = accs
-        option3 = self.opt3()
-        accs = self.remove_DS_store(option3)
-        return accs
-
-    def get_name(self,name)->list:
-        """
-        Return list of name
-        """
-        self.name = name.split(',') 
+        name = name.split(',') 
         name = [x.strip() for x in name]
         return name
 
-    def get_taken(self):
+    def get_all_sim_name(self, platform:str)->list[str]:
         """
-        Return name_item within name list, that only exist in accs
+        Return a list of directory of platform
         """
-        name = self.get_name(self)
-        accs = self.get_accs(self)
+        path_to_accs = self.user_path  + '\\' + platform
+        accs = [f for f in listdir(path_to_accs)]
+        return accs
+
+    def add_client_directory(self, platform, client:str):
+        filepath = self.user_path + '\\' + str(platform) 
+        make_dir = os.mkdir(filepath + '\\' + client)
+        return make_dir
+
+    def get_all_client_dir(self, platform):
+        path_to_platform = self.user_path + '\\' + platform 
+        client_dir = [f for f in listdir(path_to_platform)]
+        return client_dir
+
+
+    def get_all_platform(self):
+        path_to_accs = self.user_path  
+        platform_list = [f for f in listdir(path_to_accs)]
+        return platform_list
+
+    def checking_banned_or_not(self,platform:str)->tuple[list,list]:
+        """
+        Return list of available and not-available 
+        account.
+        Checking whether the account is banned or not. 
+        """
+        accs = self.get_all_sim_name(platform)
+        path_to_platform = 'user-data-dir=' + str(self.user_path) + '\\' + str(platform) + '\\' 
+       
+        for acc in accs:
+            driver = open_driver(path_to_platform+acc)
+            try:
+                WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.PARTIAL_LINK_TEXT,'Need help to get started?')))
+                self.not_available.append(acc)
+            except:
+                self.available.append(acc)
+            driver.quit()
+
+        return (self.available, self.not_available)
+
+    def take_screenshot(self, driver):
+        # TODO: QR code will be refreshed after 15 seconds
+        """
+        Take the screenshot of the QR code 
+        """
+        driver.save_screenshot('D:\\Desktop\\INVOKE\\ws_blaster\\ahilan-branch\\venvAhilan\\ws-blaster-prod\\screenshot\\QR_code.png')
+        ss = 'screenshot'
+        self.screenshot.append(ss)
+
+    def create_new_user_file(self, platform:str, client:str, account_name:str):
+        # TODO: Client has been added here, not tested yet
+        """
+        Create new file user account in platform file
+        """
+        path_to_platform = 'user-data-dir=' + self.user_path + '\\' + str(platform) + '\\' + str(client) + '\\'
+        driver = open_driver(path_to_platform + account_name, headless=True)
+        self.driver_dict[path_to_platform] = account_name
+        return driver
+    
+    
+    def deleted_account(self, platform:str, name:str):
+        """
+        To delete the directory which deleted the account too.
+        """
+        path_to_acount =  str(self.user_path) + '\\' + str(platform) + '\\' + str(name)
+        shutil.rmtree(path_to_acount)
+        self.account_dict[name] = 'deleted'
+
+    
+    def get_taken(self, name:str, platform:str)->list[str]:
+        """
+        Return list of the account name, if the account is existed (added)
+        """
+        name = self.get_name(name)
+        accs = self.get_all_sim_name(platform)
         taken = [x for x in name if x in accs]
         return taken
 
-    def option1_acc_management(self):
-        """
-        Return option1 -- 'Account management'
-        """
-        option1 = 'Account Management'
-        return option1
-
-    def ws_logo(self):
-        path = '/Users/amerwafiy/Desktop/ws-blasting/ws-logo.png'
-        return path
-
-    def select_box_option1_acc_management(self):
-        return  ['Add new account(s)','Check available account(s)', 'Delete unavailable account(s)']
+    def get_screenshot(self, photo):
+        return st.image(photo)
