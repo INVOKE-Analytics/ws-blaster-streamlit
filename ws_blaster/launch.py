@@ -1,4 +1,3 @@
-from asyncore import file_dispatcher
 import streamlit as st
 
 from PIL import Image
@@ -63,12 +62,12 @@ if option1 == 'Blast Messages':
         percent_complete = 0
         if start:
             st.info("Setting up Web Drivers")
-            blaster.setup_drivers_in_account(platform, headless=True)
+            blaster.setup_drivers_in_account(platform)
             my_progress = st.progress(0.0)
             for i, number in enumerate(numbers):
                 acc, driver = blaster.nav_to_number(number)
                 message = blaster.get_random_message()
-                file_path = blaster.imgs
+                file_path = str(blaster.imgs)
                 status = blaster.send_file(driver, file_path)
                 status = blaster.send_message(driver, message)
                 my_progress.progress((i+1)/len(numbers))

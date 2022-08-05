@@ -9,9 +9,7 @@ from os import listdir
 from ws_blaster.utils import open_driver_blasting, save_uploadedfile
 
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 
 
@@ -131,7 +129,7 @@ class Blaster:
         """
         self.messages.append(message)
 
-    def setup_drivers_in_account(self, platform, headless=False) -> None:
+    def setup_drivers_in_account(self, platform) -> None:
         """
         Load the driver for all whats app accounts under platform
         """
@@ -210,10 +208,10 @@ class Blaster:
         return elm_is_present
 
     def remove_driver(self, acc) -> str:
+        # TODO: Add logging
         """
         Remove the driver if the driver becomes unavailable
         """
-        # TODO: Add logging
         driver = self.driver_dict[acc]
         display = self.display_dict[acc]
         driver.quit()
