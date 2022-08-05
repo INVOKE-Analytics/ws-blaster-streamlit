@@ -33,7 +33,7 @@ class Manage:
         """
         Return a list of directory of platform
         """
-        path_to_accs = self.user_path  + '\\' + platform + '\\' + client
+        path_to_accs = self.user_path  + '\\' + str(platform) + '\\' + str(client)
         sim_list = [f for f in listdir(path_to_accs)]
         return sim_list
 
@@ -117,6 +117,7 @@ class Manage:
         """
         name = self.get_name(name)
         sim_list = self.get_all_sim_name(platform,client)
+        print("SIMLIST",sim_list, "NAME", name)
         taken = [x for x in name if x in sim_list]
         return taken
 

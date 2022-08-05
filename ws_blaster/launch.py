@@ -64,7 +64,8 @@ def check_available_account():
                                 'AyuhMalaysia',
                                 'Burner Accounts'))
 
-        select_client = st.selectbox('Select client', manage.get_all_client_dir(select_platform))
+        #select_client = st.selectbox('Select client', manage.get_all_client_dir(select_platform))
+        select_client = st.multiselect('Select the Client(s):',  manage.get_all_client_dir(select_platform))
         if select_platform != '':
             if select_platform == 'Burner Accounts':
                 select_platform = 'burner'
@@ -74,22 +75,24 @@ def check_available_account():
             if button:
                 with st.spinner('Checking simcard status...'):
                     time.sleep(2)
-                    check_all_acc_exist = manage.checking_banned_or_not(select_platform, select_client)
+                    for client in select_client:
+                        st.header(f'👉 {client}')
+                        check_all_acc_exist = manage.checking_banned_or_not(select_platform, client)
 
-                    available = check_all_acc_exist[0]
-                    not_available = check_all_acc_exist[1]
+                        available = check_all_acc_exist[0]
+                        not_available = check_all_acc_exist[1]
 
-                    if len(available) == 0:
-                        st.error('All sim(s) are not available!')
-                    elif len(not_available) == 0:
-                        st.success('All sim(s) are available!')
-                        st.subheader('Available sim(s): ')
-                        st.code('\n' + str(' | '.join(available)))
-                    else:
-                        st.success('Available sim(s): ')
-                        st.code(str(' |  '.join(available)))
-                        st.error('Unavailable sim(s): ')
-                        st.code(str(' |  '.join(not_available)))
+                        if len(available) == 0:
+                            st.error('All sim(s) are not available!')
+                        elif len(not_available) == 0:
+                            st.success('All sim(s) are available!')
+                            st.subheader('Available sim(s): ')
+                            st.code('\n' + str(' | '.join(available)))
+                        else:
+                            st.success('Available sim(s): ')
+                            st.code(str(' |  '.join(available)))
+                            st.error('Unavailable sim(s): ')
+                            st.code(str(' |  '.join(not_available)))
 
 def add_new_client():
     st.markdown("----------------------------------------------")
@@ -139,14 +142,18 @@ def add_new_account():
         # TODO: Adding client into open_driver
 
         if select_client != ' ':
-            name = st.text_area("Enter Whatsapp simcard name:")
-            get_name = manage.get_name(name)
-            get_taken = manage.get_taken(name, select_platform_new_acc, select_client)
+            with st.form(key='new_simcard'):
+                name = st.text_area("Enter Whatsapp simcard name:")
+                get_name = manage.get_name(name)
+                get_taken = manage.get_taken(name, select_platform_new_acc, select_client)
+
+                send = st.form_submit_button('Add_simcard')
+            print("GETTAKEN", get_taken)
 
             if len(get_taken) == 0:
-                button_add_account = st.button('Add simcard(s)')
-                if button_add_account:
+                if send:
                     for name_acc in get_name:
+                        st.subheader(f'⚠ {name_acc}: Please scan this QR code.')
                         try:
                             driver = manage.create_new_user_file(select_platform_new_acc,
                                                                 select_client, 
@@ -169,9 +176,9 @@ def add_new_account():
                             manage.deleted_account(select_platform_new_acc, name_acc)
                             st.error('ERROR: Whatsapp failed to link the simcard.')
             elif len(get_taken) == 1:
-                st.write('simcard name--' + str(get_taken[0]) + ' is not available. Please choose another name!')
+                st.error('Simcard name--' + str(get_taken[0]) + ' has been existed. Try choose another name.')
             else:
-                st.write(str(', '.join(get_taken)) + ' are not available. Please choose another name!')
+                st.error(str(', '.join(get_taken)) + ' are not available. Please choose another name!')
                         
 def deleting_account():
         """
@@ -189,11 +196,8 @@ def deleting_account():
 
         select_client = st.selectbox('Select client', tuple([' ',]) + tuple(manage.get_all_client_dir(select_platform)))
 
-        select_operation = st.selectbox('Select operation', ('','Check'))   
-        select_operation_1 = st.selectbox('Select operation', ('', 'Delete')) 
-
         empty_list = []
-        if select_platform != '' and select_client != ' ' and select_operation == 'Check' and select_operation_1 == '':
+        if select_platform != '' and select_client != ' ':
             #with st.spinner('Checking all simcard...'):
             #time.sleep(2)
             accs = manage.get_all_sim_name(select_platform,select_client)
@@ -203,8 +207,6 @@ def deleting_account():
             st.subheader('Checking banned simcard...')
             bar = st.progress(0)
             for percent_complete in range(100):
-                    #time.sleep(2)
-                    #available = manage.checking_banned_or_not(select_platform, select_client)[0]
                 bar.progress(percent_complete+20)
                 not_available_simcard = manage.checking_banned_or_not(select_platform,select_client)[1]
                 bar.progress(percent_complete+50)
@@ -221,11 +223,7 @@ def deleting_account():
                     st.error('Unavailable simcard:')
                     st.code('\n' + ' | '.join(unavailable))
 
-        # TODO: MAKE THE UNAV LIST TO EXTRACT THE UNAVAILABLE SIMCARD
-        elif select_platform != '' and select_client != ' ' and select_operation == 'Check' and select_operation_1 == 'Delete':
-            unav = [x for x in empty_list]
-            print("UNAV", unav)
-            print(empty_list)
+            unav = [k for x in empty_list for k in x]
             if len(unav) > 0:
                 st.subheader('Click Delete if you confirm to delete the simcard.')
                 approval_button = st.button('Delete')
@@ -234,8 +232,6 @@ def deleting_account():
                         manage.deleted_account(select_platform, select_client, item)
                         st.warning(f"{item} simcard has been deleted")
                         
-
-
 def user_learning():
     with st.container():
         """
