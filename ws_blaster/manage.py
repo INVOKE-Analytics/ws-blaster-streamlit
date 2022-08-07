@@ -8,6 +8,7 @@ from os import listdir, path
 import time
 import shutil
 import pathlib
+import re
 
 class Manage:
     def __init__(self, user_path):
@@ -53,6 +54,14 @@ class Manage:
         platform_list = [f for f in listdir(path_to_user)]
         return platform_list
 
+    def convert_posix_for_windows(self, the_path):
+        '''
+        TODO: For WINDOWS OS only
+
+        Return the Posix path string into Windows path 
+        '''
+        return re.sub('\/', '\\\\', the_path)
+
     def checking_banned_or_not(self,platform:str, client:str)->tuple[list,list]:
         """
         Return list of available and not-available 
@@ -61,9 +70,11 @@ class Manage:
         """
         sim_list = self.get_all_sim_name(platform, client)
         
-       
         for simcard in sim_list:
+            # TODO: make it readable for WINDOWS
+            # TODO: Test on Monday (8/8/2022)
             path_to_platform = 'user-data-dir=' + str(self.user_path/platform/client/simcard)
+            path_to_platform = self.convert_posix_for_windows(path_to_platform)
             print(path_to_platform)
             driver = open_driver(path_to_platform)
             try:
@@ -92,16 +103,19 @@ class Manage:
 
     def create_new_user_file(self, platform:str, client:str, account_name:str):
         """
+        TODO: Test the code on Monday (8/8/2022)
         Create new file user account in platform file
         """
-        path_to_platform = self.user_path/platform/client/account_name
-        path_to_platform = pathlib.WindowsPath(path_to_platform)
+        path_to_platform = 'user-data-dir=' + str(self.user_path/platform/client/account_name)
+        #path_to_platform = pathlib.WindowsPath(path_to_platform)
+        path_to_platform = self.convert_posix_for_windows(path_to_platform)
 
         # TODO: POSIX --> WINDOWS == os.path.abspath(path).replace('\\', '/')
         print(100*"#")
         print("CREATE NEW USER FILE 1", path_to_platform)
         #print(path_to_platform.exists())
         print(100*"#")
+
         driver = open_driver(path_to_platform, headless=True)
         self.driver_dict[path_to_platform] = account_name
         return driver
