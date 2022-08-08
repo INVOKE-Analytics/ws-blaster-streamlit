@@ -203,41 +203,49 @@ def deleting_account():
 
         select_client = st.selectbox('Select client', tuple([' ',]) + tuple(manage.get_all_client_dir(select_platform)))
 
+        
         empty_list = []
         if select_platform != '' and select_client != ' ':
+            get_sim_list = manage.get_all_sim_name(select_platform, select_client)
             #with st.spinner('Checking all simcard...'):
             #time.sleep(2)
-            accs = manage.get_all_sim_name(select_platform,select_client)
-            st.subheader('List of simcard: ')
-            st.code( ' | '.join(accs))
-
-            st.subheader('Checking banned simcard...')
-            bar = st.progress(0)
-            for percent_complete in range(100):
-                bar.progress(percent_complete+20)
-                not_available_simcard = manage.checking_banned_or_not(select_platform,select_client)[1]
-                bar.progress(percent_complete+50)
-                empty_list.append(not_available_simcard)
-                bar.progress(percent_complete+100)
-                break
             
-            unavailable = [z for x in empty_list for z in x]
-        
-            if len(empty_list) != 0:
-                if len(unavailable) == 0:
-                    st.success('All simcard is valid! \n No simcard need to be to deleted!')
-                elif len(unavailable) > 0:
-                    st.error('Unavailable simcard:')
-                    st.code('\n' + ' | '.join(unavailable))
+            if len(get_sim_list) != 0:
+                st.subheader(f'Working on {select_client} client')
+                accs = manage.get_all_sim_name(select_platform,select_client)
+                st.subheader('List of simcard: ')
+                st.code( ' | '.join(accs))
 
-            unav = [k for x in empty_list for k in x]
-            if len(unav) > 0:
-                st.subheader('Click Delete if you confirm to delete the simcard.')
-                approval_button = st.button('Delete')
-                if approval_button:
-                    for item in unav:
-                        manage.deleted_account(select_platform, select_client, item)
-                        st.warning(f"{item} simcard has been deleted")
+                st.subheader('Checking banned simcard...')
+                bar = st.progress(0)
+                for percent_complete in range(100):
+                    bar.progress(percent_complete+20)
+                    not_available_simcard = manage.checking_banned_or_not(accs, select_platform,select_client)[1]
+                    bar.progress(percent_complete+50)
+                    empty_list.append(not_available_simcard)
+                    bar.progress(percent_complete+100)
+                    break
+                
+                unavailable = [z for x in empty_list for z in x]
+            
+                if len(empty_list) != 0:
+                    if len(unavailable) == 0:
+                        st.success('All simcard is valid! \n No simcard need to be to deleted!')
+                    elif len(unavailable) > 0:
+                        st.error('Unavailable simcard:')
+                        st.code('\n' + ' | '.join(unavailable))
+
+                unav = [k for x in empty_list for k in x]
+                if len(unav) > 0:
+                    st.subheader('Click Delete if you confirm to delete the simcard.')
+                    approval_button = st.button('Delete')
+                    if approval_button:
+                        for item in unav:
+                            manage.deleted_account(select_platform, select_client, item)
+                            st.warning(f"{item} simcard has been deleted")
+            elif len(get_sim_list) == 0:
+                st.subheader(f'Working on {select_client} client')
+                st.error('There is no simcard registered on this client.')
                         
 def user_learning():
     with st.container():
