@@ -149,7 +149,6 @@ def add_new_account():
                 get_taken = manage.get_taken(name, select_platform_new_acc, select_client)
 
                 send = st.form_submit_button('Add_simcard')
-            print("GETTAKEN", get_taken)
 
             if len(get_taken) == 0:
                 if send:
@@ -161,10 +160,8 @@ def add_new_account():
                                                                 name_acc)
                             WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH,
                                         '//*[@id="app"]/div/div/div[2]/div[1]/div/div[2]/div/canvas')))
-                            print("HERE 1")
                             # take screenshot
                             manage.take_screenshot(driver)
-                            print("HERE 2")
                             st.success('QR code screenshot taken!')
                             manage.get_screenshot()
 
@@ -173,9 +170,10 @@ def add_new_account():
                                         '//*[@title="Search input textbox"]')))
                             st.success(name_acc + ' added!')
                             time.sleep(1)
+                            
                         except Exception as e1:
                             print('E1 ERROR:', e1)
-                            #manage.deleted_account(select_platform_new_acc, select_client, name_acc)
+                            manage.deleted_account(select_platform_new_acc, select_client, name_acc)
                             st.error('ERROR: Whatsapp failed to link the simcard.')
             elif len(get_taken) == 1:
                 st.error('Simcard name--' + str(get_taken[0]) + ' has been existed. Try choose another name.')
