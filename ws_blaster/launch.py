@@ -46,7 +46,7 @@ option1 = st.sidebar.selectbox('Select option', ('Blast Messages', 'Account Mana
 # Account Management
 ##############################################################
 
-manage = Manage(user_path='./Users')
+manage = Manage(user_path='./Users/')
 
 
 def check_available_account():
