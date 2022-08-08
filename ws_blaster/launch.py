@@ -46,7 +46,7 @@ option1 = st.sidebar.selectbox('Select option', ('Blast Messages', 'Account Mana
 # Account Management
 ##############################################################
 
-manage = Manage(user_path='./Users/')
+manage = Manage(user_path='./Users/', wsb_path='./screenshot/')
 
 
 def check_available_account():
@@ -161,19 +161,20 @@ def add_new_account():
                                                                 name_acc)
                             WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH,
                                         '//*[@id="app"]/div/div/div[2]/div[1]/div/div[2]/div/canvas')))
-
+                            print("HERE 1")
                             # take screenshot
                             manage.take_screenshot(driver)
+                            print("HERE 2")
                             st.success('QR code screenshot taken!')
-                            ss = Image.open('./screenshot/QR_code.png')
-                            manage.get_screenshot(ss)
+                            manage.get_screenshot()
 
                             # wait until all cache file get
                             f = WebDriverWait(driver, 300).until(EC.visibility_of_element_located((By.XPATH,
                                         '//*[@title="Search input textbox"]')))
                             st.success(name_acc + ' added!')
                             time.sleep(1)
-                        except:
+                        except Exception as e1:
+                            print('E1 ERROR:', e1)
                             #manage.deleted_account(select_platform_new_acc, select_client, name_acc)
                             st.error('ERROR: Whatsapp failed to link the simcard.')
             elif len(get_taken) == 1:

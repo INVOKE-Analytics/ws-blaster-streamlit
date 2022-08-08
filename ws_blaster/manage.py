@@ -1,3 +1,5 @@
+from sqlite3 import converters
+from tkinter import Image
 import streamlit as st
 from ws_blaster.utils import open_driver
 from selenium.webdriver.common.by import By
@@ -9,10 +11,12 @@ import time
 import shutil
 import pathlib
 import re
+from PIL import Image
 
 class Manage:
-    def __init__(self, user_path):
+    def __init__(self, user_path, wsb_path):
         self.user_path = pathlib.Path(user_path)
+        self.ss_path = pathlib.Path(wsb_path)
         self.driver_dict = {}
         self.account_dict = {}
         self.list_dir = {}
@@ -112,9 +116,23 @@ class Manage:
         """
         Take the screenshot of the QR code 
         """
-        driver.save_screenshot('ws-blaster-prod/screenshot/QR_code.png')
+        #ss_path = pathlib.Path('./screenshot/')
+        screen_shot_path = self.ss_path/'QR_code_1.png'
+        print("SCREENSHOT PATH", screen_shot_path.exists())
+        print('SS PATH', self.ss_path.exists())
+
+        # NOTE: Hash this for LINUX
+        converted = self.convert_posix_for_windows(str(screen_shot_path))
+        # END 
+        
+        driver.save_screenshot(converted)
         ss = 'screenshot'
         self.screenshot.append(ss)
+    
+    def get_screenshot(self):
+        #ss_path = pathlib.Path('./screenshot/')
+        ss = Image.open('./screenshot/QR_code_1.png')
+        return st.image(ss)
 
     def create_new_user_file(self, platform:str, client:str, account_name:str):
         """
@@ -155,6 +173,3 @@ class Manage:
         print("SIMLIST",sim_list, "NAME", name)
         taken = [x for x in name if x in sim_list]
         return taken
-
-    def get_screenshot(self, photo):
-        return st.image(photo)
