@@ -90,13 +90,12 @@ class Manage:
         return expander + sub_path
 
 
-    def checking_banned_or_not(self,platform:str, client:str)->tuple[list,list]:
+    def checking_banned_or_not(self, sim_list, platform:str, client:str)->tuple[list,list]:
         """
         Return list of available and not-available simcard.
 
         Checking whether the simcard is banned/unlinked.  
         """
-        sim_list = self.get_all_sim_name(platform, client)
         
         for simcard in sim_list:
             path_to_platform = str(self.user_path/platform/client/simcard)

@@ -68,32 +68,39 @@ def check_available_account():
         #select_client = st.selectbox('Select client', manage.get_all_client_dir(select_platform))
         select_client = st.multiselect('Select the Client(s):',  manage.get_all_client_dir(select_platform))
         if select_platform != '':
+            
             if select_platform == 'Burner Accounts':
                 select_platform = 'burner'
 
             # press the button to start CHECK
             button = st.button("CHECK")
+            
             if button:
                 with st.spinner('Checking simcard status...'):
                     time.sleep(2)
                     for client in select_client:
-                        st.header(f'👉 {client}')
-                        check_all_acc_exist = manage.checking_banned_or_not(select_platform, client)
+                        get_sim_list = manage.get_all_sim_name(select_platform, client)
+                        if len(get_sim_list) != 0:
+                            st.header(f'👉 {client}')
+                            check_all_acc_exist = manage.checking_banned_or_not(get_sim_list, select_platform, client)
 
-                        available = check_all_acc_exist[0]
-                        not_available = check_all_acc_exist[1]
+                            available = check_all_acc_exist[0]
+                            not_available = check_all_acc_exist[1]
 
-                        if len(available) == 0:
-                            st.error('All sim(s) are not available!')
-                        elif len(not_available) == 0:
-                            st.success('All sim(s) are available!')
-                            st.subheader('Available sim(s): ')
-                            st.code('\n' + str(' | '.join(available)))
-                        else:
-                            st.success('Available sim(s): ')
-                            st.code(str(' |  '.join(available)))
-                            st.error('Unavailable sim(s): ')
-                            st.code(str(' |  '.join(not_available)))
+                            if len(available) == 0:
+                                st.error('All sim(s) are not available!')
+                            elif len(not_available) == 0:
+                                st.success('All sim(s) are available!')
+                                st.subheader('Available sim(s): ')
+                                st.code('\n' + str(' | '.join(available)))
+                            else:
+                                st.success('Available sim(s): ')
+                                st.code(str(' |  '.join(available)))
+                                st.error('Unavailable sim(s): ')
+                                st.code(str(' |  '.join(not_available)))
+                        elif len(get_sim_list) == 0:
+                            st.header(f'👉 {client}')
+                            st.error('There is NO simcard registered for this client')
 
 def add_new_client():
     st.markdown("----------------------------------------------")
@@ -170,7 +177,7 @@ def add_new_account():
                                         '//*[@title="Search input textbox"]')))
                             st.success(name_acc + ' added!')
                             time.sleep(1)
-                            
+
                         except Exception as e1:
                             print('E1 ERROR:', e1)
                             manage.deleted_account(select_platform_new_acc, select_client, name_acc)
