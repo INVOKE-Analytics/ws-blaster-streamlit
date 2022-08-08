@@ -43,26 +43,36 @@ class Manage:
         return sim_list
 
     def add_client_directory(self, platform, client:str):
+        """
+        Make directory for client.
+        Will create a directory in Users directory
+        """
         filepath = self.user_path/platform 
         new_dir = os.mkdir(str(filepath / client))
         return new_dir
 
     def get_all_client_dir(self, platform):
+        """
+        Return a list of client directory name
+        """
         path_to_platform = self.user_path/platform
         client_dir = [f for f in listdir(path_to_platform)]
         return client_dir
 
-
     def get_all_platform(self):
+        """
+        Return a list of platform directory name
+        """
         path_to_user = self.user_path
         platform_list = [f for f in listdir(path_to_user)]
         return platform_list
 
     def convert_posix_for_windows(self, the_path):
         '''
-        TODO: For WINDOWS OS only
+        NOTE: For WINDOWS OS only! 
+        If Linux, please hash the function.
 
-        Return the Posix path string into Windows path 
+        Convert Posix to Windows path
         '''
         sub_path =  re.sub('\\\\', '\\\\\\\\', the_path)
         expander = 'D:\\\\Desktop\\\\INVOKE\\\\ws_blaster\\\\ahilan-branch\\\\venvAhilan\\\\ws-blaster-prod\\\\'
@@ -70,9 +80,10 @@ class Manage:
 
     def convert_posix_for_windows_add_acc(self, the_path):
         '''
-        TODO: For WINDOWS OS only
+        TODO: For WINDOWS OS only!
+        If Linux, please hash the function.
 
-        Return the Posix path string into Windows path 
+        Convert Posix to Windows path for adding new account function.
         '''
         sub_path =  re.sub('\\\\', '\\', the_path)
         expander = 'D:\\\\Desktop\\\\INVOKE\\\\ws_blaster\\\\ahilan-branch\\\\venvAhilan\\\\ws-blaster-prod\\\\'
@@ -81,9 +92,9 @@ class Manage:
 
     def checking_banned_or_not(self,platform:str, client:str)->tuple[list,list]:
         """
-        Return list of available and not-available 
-        account.
-        Checking whether the account is banned or not. 
+        Return list of available and not-available simcard.
+
+        Checking whether the simcard is banned/unlinked.  
         """
         sim_list = self.get_all_sim_name(platform, client)
         
@@ -99,33 +110,32 @@ class Manage:
             try:
                 f = WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.XPATH,'//*[@title="Search input textbox"]')))
                 self.available.append(simcard)
-                print("AVAILABLE")
+                print("SIMCARD AVAILABLE")
                 
             except:
                 # If not avaialble, will found these phrase
                 f = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="app"]/div/div/div[2]/div[1]/div/div[2]/div/canvas')))
                 self.not_available.append(simcard)
-                print("NOT AVAILABLE")
+                print("SIMCARD NOT AVAILABLE")
                 
             driver.quit()
 
         return (self.available, self.not_available)
 
     def take_screenshot(self, driver):
-        # NOTE : QR code will be refreshed after 15 seconds
         """
         Take the screenshot of the QR code 
+
+        ### NOTE : QR code will be refreshed after 15 seconds
         """
-        #ss_path = pathlib.Path('./screenshot/')
         screen_shot_path = self.ss_path/'QR_code_1.png'
-        print("SCREENSHOT PATH", screen_shot_path.exists())
-        print('SS PATH', self.ss_path.exists())
 
         # NOTE: Hash this for LINUX
-        converted = self.convert_posix_for_windows(str(screen_shot_path))
+        # START
+        screen_shot_path = self.convert_posix_for_windows(str(screen_shot_path))
         # END 
-        
-        driver.save_screenshot(converted)
+
+        driver.save_screenshot(screen_shot_path)
         ss = 'screenshot'
         self.screenshot.append(ss)
     
@@ -140,15 +150,12 @@ class Manage:
         """
         path_to_platform = str(self.user_path/platform/client/account_name)
 
-        # NOTE: This is for Windows only. HASH it for Linux
+        # NOTE: This is for Windows only. PLEASE HASH it for Linux.
         # START
-        path_to_platform_conv = self.convert_posix_for_windows(str(path_to_platform))
-        print('#'*100)
-        print('ADD NEW ACC: ', 'user-data-dir=' + path_to_platform_conv)
-        print('#'*100)
+        path_to_platform = self.convert_posix_for_windows(str(path_to_platform))
         # END
 
-        driver = open_driver('user-data-dir=' + path_to_platform_conv, headless=True)
+        driver = open_driver('user-data-dir=' + path_to_platform, headless=True)
         self.driver_dict[path_to_platform] = account_name
         return driver
     
@@ -157,9 +164,6 @@ class Manage:
         To delete the directory which deleted the account too.
         """
         path_to_account =  self.user_path/platform/client/simcard
-        print(100*'#')
-        print(path_to_account.exists())
-        print(100*'#')
         shutil.rmtree(path_to_account)
         self.account_dict[client] = 'deleted'
 
@@ -170,6 +174,5 @@ class Manage:
         """
         name = self.get_name(name)
         sim_list = self.get_all_sim_name(platform,client)
-        print("SIMLIST",sim_list, "NAME", name)
         taken = [x for x in name if x in sim_list]
         return taken
