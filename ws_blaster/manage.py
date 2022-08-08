@@ -64,6 +64,16 @@ class Manage:
         expander = 'D:\\\\Desktop\\\\INVOKE\\\\ws_blaster\\\\ahilan-branch\\\\venvAhilan\\\\ws-blaster-prod\\\\'
         return expander + sub_path
 
+    def convert_posix_for_windows_add_acc(self, the_path):
+        '''
+        TODO: For WINDOWS OS only
+
+        Return the Posix path string into Windows path 
+        '''
+        sub_path =  re.sub('\\\\', '\\', the_path)
+        expander = 'D:\\\\Desktop\\\\INVOKE\\\\ws_blaster\\\\ahilan-branch\\\\venvAhilan\\\\ws-blaster-prod\\\\'
+        return expander + sub_path
+
 
     def checking_banned_or_not(self,platform:str, client:str)->tuple[list,list]:
         """
@@ -116,7 +126,7 @@ class Manage:
         # START
         path_to_platform_conv = self.convert_posix_for_windows(str(path_to_platform))
         print('#'*100)
-        print('user-data-dir=' + path_to_platform_conv)
+        print('ADD NEW ACC: ', 'user-data-dir=' + path_to_platform_conv)
         print('#'*100)
         # END
 
