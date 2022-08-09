@@ -21,5 +21,5 @@ Code for reusable utility functions accross files.
 
 # TODO:
 
-- [] Add documentation
-- [] Add requirements
+- [ ] Add documentation
+- [ ] Add requirements
