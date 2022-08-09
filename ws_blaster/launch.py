@@ -222,20 +222,10 @@ def add_new_account():
                         driver = manage.create_new_user_file(select_platform_new_acc,
                                                              select_client,
                                                              name_acc)
-                        print('DRIVER is good')
                         WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH,
-                                                                                          '//*[@id="app"]/div/div/div[2]/div[1]/div/div[2]/div/canvas')))
-
-                        # take screenshot
-                        print('ss START')
-                        try:
-                            manage.take_screenshot(driver)
-                        except:
-                            print('ERROR IS HERE')
-
-                        print('ss START 1 ')
+                                                                                         '//*[@id="app"]/div/div/div[2]/div[1]/div/div[2]/div/canvas')))
+                        manage.take_screenshot(driver)
                         st.success('QR code screenshot taken!')
-                        print('ss START 2')
                         manage.get_screenshot()
 
                         # wait until all cache file get
