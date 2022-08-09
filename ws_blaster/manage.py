@@ -12,6 +12,7 @@ import shutil
 import pathlib
 import re
 from PIL import Image
+from sys import platform as my_system
 
 class Manage:
     def __init__(self, user_path, wsb_path):
@@ -98,13 +99,14 @@ class Manage:
         """
         
         for simcard in sim_list:
-            path_to_platform = str(self.user_path/platform/client/simcard)
-
-            # NOTE: This is for Windows only. HASH it for Linux
-            # START
-            path_to_platform = self.convert_posix_for_windows(str(path_to_platform))
-            # END
-
+            
+            # NOTE: System 
+            if my_system == 'win32':
+                path_to_platform = str(self.user_path/platform/client/simcard)
+                path_to_platform = self.convert_posix_for_windows(str(path_to_platform))
+            elif my_system == 'linux' or my_system == 'linux2':
+                path_to_platform = str(self.user_path/platform/client/simcard)
+                
             driver = open_driver('user-data-dir=' + path_to_platform)
             try:
                 f = WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.XPATH,'//*[@title="Search input textbox"]')))
@@ -127,12 +129,12 @@ class Manage:
 
         ### NOTE : QR code will be refreshed after 15 seconds
         """
-        screen_shot_path = self.ss_path/'QR_code_1.png'
-
-        # NOTE: Hash this for LINUX
-        # START
-        screen_shot_path = self.convert_posix_for_windows(str(screen_shot_path))
-        # END 
+        # NOTE: System 
+        if my_system == 'win32':
+            screen_shot_path = self.ss_path/'QR_code_1.png'
+            screen_shot_path = self.convert_posix_for_windows(str(screen_shot_path))
+        elif my_system == 'linux' or my_system == 'linux2':
+            screen_shot_path = self.ss_path/'QR_code_1.png'
 
         driver.save_screenshot(screen_shot_path)
         ss = 'screenshot'
