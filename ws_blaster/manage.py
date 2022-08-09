@@ -105,10 +105,10 @@ class Manage:
                 path_to_platform = str(self.user_path/platform/client/simcard)
                 path_to_platform = self.convert_posix_for_windows(
                     str(path_to_platform))
-            elif my_system == 'linux' or my_system == 'linux2':
-                path_to_platform = str(self.user_path/platform/client/simcard)
+            else:
+                path_to_platform = self.user_path/platform/client/simcard
 
-            driver = open_driver('user-data-dir=' + path_to_platform)
+            driver = open_driver('user-data-dir=' + str(path_to_platform))
             try:
                 f = WebDriverWait(driver, 20).until(EC.visibility_of_element_located(
                     (By.XPATH, '//*[@title="Search input textbox"]')))
@@ -132,21 +132,11 @@ class Manage:
 
         ### NOTE : QR code will be refreshed after 15 seconds
         """
-        print('take screenshot!')
-        # NOTE: System
-        '''if my_system == 'win32':
-            screen_shot_path = self.ss_path/'QR_code_1.png'
-            screen_shot_path = self.convert_posix_for_windows(
-                str(screen_shot_path))'''
-        # elif my_system == 'linux' or my_system == 'linux2':
-        #screen_shot_path = self.ss_path/'QR_code_1.png'
-        print('take screenshot')
         driver.save_screenshot('./Screenshot/QR_code_1.png')
         ss = 'screenshot'
         self.screenshot.append(ss)
 
     def get_screenshot(self):
-        #ss_path = pathlib.Path('./screenshot/')
         ss = Image.open('./Screenshot/QR_code_1.png')
         return st.image(ss)
 
@@ -154,28 +144,16 @@ class Manage:
         """
         Create new file user account in platform file
         """
-        print('hello!')
-        print('TYPE', type(self.user_path))
         if my_system == 'win32':
             path_to_platform = self.user_path/platform/client/account_name
             path_to_platform = self.convert_posix_for_windows(
                 str(path_to_platform))
         else:
-            print('LINUX')
-            print(type(self.user_path))
             path_to_platform = self.user_path / platform / client / account_name
-            print('PASSED!')
 
-        # NOTE: This is for Windows only. PLEASE HASH it for Linux.
-        # START
-        #path_to_platform = self.convert_posix_for_windows(str(path_to_platform))
-        # END
-
-        driver = open_driver('user-data-dir=' +
-                             str(path_to_platform), headless=True)
-        print('here')
+        driver = open_driver('user-data-dir=' + str(path_to_platform), 
+                            headless=True)
         self.driver_dict[path_to_platform] = account_name
-        print('here1')
         return driver
 
     def deleted_account(self, platform: str, client: str, simcard: str):
