@@ -38,7 +38,6 @@ option1 = st.sidebar.selectbox(
 ##############################################################
 def main_blasting():
     blaster = Blaster(user_path="./Users")
-    st.image("images/whats-app-img.png")
 
     # Upload csv file to extract phone numbers
     uploaded_file = st.file_uploader(
