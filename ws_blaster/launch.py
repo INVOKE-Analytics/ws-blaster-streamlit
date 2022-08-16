@@ -1,6 +1,5 @@
-
-import streamlit as st
 import time
+import streamlit as st
 from PIL import Image
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
