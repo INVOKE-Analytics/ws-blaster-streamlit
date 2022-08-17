@@ -1,5 +1,3 @@
-from sqlite3 import converters
-from tkinter import Image
 import streamlit as st
 from ws_blaster.utils import open_driver
 from selenium.webdriver.common.by import By
@@ -50,7 +48,7 @@ class Manage:
         Will create a directory in Users directory
         """
         filepath = self.user_path/platform
-        new_dir = os.mkdir(str(filepath / client))
+        new_dir = os.mkdir(filepath/client)
         return new_dir
 
     def get_all_client_dir(self, platform):
@@ -132,12 +130,12 @@ class Manage:
 
         ### NOTE : QR code will be refreshed after 15 seconds
         """
-        driver.save_screenshot('./Screenshot/QR_code_1.png')
+        driver.save_screenshot('./screenshot/QR_code_1.png')
         ss = 'screenshot'
         self.screenshot.append(ss)
 
     def get_screenshot(self):
-        ss = Image.open('./Screenshot/QR_code_1.png')
+        ss = Image.open('./screenshot/QR_code_1.png')
         return st.image(ss)
 
     def create_new_user_file(self, platform: str, client: str, account_name: str):
