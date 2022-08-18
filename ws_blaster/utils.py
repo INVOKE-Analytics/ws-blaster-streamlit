@@ -53,7 +53,7 @@ def open_driver_blasting(user_path):
 
     Returns a chromedriver instance
     '''
-    display = Display(visible=1, size=(1000, 1000))
+    display = Display(visible=0, size=(1000, 1000))
     display.start()
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument(user_path)
