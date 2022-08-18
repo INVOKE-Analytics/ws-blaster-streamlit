@@ -199,10 +199,12 @@ class Blaster:
         """
         Send the message in the chat
         """
-        pyperclip.copy(message)
+        # pyperclip.copy(message)
         self._select_elm(driver, "//div[@class='p3_M1']", 300).click()
+        # self._select_elm(
+        #     driver, "//div[@class='p3_M1']", 300).send_keys(pyperclip.paste())
         self._select_elm(
-            driver, "//div[@class='p3_M1']", 300).send_keys(pyperclip.paste())
+            driver, "//div[@class='p3_M1']", 300).send_keys(message)
         time.sleep(sleep)
         self._select_elm(driver, "//span[@data-testid='send']", 5).click()
         logger.info("Message sent")

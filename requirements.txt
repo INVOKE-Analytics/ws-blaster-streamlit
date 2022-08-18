@@ -6,3 +6,4 @@ pytest
 webdriver-manager
 autopep8
 loguru
+pyvirtualdisplay

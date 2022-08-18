@@ -37,7 +37,7 @@ def test_setup_drivers_in_account():
 
 def test_nav_to_number():
     # TODO : write a test to check that selenium went to the right number
-    acc, driver = blaster.nav_to_number('60194078974')
+    acc, driver = blaster.nav_to_number('0125303532')
     pytest.acc, pytest.driver = acc, driver
 
 
