@@ -1,14 +1,14 @@
+from http import client
 import time
-import streamlit as st
 from PIL import Image
+import streamlit as st
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
 from ws_blaster.manage import Manage
 from ws_blaster.utils import save_uploadedfile, open_driver
-
-from PIL import Image
-import pandas as pd
 from ws_blaster.blasting import Blaster
 
 # Hide streamlit header and footer
@@ -51,7 +51,7 @@ def main_blasting():
     # Upload pictures
     if uploaded_file:
         uploaded_imgs = st.file_uploader(
-            "Choose imgs you want to blast (png)", type='png', accept_multiple_files=True)
+            "Choose imgs you want to blast (png)", type=['png', 'jpg', 'jpeg'], accept_multiple_files=True)
         blaster.save_files_to_blast(uploaded_imgs)
 
     # Variations of the same message
@@ -66,21 +66,23 @@ def main_blasting():
     if uploaded_file:
         platform = st.selectbox("Choose set of accounts to blast from",
                                 ('Select', 'meniaga', 'AyuhMalaysia', "Burner Accounts"))
+        if platform != 'Select':
+            clients = blaster.get_clients(platform)
+            client = st.selectbox("Choose client account", clients)
 
     # Start Blasting
     # TODO: Check if unavailable
     if uploaded_file and platform != "Select":
         start = st.button('Start Blasting')
-        percent_complete = 0
         if start:
             st.info("Setting up Web Drivers")
-            blaster.setup_drivers_in_account(platform)
+            blaster.setup_drivers_in_account(platform, client)
             my_progress = st.progress(0.0)
             for i, number in enumerate(numbers):
                 acc, driver = blaster.nav_to_number(number)
                 message = blaster.get_random_message()
-                file_path = str(blaster.imgs)
-                status = blaster.send_file(driver, file_path)
+                if blaster.imgs:
+                    status = blaster.send_file(driver)
                 status = blaster.send_message(driver, message)
                 my_progress.progress((i+1)/len(numbers))
                 blaster.apply_random_wait(i)

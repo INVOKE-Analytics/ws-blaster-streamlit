@@ -2,7 +2,8 @@ import pytest
 import pandas as pd
 from ws_blaster.blasting import Blaster
 
-blaster = Blaster(user_path="D:\\Desktop\\INVOKE\\ws_blaster\\ahilan-branch\\venvAhilan\\ws-blaster-prod\\Users")
+blaster = Blaster(
+    user_path="./Users")
 
 
 def pytest_namespace():
@@ -30,13 +31,13 @@ def test_clean_numbers():
 
 
 def test_setup_drivers_in_account():
-    blaster.setup_drivers_in_account("burner")
+    blaster.setup_drivers_in_account("AyuhMalaysia")
     assert len(blaster.driver_dict) == 1
 
 
 def test_nav_to_number():
     # TODO : write a test to check that selenium went to the right number
-    acc, driver = blaster.nav_to_number('60125303532')
+    acc, driver = blaster.nav_to_number('60194078974')
     pytest.acc, pytest.driver = acc, driver
 
 
