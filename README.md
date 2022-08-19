@@ -69,7 +69,15 @@ You can launch the program by writing the following command on terminal;
 
 This file contain the function to setup the Whatsapp driver for `blasting.py` and `manage.py`. 
 
-# TODO:
+## Requirements
 
-- [ ] Add documentation
-- [ ] Add requirements
+Library/package implemented:
+
+- pandas
+- streamlit 
+- pypeclip
+- loguru
+- selenium
+- pyvirtualdisplay
+- webdriver-manager
+- Pillows
