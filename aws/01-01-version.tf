@@ -15,9 +15,10 @@ provider "aws" {
 
 # These are a set of local values that can be declared together
 locals {
-  prefix = var.app_prefix
+  prefix       = var.app_prefix
+  docker_image = var.docker_image
   common_tags = {
-    author   = var.creator
+    creator  = var.creator
     app_name = var.app_name
   }
 }

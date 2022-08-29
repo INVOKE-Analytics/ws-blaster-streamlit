@@ -14,6 +14,12 @@ variable "app_prefix" {
   type        = string
 }
 
+# Set a prefix name for the project 
+variable "docker_image" {
+  description = "The docker image name to push and populate aws ecr"
+  type        = string
+}
+
 # Set the default region
 variable "aws_region" {
   description = "Region in which aws resources are created"
