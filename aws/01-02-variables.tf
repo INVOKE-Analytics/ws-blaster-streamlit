@@ -14,7 +14,6 @@ variable "app_prefix" {
   type        = string
 }
 
-
 # Set the default region
 variable "aws_region" {
   description = "Region in which aws resources are created"

@@ -1,9 +1,4 @@
-output "ecr_repository_url" {
-  description = "The URL of the ecr reposiory"
-  value       = aws_ecr_repository.ecr_repo.repository_url
-}
-
-output "ecr_repository_arm" {
-  description = "The ARN of the ecr reposiory"
-  value       = aws_ecr_repository.ecr_repo.arn
-}
+# output "api_gateway_stage_url" {
+#   description = "API Gateway stage invocation URL"
+#   value       = aws_api_gateway_stage.api_dev.invoke_url
+# }
