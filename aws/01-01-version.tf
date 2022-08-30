@@ -10,13 +10,12 @@ terraform {
 provider "aws" {
   # Configuration options
   region  = var.aws_region
-  profile = "INVOKE"
+  profile = "INVOKE_Ahilan"
 }
 
 # These are a set of local values that can be declared together
 locals {
-  prefix       = var.app_prefix
-  docker_image = var.docker_image
+  prefix = var.app_prefix
   common_tags = {
     creator  = var.creator
     app_name = var.app_name
