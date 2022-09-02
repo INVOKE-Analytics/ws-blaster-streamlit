@@ -1,13 +1,19 @@
 # Get a python3.10 base image
 FROM public.ecr.aws/lambda/python:3.8
 
-# install google chrome
-RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-    sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+RUN yum -y install wget
 
-RUN apt-get -y update && \
-    apt-get install xvfb xclip -y && \
-    apt-get install -y google-chrome-stable
+# # install google chrome
+# RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | yum-config-manager --add-repo - && \
+#     sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+
+RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm && \
+    yum install ./google-chrome-stable_current_*.rpm -y
+
+
+RUN yum -y update && \
+    yum install xorg-x11-server-Xvfb -y && \
+    yum install -y google-chrome-stable
 
 # Copy the requirements for the project
 COPY requirements.txt .
