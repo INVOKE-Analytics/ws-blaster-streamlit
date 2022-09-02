@@ -1,31 +1,3 @@
-# data "aws_iam_policy_document" "lambda_assume_policy" {
-#   statement {
-#     effect = "Allow"
-#     actions = [
-#       "sts:AssumeRole",
-#     ]
-#     principals {
-#       type        = "Service"
-#       identifiers = ["lambda.amazonaws.com"]
-#     }
-#   }
-# }
-
-# resource "aws_iam_role" "lambda_role" {
-#   name               = "WhatsAppBlasterLambdaRole"
-#   assume_role_policy = data.aws_iam_policy_document.lambda_assume_policy.json
-# }
-
-# resource "aws_iam_role_policy_attachment" "lambda_sqs_role_policy" {
-#   role       = aws_iam_role.lambda_role.name
-#   policy_arn = "arn:aws:iam::aws:policy/AmazonSQSFullAccess"
-# }
-
-# resource "aws_iam_role_policy_attachment" "lambda_logs_policy" {
-#   role       = aws_iam_role.lambda_role.name
-#   policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
-# }
-
 data "aws_iam_role" "lambda_role" {
   name = "WhatsAppBlasterLambdaRole"
 }
@@ -75,8 +47,9 @@ resource "aws_lambda_function" "api_lambda" {
   package_type  = "Image"
   environment {
     variables = {
-      "STAGE"   = "${each.key}",
-      "SQS_URL" = "${local.prefix}-sqs-${each.key}"
+      "STAGE"            = "${each.key}",
+      "SQS_URL"          = "${local.prefix}-sqs-${each.key}"
+      "LOCAL_MOUNT_PATH" = "/mnt/files"
 
     }
   }
@@ -88,6 +61,22 @@ resource "aws_lambda_function" "worker_lambda" {
   role          = data.aws_iam_role.lambda_role.arn
   image_uri     = "${data.aws_ecr_repository.ecr_repo.repository_url}@${data.aws_ecr_image.lambda_image.id}"
   package_type  = "Image"
+
+  vpc_config {
+    # Every subnet should be able to reach an EFS mount target in the same Availability Zone. Cross-AZ mounts are not permitted.
+    subnet_ids         = data.aws_subnets.subnets.ids
+    security_group_ids = ["sg-0f858f501b1216043"]
+  }
+
+  file_system_config {
+    # EFS file system access point ARN
+    arn = aws_efs_access_point.access_point_for_lambda.arn
+
+    # Local mount path inside the lambda function. Must start with '/mnt/'.
+    local_mount_path = "/mnt/files"
+  }
+
+  depends_on = [aws_efs_mount_target.alpha]
 
   image_config {
     command = ["app.lambda_function.consumer_handler"]
