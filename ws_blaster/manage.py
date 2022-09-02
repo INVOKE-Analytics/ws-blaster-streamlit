@@ -1,5 +1,3 @@
-from sqlite3 import converters
-from tkinter import Image
 import streamlit as st
 from ws_blaster.utils import open_driver
 from selenium.webdriver.common.by import By
@@ -137,7 +135,7 @@ class Manage:
         self.screenshot.append(ss)
 
     def get_screenshot(self):
-        ss = Image.open('./Screenshot/QR_code_1.png')
+        ss = Image.open('./screenshot/QR_code_1.png')
         return st.image(ss)
 
     def create_new_user_file(self, platform: str, client: str, account_name: str):
