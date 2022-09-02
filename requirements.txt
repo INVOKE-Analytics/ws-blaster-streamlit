@@ -1,9 +1,11 @@
-streamlit
 selenium 
-pyperclip
 pandas
 pytest
 webdriver-manager
 autopep8
 loguru
 pyvirtualdisplay
+boto3
+uvicorn[standard]
+fastapi
+mangum
