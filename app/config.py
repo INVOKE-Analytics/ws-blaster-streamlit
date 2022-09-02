@@ -6,7 +6,7 @@ from pydantic import BaseSettings
 class Settings(BaseSettings):
     PROJECT_NAME: str = "Whats App Blaster API"
     STAGE: str = "local"
-    SQS_URL: str = "awslambda-fastapi-dev-sqs-local"
+    SQS_URL: str = "whatsapp-blaster-sqs-local"
     LOCAL_MOUNT_PATH: Path = Path("./")
 
     class Config:
