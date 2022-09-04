@@ -49,7 +49,7 @@ resource "aws_lambda_function" "api_lambda" {
     variables = {
       "STAGE"            = "${each.key}",
       "SQS_URL"          = "${local.prefix}-sqs-${each.key}"
-      "LOCAL_MOUNT_PATH" = "/mnt/files"
+      "LOCAL_MOUNT_PATH" = "/mnt/files/${each.key}"
 
     }
   }
@@ -79,6 +79,6 @@ resource "aws_lambda_function" "worker_lambda" {
   depends_on = [aws_efs_mount_target.alpha]
 
   image_config {
-    command = ["app.lambda_function.consumer_handler"]
+    command = ["app.lambda.handler"]
   }
 }
