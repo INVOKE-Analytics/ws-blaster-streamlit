@@ -16,7 +16,7 @@ handler = Mangum(app)
 
 @ app.get("/", status_code=200)
 def get_index():
-    return {'title': 'Hello World', 'author': "Ahilan Ashwin",
+    return {'title': 'Hello World', 'author': ["Ahilan Ashwin", "Ammar Azman"],
             'version': "0.1.1", 'stage': settings.STAGE}
 
 
