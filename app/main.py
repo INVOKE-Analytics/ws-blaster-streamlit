@@ -7,6 +7,7 @@ from app.config import get_settings
 settings = get_settings()
 root_path = "/" if settings.STAGE == 'local' else f"/{settings.STAGE}/"
 app = FastAPI(title=f"{settings.PROJECT_NAME} ({settings.STAGE.upper()})",
+              openapi_prefix=root_path,
               root_path=root_path,
               root_path_in_servers=False,
               description="""An API Service created to blast promotional 
