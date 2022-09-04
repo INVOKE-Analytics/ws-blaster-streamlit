@@ -1,6 +1,6 @@
 import boto3
-from mangum import Mangum
 
+from mangum import Mangum
 from fastapi import FastAPI
 from app.config import get_settings
 
@@ -16,7 +16,7 @@ handler = Mangum(app)
 @ app.get("/", status_code=200)
 def get_index():
     return {'title': settings.PROJECT_NAME,
-            'author': ["Ahilan Ashwin", "Ammar Azman"],
+            'authors': ["Ahilan Ashwin", "Ammar Azman"],
             'version': "0.1.1",
             'stage': settings.STAGE}
 
