@@ -25,5 +25,5 @@ with Diagram("Whats App Blasting API", show=False):
 
     store = EFS("Whats APP Account store")
     source >> handlers >> queue >> workers
-    handlers >> store
-    workers >> store
+    handlers - store
+    workers - store
