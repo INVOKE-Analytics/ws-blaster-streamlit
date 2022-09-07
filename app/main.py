@@ -1,5 +1,6 @@
-import boto3
+# import boto3
 
+from ws_blaster.blasting import Blaster
 from mangum import Mangum
 from fastapi import FastAPI
 from app.config import get_settings
