@@ -62,6 +62,15 @@ resource "aws_lambda_function" "worker_lambda" {
   image_uri     = "${data.aws_ecr_repository.ecr_repo.repository_url}@${data.aws_ecr_image.lambda_image.id}"
   package_type  = "Image"
 
+  environment {
+    variables = {
+      "STAGE"            = "${each.key}",
+      "SQS_URL"          = "${local.prefix}-sqs-${each.key}"
+      "LOCAL_MOUNT_PATH" = "/mnt/files/${each.key}"
+
+    }
+  }
+
   vpc_config {
     # Every subnet should be able to reach an EFS mount target in the same Availability Zone. Cross-AZ mounts are not permitted.
     subnet_ids         = data.aws_subnets.subnets.ids
