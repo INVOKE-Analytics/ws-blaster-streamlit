@@ -1,4 +1,4 @@
-# ws-blaster-prod
+# ws-blaster-prod (Streamlit deployment) 
 
 This repo serves as the production ready version of the whats app blaster.
 The module ws-blaster consists of `blasting.py`, `manage.py` and `launch.py`
