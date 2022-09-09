@@ -94,7 +94,7 @@ def main_blasting():
 # Account Management
 ##############################################################
 
-manage = Manage(user_path='../ws-blaster-prod-f1/ws_blaster/images', wsb_path='./Screenshot/')
+manage = Manage(user_path='../ws-blaster-prod-f1/ws_blaster/Users', wsb_path='./Screenshot/')
 
 
 def check_available_account():
