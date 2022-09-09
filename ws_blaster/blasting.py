@@ -7,7 +7,7 @@ import pandas as pd
 
 from os import listdir
 from loguru import logger
-from ws_blaster.utils import open_driver_blasting, save_uploadedfile
+from utils import open_driver_blasting, save_uploadedfile
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
