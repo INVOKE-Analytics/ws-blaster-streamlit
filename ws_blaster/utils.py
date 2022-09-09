@@ -73,7 +73,7 @@ def open_driver_Streamlit(user_path, headless=True):
 
     Returns a chromedriver instance
     '''
-    chrome_options = webdriver.Chrome('./ws-blaster-prod-f1/ws_blaster/chromedriver/chromedriver.exe')
+    chrome_options = webdriver.Chrome(executable_path='./ws-blaster-prod-f1/ws_blaster/chromedriver/chromedriver.exe')
     chrome_options.add_argument(user_path)
     chrome_options.add_argument('--disable-notifications')
 
