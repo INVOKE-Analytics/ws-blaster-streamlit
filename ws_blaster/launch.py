@@ -7,9 +7,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from ..ws_blaster.manage import Manage
-from ..ws_blaster.utils import save_uploadedfile, open_driver
-from ..ws_blaster.blasting import Blaster
+from .manage import Manage
+from .utils import save_uploadedfile, open_driver
+from .blasting import Blaster
 
 # Hide streamlit header and footer
 hide_st_style = """
