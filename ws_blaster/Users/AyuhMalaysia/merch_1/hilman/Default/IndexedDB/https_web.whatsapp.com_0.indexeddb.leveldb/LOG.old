@@ -1,0 +1,5 @@
+2022/09/08-11:17:08.928 4efc Creating DB /home/ammar/wsbAPI/venvWSBAPI/User/Ayuh_Malaysia/growthhack/hilman/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb since it was missing.
+2022/09/08-11:17:08.948 4efc Reusing MANIFEST /home/ammar/wsbAPI/venvWSBAPI/User/Ayuh_Malaysia/growthhack/hilman/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2022/09/08-11:17:55.648 4efb Level-0 table #5: started
+2022/09/08-11:17:55.712 4efb Level-0 table #5: 1668808 bytes OK
+2022/09/08-11:17:55.757 4efb Delete type=0 #3
