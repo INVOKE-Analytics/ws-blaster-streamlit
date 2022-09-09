@@ -7,7 +7,7 @@ import pandas as pd
 
 from os import listdir
 from loguru import logger
-from utils import open_driver, save_uploadedfile
+from utils import open_driver, save_uploadedfile, open_driver_Streamlit
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -146,7 +146,7 @@ class Blaster:
         for acc in listdir(self.driver_path):
             data_dir = "user-data-dir=" + str(self.driver_path / acc)
             logger.info(f"Open Account: {data_dir}")
-            driver, display = open_driver(data_dir)
+            driver, display = open_driver_Streamlit(data_dir)
             self.driver_dict[data_dir] = driver
             self.display_dict[data_dir] = display
             time.sleep(10)
