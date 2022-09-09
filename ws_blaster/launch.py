@@ -22,8 +22,8 @@ hide_st_style = """
 st.markdown(hide_st_style, unsafe_allow_html=True)
 
 # INVOKE logo and WS logo setup
-invoke_logo_path = '../ws-blaster-prod-f1/images/invoke_logo.jpg'
-ws_logo_path = '../ws-blaster-prod-f1/images/ws-logo.png'
+invoke_logo_path = '../ws-blaster-prod-f1/ws_blaster/images/invoke_logo.jpg'
+ws_logo_path = '../ws-blaster-prod-f1/ws_blaster/images/ws-logo.png'
 invoke_logo = Image.open(invoke_logo_path)
 ws_logo = Image.open(ws_logo_path)
 st.sidebar.title('Whatsapp Blaster')
