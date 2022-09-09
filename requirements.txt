@@ -1,4 +1,5 @@
 streamlit
+pyvirtualdisplay
 selenium 
 pyperclip
 pandas
@@ -6,5 +7,4 @@ pytest
 webdriver-manager
 autopep8
 loguru
-pyvirtualdisplay
 pillow
