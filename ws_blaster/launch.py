@@ -37,7 +37,7 @@ option1 = st.sidebar.selectbox(
 # Blasting
 ##############################################################
 def main_blasting():
-    blaster = Blaster(user_path="./Users")
+    blaster = Blaster(user_path="../ws-blaster-prod-f1/ws_blaster/Users")
 
     # Upload csv file to extract phone numbers
     uploaded_file = st.file_uploader(
